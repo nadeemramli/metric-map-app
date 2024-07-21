@@ -1,0 +1,7 @@
+Basic Statistics
+================
+
+.. automodule:: metrics.computations.statistics.basic_stats
+   :members:
+   :undoc-members:
+   :show-inheritance:

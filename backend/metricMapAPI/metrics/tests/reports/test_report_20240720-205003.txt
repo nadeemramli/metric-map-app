@@ -1,0 +1,1203 @@
+Ran 28 tests in 10.223 seconds
+
+EEEEEEEEEEEEEEEEEEEEEEEE..EE
+======================================================================
+ERROR: test_authentication_required (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 242, in test_authentication_required
+    url = self.get_client_project_url('project-metrics-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_create_action_remark (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 134, in test_create_action_remark
+    url = self.get_client_project_url('metric-action-remarks-list', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, 'metric__pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_create_dashboard (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 158, in test_create_dashboard
+    url = self.get_client_project_url('project-dashboards-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_create_experiment (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 172, in test_create_experiment
+    url = self.get_client_project_url('project-experiments-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_create_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 85, in test_create_metric
+    url = self.get_client_project_url('project-metrics-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_delete_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 113, in test_delete_metric
+    url = self.get_client_project_url('project-metrics-detail', pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_categories (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 183, in test_get_categories
+    url = self.get_client_project_url('project-categories-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_client_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 55, in test_get_client_detail
+    url = reverse('client-detail', kwargs={'pk': self.tenant_client.pk})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_clients_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 49, in test_get_clients_list
+    url = reverse('client-list')
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 193, in test_get_connections
+    url = self.get_client_project_url('project-connections-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_dashboards (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 153, in test_get_dashboards
+    url = self.get_client_project_url('project-dashboards-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_experiments (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 167, in test_get_experiments
+    url = self.get_client_project_url('project-experiments-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_historical_data (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 119, in test_get_historical_data
+    url = self.get_client_project_url('metric-historical-data', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, 'metric__pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_metric_action_remarks (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 129, in test_get_metric_action_remarks
+    url = self.get_client_project_url('metric-action-remarks-list', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, 'metric__pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_metric_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 124, in test_get_metric_connections
+    url = self.get_client_project_url('project-connections-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_metric_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 79, in test_get_metric_detail
+    url = self.get_client_project_url('project-metrics-detail', pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_metric_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 148, in test_get_metric_reports
+    url = self.get_client_project_url('project-reports-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_metric_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 143, in test_get_metric_targets
+    url = self.get_client_project_url('project-targets-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_metrics_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 73, in test_get_metrics_list
+    url = self.get_client_project_url('project-metrics-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_project_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 67, in test_get_project_detail
+    url = self.get_client_project_url('client-projects-detail', pk=self.project.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 40, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_projects_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 61, in test_get_projects_list
+    url = self.get_client_project_url('client-projects-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 40, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 203, in test_get_reports
+    url = self.get_client_project_url('project-reports-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_tags (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 188, in test_get_tags
+    url = self.get_client_project_url('project-tags-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_get_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 198, in test_get_targets
+    url = self.get_client_project_url('project-targets-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_update_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 99, in test_update_metric
+    url = self.get_client_project_url('project-metrics-detail', pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+======================================================================
+ERROR: test_url_patterns (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 224, in test_url_patterns
+    self.get_client_project_url('project-metrics-list'),
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 769, in _reverse_with_prefix
+    self._populate()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 568, in _populate
+    for url_pattern in reversed(self.url_patterns):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 738, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/utils/functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 731, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metricMapAPI/urls.py", line 31, in <module>
+    path('api/', include('metrics.urls')),
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/conf.py", line 39, in include
+    urlconf_module = import_module(urlconf_module)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/urls.py", line 17, in <module>
+    metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+NameError: name 'metric_router' is not defined
+
+----------------------------------------------------------------------
+Ran 28 tests in 10.223s
+
+FAILED (errors=26)
+
+Test Result: Failure
+Errors: 26
+Failures: 0

@@ -1,0 +1,377 @@
+Ran 29 tests in 9.516 seconds
+
+EEEEEEEEFFEEEEEEEEEEEEEEE..EE
+======================================================================
+ERROR: test_analyze_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 124, in test_analyze_metric
+    url = self.get_client_project_url('project-metrics-analyze', pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-analyze' with keyword arguments '{'client_pk': 2, 'project_pk': 1, 'pk': 1}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/analyze/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/analyze/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/analyze/$']
+
+======================================================================
+ERROR: test_authentication_required (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 252, in test_authentication_required
+    url = self.get_client_project_url('project-metrics-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-list' with keyword arguments '{'client_pk': 3, 'project_pk': 2}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$']
+
+======================================================================
+ERROR: test_create_action_remark (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 144, in test_create_action_remark
+    url = self.get_client_project_url('metric-action-remarks-list', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, 'metric_pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'metric-action-remarks-list' with keyword arguments '{'client_pk': 4, 'project_pk': 3, 'metric_pk': 3}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric_pk>[^/.]+)/action-remarks/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric_pk>[^/.]+)/action-remarks/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric_pk>[^/.]+)/action-remarks/$']
+
+======================================================================
+ERROR: test_create_dashboard (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 168, in test_create_dashboard
+    url = self.get_client_project_url('project-dashboards-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-dashboards-list' with keyword arguments '{'client_pk': 5, 'project_pk': 4}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/dashboards/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/dashboards/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/dashboards/$']
+
+======================================================================
+ERROR: test_create_experiment (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 182, in test_create_experiment
+    url = self.get_client_project_url('project-experiments-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-experiments-list' with keyword arguments '{'client_pk': 6, 'project_pk': 5}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/experiments/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/experiments/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/experiments/$']
+
+======================================================================
+ERROR: test_create_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 85, in test_create_metric
+    url = self.get_client_project_url('project-metrics-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-list' with keyword arguments '{'client_pk': 7, 'project_pk': 6}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$']
+
+======================================================================
+ERROR: test_delete_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 113, in test_delete_metric
+    url = self.get_client_project_url('project-metrics-detail', pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-detail' with keyword arguments '{'client_pk': 8, 'project_pk': 7, 'pk': 7}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$']
+
+======================================================================
+ERROR: test_get_categories (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 193, in test_get_categories
+    url = self.get_client_project_url('project-categories-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-categories-list' with keyword arguments '{'client_pk': 9, 'project_pk': 8}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/categories/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/categories/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/categories/$']
+
+======================================================================
+ERROR: test_get_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 203, in test_get_connections
+    url = self.get_client_project_url('project-connections-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-connections-list' with keyword arguments '{'client_pk': 12, 'project_pk': 11}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/connections/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/connections/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/connections/$']
+
+======================================================================
+ERROR: test_get_dashboards (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 163, in test_get_dashboards
+    url = self.get_client_project_url('project-dashboards-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-dashboards-list' with keyword arguments '{'client_pk': 13, 'project_pk': 12}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/dashboards/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/dashboards/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/dashboards/$']
+
+======================================================================
+ERROR: test_get_experiments (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 177, in test_get_experiments
+    url = self.get_client_project_url('project-experiments-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-experiments-list' with keyword arguments '{'client_pk': 14, 'project_pk': 13}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/experiments/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/experiments/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/experiments/$']
+
+======================================================================
+ERROR: test_get_historical_data (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 119, in test_get_historical_data
+    url = self.get_client_project_url('metric-historical-data-list', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, 'metric_pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'metric-historical-data-list' with keyword arguments '{'client_pk': 15, 'project_pk': 14, 'metric_pk': 14}' not found. 4 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/historical-data/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/historical-data/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/historical-data/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/historical-data/$']
+
+======================================================================
+ERROR: test_get_metric_action_remarks (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 139, in test_get_metric_action_remarks
+    url = self.get_client_project_url('metric-action-remarks-list', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, 'metric_pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'metric-action-remarks-list' with keyword arguments '{'client_pk': 16, 'project_pk': 15, 'metric_pk': 15}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric_pk>[^/.]+)/action-remarks/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric_pk>[^/.]+)/action-remarks/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric_pk>[^/.]+)/action-remarks/$']
+
+======================================================================
+ERROR: test_get_metric_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 134, in test_get_metric_connections
+    url = self.get_client_project_url('project-connections-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-connections-list' with keyword arguments '{'client_pk': 17, 'project_pk': 16}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/connections/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/connections/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/connections/$']
+
+======================================================================
+ERROR: test_get_metric_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 79, in test_get_metric_detail
+    url = self.get_client_project_url('project-metrics-detail', pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-detail' with keyword arguments '{'client_pk': 18, 'project_pk': 17, 'pk': 17}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$']
+
+======================================================================
+ERROR: test_get_metric_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 158, in test_get_metric_reports
+    url = self.get_client_project_url('project-reports-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-reports-list' with keyword arguments '{'client_pk': 19, 'project_pk': 18}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/reports/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/reports/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/reports/$']
+
+======================================================================
+ERROR: test_get_metric_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 153, in test_get_metric_targets
+    url = self.get_client_project_url('project-targets-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-targets-list' with keyword arguments '{'client_pk': 20, 'project_pk': 19}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/targets/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/targets/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/targets/$']
+
+======================================================================
+ERROR: test_get_metrics_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 73, in test_get_metrics_list
+    url = self.get_client_project_url('project-metrics-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-list' with keyword arguments '{'client_pk': 21, 'project_pk': 20}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$']
+
+======================================================================
+ERROR: test_get_project_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 67, in test_get_project_detail
+    url = self.get_client_project_url('client-projects-detail', pk=self.project.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 40, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'client-projects-detail' with keyword arguments '{'client_pk': 22, 'pk': 21}' not found. 2 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<pk>[^/.]+)/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<pk>[^/.]+)/$']
+
+======================================================================
+ERROR: test_get_projects_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 61, in test_get_projects_list
+    url = self.get_client_project_url('client-projects-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 40, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'client-projects-list' with keyword arguments '{'client_pk': 23}' not found. 2 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/$']
+
+======================================================================
+ERROR: test_get_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 213, in test_get_reports
+    url = self.get_client_project_url('project-reports-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-reports-list' with keyword arguments '{'client_pk': 24, 'project_pk': 23}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/reports/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/reports/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/reports/$']
+
+======================================================================
+ERROR: test_get_tags (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 198, in test_get_tags
+    url = self.get_client_project_url('project-tags-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-tags-list' with keyword arguments '{'client_pk': 25, 'project_pk': 24}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/tags/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/tags/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/tags/$']
+
+======================================================================
+ERROR: test_get_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 208, in test_get_targets
+    url = self.get_client_project_url('project-targets-list')
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-targets-list' with keyword arguments '{'client_pk': 26, 'project_pk': 25}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/targets/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/targets/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/targets/$']
+
+======================================================================
+ERROR: test_update_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 99, in test_update_metric
+    url = self.get_client_project_url('project-metrics-detail', pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-detail' with keyword arguments '{'client_pk': 29, 'project_pk': 28, 'pk': 28}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<pk>[^/.]+)/$']
+
+======================================================================
+ERROR: test_url_patterns (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 234, in test_url_patterns
+    self.get_client_project_url('project-metrics-list'),
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 42, in get_client_project_url
+    return reverse(viewname, kwargs={'client_pk': client_pk, 'project_pk': project_pk, **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'project-metrics-list' with keyword arguments '{'client_pk': 30, 'project_pk': 29}' not found. 3 pattern(s) tried: ['api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$', 'api/api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/$']
+
+======================================================================
+FAIL: test_get_client_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 57, in test_get_client_detail
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_clients_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 51, in test_get_clients_list
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+----------------------------------------------------------------------
+Ran 29 tests in 9.516s
+
+FAILED (failures=2, errors=25)
+
+Test Result: Failure
+Errors: 25
+Failures: 2

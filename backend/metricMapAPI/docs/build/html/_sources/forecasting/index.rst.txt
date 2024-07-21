@@ -1,0 +1,13 @@
+Forecasting
+===========
+
+.. toctree::
+   :maxdepth: 1
+
+   forecasting
+   classification_models
+   survival_analysis
+   ensemble_models
+   regression_models
+   feedback_models
+   time_series_models

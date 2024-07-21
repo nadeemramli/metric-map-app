@@ -1,0 +1,13 @@
+Impact
+======
+
+.. toctree::
+   :maxdepth: 1
+
+   trend_analysis
+   technical_indicators
+   impact_analysis
+   change_detection
+   experimentation
+   anomaly_detection
+   predictive_maintenance

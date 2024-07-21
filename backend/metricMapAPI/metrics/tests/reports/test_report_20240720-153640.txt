@@ -1,0 +1,1300 @@
+Ran 30 tests in 27.791 seconds
+
+======================================================================
+ERROR: test_analyze_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_analyze_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(2) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(2) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_authentication_required (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_authentication_required (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(3) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(3) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_create_action_remark (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_create_action_remark (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(4) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(4) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_create_dashboard (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_create_dashboard (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(5) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(5) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_create_experiment (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_create_experiment (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(6) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(6) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_create_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_create_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(7) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(7) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_delete_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_delete_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(8) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(8) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_categories (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_categories (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(9) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(9) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_client_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_client_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(10) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(10) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_clients_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_clients_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(11) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(11) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(12) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(12) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_dashboards (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_dashboards (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(13) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(13) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_experiments (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_experiments (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(14) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(14) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_historical_data (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_historical_data (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(15) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(15) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_metric_action_remarks (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_metric_action_remarks (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(16) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(16) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_metric_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_metric_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(17) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(17) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_metric_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_metric_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(18) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(18) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_metric_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_metric_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(19) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(19) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_metric_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_metric_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(20) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(20) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_metrics_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_metrics_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(21) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(21) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_project_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_project_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(22) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(22) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_projects_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_projects_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(23) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(23) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(24) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(24) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_tags (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_tags (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(25) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(25) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_get_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_get_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(26) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(26) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_health_check (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_health_check (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(27) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(27) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_metric_serializer (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_metric_serializer (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(28) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(28) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_project_serializer (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_project_serializer (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(29) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(29) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_update_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_update_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(30) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(30) is not present in table "metrics_client".
+
+
+======================================================================
+ERROR: test_url_patterns (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 47, in setUp
+    self.client.force_authenticate(user=self.user)
+AttributeError: 'TenantClient' object has no attribute 'force_authenticate'
+
+======================================================================
+ERROR: test_url_patterns (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(31) is not present in table "metrics_client".
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 296, in _setup_and_call
+    self._post_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1102, in _post_teardown
+    self._fixture_teardown()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/test/testcases.py", line 1333, in _fixture_teardown
+    connections[db_name].check_constraints()
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/postgresql/base.py", line 385, in check_constraints
+    cursor.execute("SET CONSTRAINTS ALL IMMEDIATE")
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/db/backends/utils.py", line 103, in _execute
+    return self.cursor.execute(sql)
+django.db.utils.IntegrityError: insert or update on table "metrics_project" violates foreign key constraint "metrics_project_tenant_id_db4a1170_fk_metrics_client_id"
+DETAIL:  Key (tenant_id)=(31) is not present in table "metrics_client".
+
+
+----------------------------------------------------------------------
+Ran 30 tests in 27.790s
+
+FAILED (errors=60)
+
+Test Result: Failure
+Errors: 60
+Failures: 0
