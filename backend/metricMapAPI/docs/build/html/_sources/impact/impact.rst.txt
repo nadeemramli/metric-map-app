@@ -1,0 +1,69 @@
+impact package
+==============
+
+Submodules
+----------
+
+impact.anomaly\_detection module
+--------------------------------
+
+.. automodule:: impact.anomaly_detection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+impact.change\_detection module
+-------------------------------
+
+.. automodule:: impact.change_detection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+impact.experimentation module
+-----------------------------
+
+.. automodule:: impact.experimentation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+impact.impact\_analysis module
+------------------------------
+
+.. automodule:: impact.impact_analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+impact.predictive\_maintenance module
+-------------------------------------
+
+.. automodule:: impact.predictive_maintenance
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+impact.technical\_indicators module
+-----------------------------------
+
+.. automodule:: impact.technical_indicators
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+impact.trend\_analysis module
+-----------------------------
+
+.. automodule:: impact.trend_analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: impact
+   :members:
+   :undoc-members:
+   :show-inheritance:

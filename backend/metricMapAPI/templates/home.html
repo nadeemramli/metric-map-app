@@ -1,0 +1,7 @@
+{% if request.tenant %}
+<p>Current schema: {{ request.tenant.schema_name }}</p>
+<p>Current domain: {{ request.get_host }}</p>
+{% else %}
+<p>Current schema: public</p>
+<p>Current domain: {{ request.get_host }}</p>
+{% endif %}

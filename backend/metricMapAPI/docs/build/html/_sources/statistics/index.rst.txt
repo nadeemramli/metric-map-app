@@ -1,0 +1,10 @@
+Statistics
+==========
+
+.. toctree::
+   :maxdepth: 1
+
+   basic_stats
+   advanced_stats
+   variance_analysis
+   time_series_stats

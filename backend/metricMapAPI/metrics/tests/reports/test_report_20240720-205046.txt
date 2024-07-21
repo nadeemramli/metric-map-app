@@ -1,0 +1,237 @@
+Ran 28 tests in 8.971 seconds
+
+FEFFFFFFFFFFEEFFFFFFFFFF..F.
+======================================================================
+ERROR: test_create_action_remark (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 134, in test_create_action_remark
+    url = self.get_client_project_url('metric-action-remarks-list', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, 'metric__pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'metric-action-remarks-list' with keyword arguments '{'client__pk': 3, 'project__pk': 2, 'metric__pk': None, 'metric_pk': 2}' not found. 4 pattern(s) tried: ['api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$', 'api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$', 'api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$', 'api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$']
+
+======================================================================
+ERROR: test_get_historical_data (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 119, in test_get_historical_data
+    url = self.get_client_project_url('metric-historical-data', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, 'metric__pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'metric-historical-data' not found. 'metric-historical-data' is not a valid view function or pattern name.
+
+======================================================================
+ERROR: test_get_metric_action_remarks (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 129, in test_get_metric_action_remarks
+    url = self.get_client_project_url('metric-action-remarks-list', metric_pk=self.metric.pk)
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 44, in get_client_project_url
+    return reverse(viewname, kwargs={'client__pk': client_pk, 'project__pk': project_pk, 'metric__pk': kwargs.get('pk'), **kwargs})
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/django/urls/resolvers.py", line 851, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'metric-action-remarks-list' with keyword arguments '{'client__pk': 15, 'project__pk': 14, 'metric__pk': None, 'metric_pk': 14}' not found. 4 pattern(s) tried: ['api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$', 'api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$', 'api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$', 'api/clients/(?P<client__pk>[^/.]+)/projects/(?P<project__pk>[^/.]+)/metrics/(?P<metric__pk>[^/.]+)/action-remarks/$']
+
+======================================================================
+FAIL: test_authentication_required (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 244, in test_authentication_required
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+AssertionError: 404 != 401
+
+======================================================================
+FAIL: test_create_dashboard (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 163, in test_create_dashboard
+    response = self.client.post(url, data)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/rest_framework/test.py", line 295, in post
+    response = super().post(
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/rest_framework/test.py", line 208, in post
+    data, content_type = self._encode_data(data, format, content_type)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/rest_framework/test.py", line 179, in _encode_data
+    ret = renderer.render(data)
+  File "/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages/rest_framework/renderers.py", line 911, in render
+    assert not isinstance(value, dict), (
+AssertionError: Test data contained a dictionary value for key 'layout', but multipart uploads do not support nested data. You may want to consider using format='json' in this test case.
+
+======================================================================
+FAIL: test_create_experiment (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 180, in test_create_experiment
+    self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+AssertionError: 404 != 201
+
+======================================================================
+FAIL: test_create_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 95, in test_create_metric
+    self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+AssertionError: 404 != 201
+
+======================================================================
+FAIL: test_delete_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 115, in test_delete_metric
+    self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+AssertionError: 404 != 204
+
+======================================================================
+FAIL: test_get_categories (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 185, in test_get_categories
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_client_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 57, in test_get_client_detail
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_clients_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 51, in test_get_clients_list
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 195, in test_get_connections
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_dashboards (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 155, in test_get_dashboards
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_experiments (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 169, in test_get_experiments
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_metric_connections (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 126, in test_get_metric_connections
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_metric_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 81, in test_get_metric_detail
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_metric_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 150, in test_get_metric_reports
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_metric_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 145, in test_get_metric_targets
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_metrics_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 75, in test_get_metrics_list
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_project_detail (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 69, in test_get_project_detail
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_projects_list (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 63, in test_get_projects_list
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_reports (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 205, in test_get_reports
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_tags (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 190, in test_get_tags
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_get_targets (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 200, in test_get_targets
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_update_metric (metrics.tests.test_apis.APITests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nadeemramli/workspace/github.com/nadeemramli/mapping-of-metrics/metric-map-app/backend/metricMapAPI/metrics/tests/test_apis.py", line 109, in test_update_metric
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 404 != 200
+
+----------------------------------------------------------------------
+Ran 28 tests in 8.971s
+
+FAILED (failures=22, errors=3)
+
+Test Result: Failure
+Errors: 3
+Failures: 22

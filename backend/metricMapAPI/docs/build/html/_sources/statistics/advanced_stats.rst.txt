@@ -1,0 +1,7 @@
+Advanced Statistics
+===================
+
+.. automodule:: metrics.computations.statistics.advanced_stats
+   :members:
+   :undoc-members:
+   :show-inheritance:
