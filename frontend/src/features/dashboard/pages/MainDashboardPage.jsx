@@ -1,115 +1,126 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+
+const MainDashboardPage = ({ projectId }) => {
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold">Main Dashboard</h1>
+      <p>Project ID: {projectId}</p>
+      <p>Dashboard content will be implemented later.</p>
+    </div>
+  );
+};
+
+export default MainDashboardPage;
+
+/*
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { selectAllMetrics, fetchMetrics } from '@/store/slices/metricsSlice';
-import { selectAllExperiments, fetchExperiments } from '@/store/slices/actionRemarksSlice';
-import { fetchForecastsForAllMetrics, selectForecastsByMetricId } from '@/store/slices/forecastsSlice';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { fetchMetrics } from '@/store/slices/metricsSlice';
+import fetchExperiments from '@/store/slices/actionRemarksSlice';
+import { fetchForecastsForAllMetrics } from '@/store/slices/forecastsSlice';
 
-const ExperimentCard = ({ experiment }) => (
-  <Card>
-    <CardHeader>
-      <CardTitle>{experiment.name}</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <p>Status: {experiment.status}</p>
-      <p>Progress:</p>
-      <Progress value={experiment.progress} className="w-full" />
-    </CardContent>
-  </Card>
-);
-
-const MetricUpdateCard = ({ metric }) => (
-  <Card>
-    <CardHeader>
-      <CardTitle>{metric.name}</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <p>Current Value: {metric.currentValue}</p>
-      <p>Last Updated: {new Date(metric.lastUpdated).toLocaleDateString()}</p>
-    </CardContent>
-  </Card>
-);
-
-const ForecastVsActualChart = ({ data }) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <LineChart data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="date" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="actual" stroke="#8884d8" />
-      <Line type="monotone" dataKey="forecast" stroke="#82ca9d" />
-    </LineChart>
-  </ResponsiveContainer>
-);
-
-const MainDashboardPage = () => {
+const MainDashboardPage = ({ projectId }) => {
   const dispatch = useDispatch();
-  const metrics = useSelector(selectAllMetrics);
-  const experiments = useSelector(selectAllExperiments);
-  const forecasts = useSelector(state => selectForecastsByMetricId(state, metrics[0]?.id)); // Assuming we want forecasts for the first metric
-  const currentClientId = useSelector(state => state.user.currentClientId);
-  const currentProjectId = useSelector(state => state.projects.currentProjectId);
-  const metricsStatus = useSelector(state => state.metrics.status);
-  const experimentsStatus = useSelector(state => state.actionRemarks.experimentsStatus);
-  const forecastsStatus = useSelector(state => state.forecasts.status);
+  const metrics = useSelector(state => state.metrics.metrics);
+  const experiments = useSelector(state => state.experiments.experiments);
+  const forecasts = useSelector(state => state.forecasts.forecasts);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (currentClientId && currentProjectId) {
-      dispatch(fetchMetrics({ clientId: currentClientId, projectId: currentProjectId }));
-      dispatch(fetchExperiments({ clientId: currentClientId, projectId: currentProjectId }));
-      dispatch(fetchForecastsForAllMetrics({ clientId: currentClientId, projectId: currentProjectId }));
-    }
-  }, [dispatch, currentClientId, currentProjectId]);
+    const fetchDashboardData = async () => {
+      setIsLoading(true);
+      try {
+        await Promise.all([
+          dispatch(fetchMetrics(projectId)),
+          dispatch(fetchExperiments(projectId)),
+          dispatch(fetchForecastsForAllMetrics(projectId))
+        ]);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  if (metricsStatus === 'loading' || experimentsStatus === 'loading' || forecastsStatus === 'loading') {
+    fetchDashboardData();
+  }, [dispatch, projectId]);
+
+  if (isLoading) {
     return <div className="flex justify-center items-center h-screen"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   }
 
-  const forecastVsActualData = forecasts.map(forecast => ({
-    date: forecast.date,
-    actual: forecast.actualValue,
-    forecast: forecast.forecastValue,
-  }));
-
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Project Dashboard</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         <Card>
           <CardHeader>
-            <CardTitle>Ongoing Experiments</CardTitle>
+            <CardTitle>Key Metrics</CardTitle>
           </CardHeader>
           <CardContent>
-            {experiments.map(experiment => (
-              <ExperimentCard key={experiment.id} experiment={experiment} />
+            {metrics.slice(0, 3).map(metric => (
+              <div key={metric.id} className="mb-2">
+                <p>{metric.name}: {metric.value}</p>
+                <Progress value={metric.progress} className="w-full" />
+              </div>
             ))}
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader>
-            <CardTitle>Recent Metric Updates</CardTitle>
+            <CardTitle>Active Experiments</CardTitle>
           </CardHeader>
           <CardContent>
-            {metrics.slice(0, 5).map(metric => (
-              <MetricUpdateCard key={metric.id} metric={metric} />
+            {experiments.slice(0, 3).map(experiment => (
+              <div key={experiment.id} className="mb-2">
+                <p>{experiment.name}</p>
+                <Progress value={experiment.progress} className="w-full" />
+              </div>
             ))}
           </CardContent>
         </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full mb-2">Create New Metric</Button>
+            <Button className="w-full mb-2">Start New Experiment</Button>
+            <Button className="w-full">Generate Report</Button>
+          </CardContent>
+        </Card>
       </div>
-
+      
       <Card>
         <CardHeader>
-          <CardTitle>Forecast vs Actual</CardTitle>
+          <CardTitle>Metrics Forecast</CardTitle>
         </CardHeader>
         <CardContent>
-          <ForecastVsActualChart data={forecastVsActualData} />
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={forecasts}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {metrics.slice(0, 3).map((metric, index) => (
+                <Line 
+                  key={metric.id} 
+                  type="monotone" 
+                  dataKey={metric.name} 
+                  stroke={`hsl(${index * 120}, 70%, 50%)`} 
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
     </div>
@@ -117,3 +128,4 @@ const MainDashboardPage = () => {
 };
 
 export default MainDashboardPage;
+*/

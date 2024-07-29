@@ -1,8 +1,1420 @@
-Created new metric: Customer Acquisition Cost (CAC)
-Created new metric: Conversion Rate
-Created new metric: Customer Lifetime Value (CLV)
-Created new metric: Net Promoter Score (NPS)
-Created new metric: Monthly Recurring Revenue (MRR)
-Created new user: analyst
-Created new user: manager
-Created new user: admin
+Error loading historical data for metric 1: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 1: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error detecting outliers for metric 1: 'value'
+Error calculating data quality score for metric 1: 'value'
+Error loading historical data for metric 2: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 3: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 3: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 4: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error detecting outliers for metric 4: 'value'
+Error loading historical data for metric 5: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Starting data preparation for metric 5
+Error handling missing values for metric 5: "None of [Index(['value'], dtype='object')] are in the [columns]"
+Error detecting outliers for metric 5: 'value'
+Error calculating data quality score for metric 5: 'value'
+Completed data preparation for metric 5
+Error loading historical data for metric 6: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 7: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 7: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 8: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Starting data preparation for metric 8
+Error handling missing values for metric 8: "None of [Index(['value'], dtype='object')] are in the [columns]"
+Error detecting outliers for metric 8: 'value'
+Error calculating data quality score for metric 8: 'value'
+Completed data preparation for metric 8
+Error loading historical data for metric 1: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 1: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error detecting outliers for metric 1: 'value'
+Error calculating data quality score for metric 1: 'value'
+Error loading historical data for metric 2: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 3: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Error loading historical data for metric 3: Cannot resolve keyword 'metric_project' into field. Choices are: date, forecast, forecast_id, id, metric, metric_id, tenant, tenant_id, value
+Detected 0 outliers for metric 1
+Error calculating data quality score for metric 1: Cannot resolve keyword 'metric' into field. Choices are: accuracy_score, completeness_score, consistency_score, data_entry, data_quality_score, id, overall_score, tenant, tenant_id, timeliness_score
+Detected 0 outliers for metric 4
+Starting data preparation for metric 5
+Handled missing values for metric 5
+Detected 0 outliers for metric 5
+Error calculating data quality score for metric 5: Cannot resolve keyword 'metric' into field. Choices are: accuracy_score, completeness_score, consistency_score, data_entry, data_quality_score, id, overall_score, tenant, tenant_id, timeliness_score
+Completed data preparation for metric 5
+Starting data preparation for metric 8
+Handled missing values for metric 8
+Detected 0 outliers for metric 8
+Error calculating data quality score for metric 8: Cannot resolve keyword 'metric' into field. Choices are: accuracy_score, completeness_score, consistency_score, data_entry, data_quality_score, id, overall_score, tenant, tenant_id, timeliness_score
+Completed data preparation for metric 8
+Detected 0 outliers for metric 1
+Error calculating data quality score for metric 1: Cannot resolve keyword 'metric' into field. Choices are: accuracy_score, completeness_score, consistency_score, data_entry, data_quality_score, id, overall_score, tenant, tenant_id, timeliness_score
+Detected 0 outliers for metric 4
+Starting data preparation for metric 5
+Handled missing values for metric 5
+Detected 0 outliers for metric 5
+Error calculating data quality score for metric 5: Cannot resolve keyword 'metric' into field. Choices are: accuracy_score, completeness_score, consistency_score, data_entry, data_quality_score, id, overall_score, tenant, tenant_id, timeliness_score
+Starting data preparation for metric 10
+Handled missing values for metric 10
+Detected 0 outliers for metric 10
+Error calculating data quality score for metric 10: Cannot resolve keyword 'metric' into field. Choices are: accuracy_score, completeness_score, consistency_score, data_entry, data_quality_score, id, overall_score, tenant, tenant_id, timeliness_score
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Detected 0 outliers for metric 4
+Starting data preparation for metric 5
+Handled missing values for metric 5
+Detected 0 outliers for metric 5
+Calculated data quality score for metric 5
+Completed data preparation for metric 5
+Handled missing values for metric 6
+Starting data preparation for metric 10
+Handled missing values for metric 10
+Detected 0 outliers for metric 10
+Calculated data quality score for metric 10
+Completed data preparation for metric 10
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Detected 0 outliers for metric 3
+Starting data preparation for metric 4
+No historical data found for metric 4
+No data available for metric 4
+Handled missing values for metric 5
+Starting data preparation for metric 9
+Handled missing values for metric 9
+Detected 0 outliers for metric 9
+Calculated data quality score for metric 9
+Completed data preparation for metric 9
+Error detecting anomalies for metric 1: 'NoneType' object is not subscriptable
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Error generating SARIMA forecast for metric 3: 'NoneType' object is not subscriptable
+Error detecting seasonality for metric 4: 'NoneType' object is not subscriptable
+Error analyzing trend for metric 5: 'NoneType' object is not subscriptable
+No historical data found for metric 1
+Starting data preparation for metric 1
+No historical data found for metric 1
+No data available for metric 1
+No historical data found for metric 2
+Starting data preparation for metric 2
+No historical data found for metric 2
+No data available for metric 2
+No historical data found for metric 3
+Starting data preparation for metric 3
+No historical data found for metric 3
+No data available for metric 3
+No historical data found for metric 4
+Starting data preparation for metric 4
+No historical data found for metric 4
+No data available for metric 4
+No historical data found for metric 5
+Starting data preparation for metric 5
+No historical data found for metric 5
+No data available for metric 5
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Error detecting anomalies for metric 1: Cannot resolve keyword 'project' into field. Choices are: anomaly_score, anomaly_type, anomaly_value, detection_date, id, metric, metric_id, notes, quality, tenant, tenant_id
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Error generating SARIMA forecast for metric 2: Cannot resolve keyword 'project' into field. Choices are: accuracy, confidence_interval, forecast_date, forecast_value, historical_data, id, lower_bound, metric, metric_id, model_used, tenant, tenant_id, upper_bound, variance
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: Cannot resolve keyword 'project' into field. Choices are: id, metric, metric_id, period, seasonality_type, strength
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Error analyzing trend for metric 4: Cannot resolve keyword 'project' into field. Choices are: end_date, id, metric, metric_id, notes, slope, start_date, tenant, tenant_id, trend_type, trend_value
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: Cannot resolve keyword 'tenant' into field. Choices are: id, metric, metric_id, period, seasonality_type, strength
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Error analyzing trend for metric 4: null value in column "trend_value" of relation "metrics_trend" violates not-null constraint
+DETAIL:  Failing row contains (1, stable, 2023-07-26, 2024-07-24, null, , 4, 4, NaN).
+
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 3 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: Cannot resolve keyword 'tenant' into field. Choices are: id, metric, metric_id, period, seasonality_type, strength
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Error analyzing trend for metric 4: null value in column "trend_value" of relation "metrics_trend" violates not-null constraint
+DETAIL:  Failing row contains (1, stable, 2023-07-26, 2024-07-24, null, , 4, 4, NaN).
+
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: Cannot resolve keyword 'tenant' into field. Choices are: id, metric, metric_id, period, seasonality_type, strength
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 3 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Detected and saved seasonality for metric 3
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Detected 0 outliers for metric 3
+Starting data preparation for metric 4
+No historical data found for metric 4
+No data available for metric 4
+Handled missing values for metric 5
+Starting data preparation for metric 9
+Handled missing values for metric 9
+Detected 0 outliers for metric 9
+Calculated data quality score for metric 9
+Completed data preparation for metric 9
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Detected and saved seasonality for metric 3
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: x must have 2 complete cycles requires 728 observations. x only has 365 observation(s)
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 27.7716127476887
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: x must have 2 complete cycles requires 728 observations. x only has 365 observation(s)
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 3 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 26.497179687508833
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: x must have 2 complete cycles requires 728 observations. x only has 365 observation(s)
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: stable (slope: nan, p-value: nan)
+Detected trend: stable, slope: nan, notes: p-value: nan, R-squared: nan
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 32.11203453498423
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Error detecting seasonality for metric 3: x must have 2 complete cycles requires 728 observations. x only has 365 observation(s)
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: stable (slope: nan, p-value: nan)
+Detected trend: stable, slope: nan, notes: p-value: nan, R-squared: nan
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Error generating SARIMA forecast for metric 2: name 'auto_arima' is not defined
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+Detected and saved seasonality for metric 3
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 1 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Error analyzing trend for metric 4: name 'LinearRegression' is not defined
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 3 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 25.833141151692796
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: stable (slope: 0.0009909245222606694, p-value: 0.4006527887302669)
+Detected trend: stable, slope: 0.0009909245222606694, notes: p-value: 0.4006527887302669, R-squared: 0.0019466968676289387
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 21.79410346202302
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: stable (slope: 0.0010374306447367796, p-value: 0.39863071432869246)
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Detected 0 outliers for metric 3
+Starting data preparation for metric 4
+No historical data found for metric 4
+No data available for metric 4
+Handled missing values for metric 5
+Starting data preparation for metric 9
+Handled missing values for metric 9
+Detected 0 outliers for metric 9
+Calculated data quality score for metric 9
+Completed data preparation for metric 9
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 3 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 15.580043745649569
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.001952996731333048, Mann-Kendall p-value: 0.4986403218761295, tau: 0.02372422098449495)
+Detected trend: increasing, slope: 0.001952996731333048, notes: Mann-Kendall p-value: 0.4986403218761295, tau: 0.02372422098449495, R-squared: 0.007454199506415793
+Data summary: min=-0.9391925625124091, max=10.941383989200036, mean=4.987301198490325, std=2.3834257213898447
+First 10 values: [-0.93764859  0.37785765  0.65254865 -0.01349196 -0.93919256  0.87110456
+  0.67334098  1.22001988  1.53850515  0.58694839]
+Last 10 values: [ 8.56160279  8.35760449  8.54489154  9.97689371  9.90553994 10.06016181
+  9.93518252 10.94138399  9.14390489  9.9887838 ]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Detected and saved 2 anomalies for metric 1
+Number of anomalies detected: 2
+Anomaly detected on 2023-09-15: value = 45.14806215197513, score = nan
+Anomaly detected on 2024-02-12: value = -23.379410350462784, score = nan
+Data around 2023-09-15:
+                value
+date                 
+2023-09-10   6.316368
+2023-09-11   5.227581
+2023-09-12   5.445712
+2023-09-13   4.600128
+2023-09-14   4.573533
+2023-09-15  45.148062
+2023-09-16   5.551159
+2023-09-17   5.712905
+2023-09-18   5.909042
+2023-09-19   5.135553
+2023-09-20   6.741936
+Data around 2024-02-12:
+                value
+date                 
+2024-02-07   3.876143
+2024-02-08   5.119524
+2024-02-09   2.732357
+2024-02-10   4.683481
+2024-02-11   2.921895
+2024-02-12 -23.379410
+2024-02-13   4.224589
+2024-02-14   2.651952
+2024-02-15   6.202446
+2024-02-16   4.542686
+2024-02-17   4.465769
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 41.76880879214494
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0016738664369508576, Mann-Kendall p-value: 0.757229785381166, tau: 0.010838476591901246)
+Detected trend: increasing, slope: 0.0016738664369508576, notes: Mann-Kendall p-value: 0.757229785381166, tau: 0.010838476591901246, R-squared: 0.004903739339378377
+Data summary: min=-1.3373966839723392, max=12.183812447769911, mean=5.019147207432563, std=2.5185914478005564
+First 10 values: [-4.87391908e-01  1.85582163e+00 -7.04151497e-01  9.78767370e-01
+  5.98672501e-01  2.86727779e-02 -1.33739668e+00 -1.04622907e-01
+ -1.80585148e-01 -2.13419124e-04]
+Last 10 values: [12.18381245  9.03243652  7.78747698  8.39277344  8.26298642 11.82028811
+  9.28005063 10.09346968 10.8278447  11.16997521]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Error detecting anomalies for metric 1: x must have 2 complete cycles requires 730 observations. x only has 365 observation(s)
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 23.256781222100052
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0022833864969884336, Mann-Kendall p-value: 0.613028190999207, tau: 0.01773295197952732)
+Detected trend: increasing, slope: 0.0022833864969884336, notes: Mann-Kendall p-value: 0.613028190999207, tau: 0.01773295197952732, R-squared: 0.009305953647615328
+Data summary: min=-0.16243036624743779, max=11.412960704779131, mean=5.091709547640279, std=2.4940180798587117
+First 10 values: [ 0.92141959 -0.16243037  0.49481321  0.77037897 -0.10560785  0.80577867
+  1.91752329  0.00466406  0.42144238  0.15337596]
+Last 10 values: [ 9.98957533  9.39663086  8.96634902  7.75611041 11.4129607   8.74031116
+  9.2134158  10.75112102 11.26582351 10.28219504]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Error detecting anomalies for metric 1: Can only compare identically-labeled Series objects
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 18.495608263070967
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0018779101762910293, Mann-Kendall p-value: 0.5897186948236436, tau: 0.018907120276983286)
+Detected trend: increasing, slope: 0.0018779101762910293, notes: Mann-Kendall p-value: 0.5897186948236436, tau: 0.018907120276983286, R-squared: 0.007008815869537721
+Data summary: min=0.07388793690472645, max=10.784340410854796, mean=5.032068304132491, std=2.3634863668398807
+First 10 values: [0.84777872 1.06432537 0.45927663 0.07388794 0.10698537 2.1663976
+ 1.67100562 0.17447811 0.08482477 0.93363533]
+Last 10 values: [ 8.32673667 10.36955468 10.05598045  6.9543388   8.26296052 10.167912
+ 10.78434041 10.73075647  9.74082277  9.63041197]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Mean: 5.089533005493465
+Std: 6.087155945162534
+Min: -65.00778755762838
+Max: 84.9391095945433
+Error detecting anomalies for metric 1: Can only compare identically-labeled Series objects
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 19.098954287700515
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.001240260310652102, Mann-Kendall p-value: 0.6142344486664439, tau: 0.017672738220683423)
+Detected trend: increasing, slope: 0.001240260310652102, notes: Mann-Kendall p-value: 0.6142344486664439, tau: 0.017672738220683423, R-squared: 0.0030643540862074214
+Data summary: min=-0.8658035581234398, max=11.004467958190421, mean=5.096482610204148, std=2.3607173090580793
+First 10 values: [ 0.5369297   0.21151023  0.54872172  0.80740121 -0.22570165  1.62863345
+ -0.01236949  0.06357494 -0.86580356 -0.22563725]
+Last 10 values: [ 8.34373196  8.46605996  9.20125036  6.97104274  8.54101949  9.41339017
+  9.34344521 10.14956072  7.38141716 10.64294309]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Mean: 5.0208957916905215
+Std: 6.070676049912237
+Min: -65.00287407805378
+Max: 84.54863797873146
+Detected and saved 2 anomalies for metric 1
+Number of anomalies detected: 2
+Anomaly detected on 2023-09-15: value = 84.54863797873146, score = 5.276076326427081
+Anomaly detected on 2024-02-12: value = -65.00287407805378, score = 5.280516511300523
+Data around 2023-09-15:
+                value
+date                 
+2023-09-10   4.658473
+2023-09-11   4.015923
+2023-09-12   5.467354
+2023-09-13   3.255539
+2023-09-14   4.048882
+2023-09-15  84.548638
+2023-09-16   6.911813
+2023-09-17   7.021709
+2023-09-18   4.465283
+2023-09-19   6.054262
+2023-09-20   4.270225
+Data around 2024-02-12:
+                value
+date                 
+2024-02-07   5.189564
+2024-02-08   3.164187
+2024-02-09   5.091826
+2024-02-10   3.424641
+2024-02-11   3.267036
+2024-02-12 -65.002874
+2024-02-13   3.829658
+2024-02-14   2.640835
+2024-02-15   3.887749
+2024-02-16   4.704066
+2024-02-17   1.236315
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 50.44368622540995
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Mean: 5.0192278948531515
+Std: 6.094677574213294
+Min: -65.42920428831144
+Max: 84.70680432616393
+Detected and saved 2 anomalies for metric 1
+Number of anomalies detected: 2
+Anomaly detected on 2023-09-15: value = 84.70680432616393, score = 5.270866520579591
+Anomaly detected on 2024-02-12: value = -65.42920428831144, score = 5.275379288063198
+Data around 2023-09-15:
+                value
+date                 
+2023-09-10   7.035690
+2023-09-11   4.577691
+2023-09-12   5.508922
+2023-09-13   4.346788
+2023-09-14   5.577196
+2023-09-15  84.706804
+2023-09-16   3.945758
+2023-09-17   7.731356
+2023-09-18   5.492341
+2023-09-19   5.293619
+2023-09-20   4.561472
+Data around 2024-02-12:
+                value
+date                 
+2024-02-07   2.745633
+2024-02-08   5.650611
+2024-02-09   3.003034
+2024-02-10   3.240366
+2024-02-11   4.212003
+2024-02-12 -65.429204
+2024-02-13   5.035088
+2024-02-14   2.846587
+2024-02-15   3.594703
+2024-02-16   3.838152
+2024-02-17   3.467976
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 21.9679403599237
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 1 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0017612692434164116, Mann-Kendall p-value: 0.7331853886897803, tau: 0.01195243113051332)
+Detected trend: increasing, slope: 0.0017612692434164116, notes: Mann-Kendall p-value: 0.7331853886897803, tau: 0.01195243113051332, R-squared: 0.006170051675510324
+Data summary: min=-2.2475975353960185, max=11.969332916913498, mean=5.027843031561889, std=2.36255518707327
+First 10 values: [ 1.35962239 -0.88081787 -0.06110099  0.46041819 -0.07853291  1.04968933
+  1.27089067 -2.24759754  1.25912263  0.22246262]
+Last 10 values: [ 8.71064093  9.07556154  8.54815384  9.45110067  9.84425203 11.96933292
+ 10.09172647  9.05283081  9.92354161 10.19151605]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Mean: 5.054021964434674
+Std: 6.05233884448562
+Min: -65.45969509654743
+Max: 84.6767901090294
+Detected and saved 0 anomalies for metric 1
+Error detecting anomalies for metric 1: name 'threshold' is not defined
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 1 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 14.189288468149305
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0012336247725864685, Mann-Kendall p-value: 0.952754485860543, tau: 0.0020773746801144057)
+Detected trend: increasing, slope: 0.0012336247725864685, notes: Mann-Kendall p-value: 0.952754485860543, tau: 0.0020773746801144057, R-squared: 0.0025322717768307967
+Data summary: min=-2.213589273866696, max=12.029112355119537, mean=4.934817359662096, std=2.5830245631893116
+First 10 values: [ 0.3983093   1.29053788  0.78058263 -0.44155399 -0.44350489  1.53193857
+ -2.21358927  2.36883319  1.00745191  2.16934451]
+Last 10 values: [ 8.20033734  9.63993928  8.06441938 11.31768502  9.18995818  9.78374149
+  9.51572591  9.0243631   9.47812495 12.02911236]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Mean: 5.018013655196857
+Std: 6.089853270848804
+Min: -65.43459506500167
+Max: 84.98148474681373
+Detected and saved 0 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 14.392919460477637
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0013772143242152546, Mann-Kendall p-value: 0.6960233615067495, tau: 0.013698630136986299)
+Detected trend: increasing, slope: 0.0013772143242152546, notes: Mann-Kendall p-value: 0.6960233615067495, tau: 0.013698630136986299, R-squared: 0.0034090519353376925
+Data summary: min=-1.207695481392404, max=10.77829681110897, mean=5.03359819927999, std=2.485337277338318
+First 10 values: [-1.20769548  0.03209299  1.20358027  0.39354111  1.14636777  0.85976623
+  0.41138953 -0.18417625  1.15524103  1.3937076 ]
+Last 10 values: [ 9.58569449  9.65326316  9.34885624  8.28190893 10.09792037  9.03906574
+  8.48687773  9.58044959 10.74972199 10.58211767]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Mean: 4.928535558857838
+Std: 3.107773215429033
+Min: -20.827666172912366
+Max: 28.65038324635007
+Automatically detected seasonality period: 7
+Detected and saved 0 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 22.055697416342596
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.002323158833364597, Mann-Kendall p-value: 0.42305200875318594, tau: 0.0280897185006774)
+Detected trend: increasing, slope: 0.002323158833364597, notes: Mann-Kendall p-value: 0.42305200875318594, tau: 0.0280897185006774, R-squared: 0.010214520947420591
+Data summary: min=-1.2680672135715974, max=10.465810083523477, mean=5.049458123689758, std=2.4219797802540124
+First 10 values: [-0.81981896  1.05099072 -0.70747714 -0.96988598  0.87105558 -1.26806721
+ -0.82000464 -0.28800916  0.43389347  2.29845671]
+Last 10 values: [ 8.41463702  9.82083919 10.46581008  8.65380689  8.45291644 10.24652265
+  9.51333691  7.56579419 10.20856894  9.87421125]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Introducing anomalies: [(Timestamp('2023-09-15 00:00:00'), 41.307606168881705), (Timestamp('2024-02-12 00:00:00'), -32.47143434036771)]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       5.006792
+std        3.639988
+min      -32.471434
+25%        3.153995
+50%        4.846794
+75%        7.063811
+max       41.307606
+Name: value, dtype: float64
+Starting anomaly detection for metric 1
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       5.006792
+std        3.639988
+min      -32.471434
+25%        3.153995
+50%        4.846794
+75%        7.063811
+max       41.307606
+Name: value, dtype: float64
+Deseasonalized data summary: count    365.000000
+mean       4.840775
+std        3.639402
+min      -32.471434
+25%        3.066268
+50%        4.740595
+75%        7.002986
+max       41.307606
+Name: value, dtype: float64
+Z-scores summary: count    364.000000
+mean       0.149115
+std        0.818895
+min       -3.714995
+25%       -0.272684
+50%        0.117177
+75%        0.654443
+max        3.646235
+Name: value, dtype: float64
+Adaptive threshold summary: count    364.000000
+mean       6.162503
+std        1.348780
+min        3.600922
+25%        5.189977
+50%        5.671186
+75%        6.586550
+max       10.069128
+Name: value, dtype: float64
+Contextual z-scores summary: count    360.000000
+mean       0.007833
+std        0.886162
+min       -1.778980
+25%       -0.664550
+50%       -0.079057
+75%        0.696197
+max        1.779826
+Name: value, dtype: float64
+Number of anomalies detected: 0
+Anomalies detected:
+Empty DataFrame
+Columns: [value, anomaly_score]
+Index: []
+Detected and saved 0 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 21.757881757711807
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.002111496534284998, Mann-Kendall p-value: 0.5330261516167967, tau: 0.021857594460334185)
+Detected trend: increasing, slope: 0.002111496534284998, notes: Mann-Kendall p-value: 0.5330261516167967, tau: 0.021857594460334185, R-squared: 0.007406503261001229
+Data summary: min=-1.2140739843290864, max=11.324656805938357, mean=5.015885254898546, std=2.585141831331015
+First 10 values: [-0.48387722  0.08746932  0.46222214 -1.11911898 -0.07180908 -0.31113757
+ -0.40362043  0.48125804  0.32270458  1.76668984]
+Last 10 values: [10.63385181  8.95013134  7.8003872   7.83494417 11.16731913 10.66631272
+ 10.10227453  8.63371563  9.00728228  8.72464798]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Introducing anomalies: [(Timestamp('2023-09-15 00:00:00'), 42.1382205024146), (Timestamp('2024-02-12 00:00:00'), -31.88277467861939)]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       4.980379
+std        3.673546
+min      -31.882775
+25%        3.151993
+50%        4.936422
+75%        6.921534
+max       42.138221
+Name: value, dtype: float64
+Starting anomaly detection for metric 1
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       4.980379
+std        3.673546
+min      -31.882775
+25%        3.151993
+50%        4.936422
+75%        6.921534
+max       42.138221
+Name: value, dtype: float64
+Deseasonalized data summary: count    365.000000
+mean       4.799259
+std        3.665335
+min      -31.882775
+25%        3.005719
+50%        4.777231
+75%        6.826069
+max       42.138221
+Name: value, dtype: float64
+Z-scores summary: count    364.000000
+mean       0.170465
+std        0.799216
+min       -3.718594
+25%       -0.249713
+50%        0.149282
+75%        0.706775
+max        3.664552
+Name: value, dtype: float64
+Adaptive threshold summary: count    364.000000
+mean       6.243311
+std        1.293238
+min        4.670219
+25%        5.385923
+50%        5.666336
+75%        6.645594
+max       10.122189
+Name: value, dtype: float64
+Contextual z-scores summary: count    360.000000
+mean      -0.017921
+std        0.909628
+min       -1.731026
+25%       -0.799513
+50%       -0.049528
+75%        0.698213
+max        1.764329
+Name: value, dtype: float64
+Number of anomalies detected: 0
+Anomalies detected:
+Empty DataFrame
+Columns: [value, anomaly_score]
+Index: []
+Detected and saved 0 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 17.757610665361934
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0021442756719302074, Mann-Kendall p-value: 0.6783345806696428, tau: 0.01454162276080084)
+Detected trend: increasing, slope: 0.0021442756719302074, notes: Mann-Kendall p-value: 0.6783345806696428, tau: 0.01454162276080084, R-squared: 0.00821749404689509
+Data summary: min=-0.21943950886800878, max=11.99660893501543, mean=5.04472200279764, std=2.492364350605271
+First 10 values: [ 0.12372218  0.10265636 -0.20890827  0.55723205  0.14460926  1.92670222
+  1.29106757  1.68002517  2.03214436  1.21007928]
+Last 10 values: [ 8.2037898   9.59059936 11.32180612  9.74540739 11.99660894  8.82956525
+  9.52476643 10.53580791 10.06470605  9.95771419]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Introducing anomalies: [(Timestamp('2023-09-15 00:00:00'), 42.94376669233448), (Timestamp('2024-02-12 00:00:00'), -33.80518210442222)]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       4.935483
+std        3.806200
+min      -33.805182
+25%        2.963897
+50%        5.026256
+75%        6.873234
+max       42.943767
+Name: value, dtype: float64
+Starting anomaly detection for metric 1
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       4.935483
+std        3.806200
+min      -33.805182
+25%        2.963897
+50%        5.026256
+75%        6.873234
+max       42.943767
+Name: value, dtype: float64
+Deseasonalized data summary: count    365.000000
+mean       4.751641
+std        3.810566
+min      -33.805182
+25%        2.883653
+50%        4.707105
+75%        6.751937
+max       42.943767
+Name: value, dtype: float64
+Z-scores summary: count    364.000000
+mean       0.175349
+std        0.824257
+min       -3.714626
+25%       -0.250658
+50%        0.155939
+75%        0.669813
+max        3.649280
+Name: value, dtype: float64
+Adaptive threshold summary: count    364.000000
+mean       6.264655
+std        1.355931
+min        3.719670
+25%        5.417681
+50%        5.697802
+75%        6.729571
+max       10.181871
+Name: value, dtype: float64
+Contextual z-scores summary: count    360.000000
+mean       0.005827
+std        0.895454
+min       -1.764949
+25%       -0.725083
+50%        0.033497
+75%        0.773888
+max        1.728208
+Name: value, dtype: float64
+Number of anomalies detected: 0
+Anomalies detected:
+Empty DataFrame
+Columns: [value, anomaly_score]
+Index: []
+Detected and saved 0 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 20.544435510615653
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0010920060106926464, Mann-Kendall p-value: 0.9787638431020574, tau: -0.0009333132620803851)
+Detected trend: increasing, slope: 0.0010920060106926464, notes: Mann-Kendall p-value: 0.9787638431020574, tau: -0.0009333132620803851, R-squared: 0.002268098859407597
+Data summary: min=-1.3356218401656355, max=12.014119686494077, mean=4.976952686470883, std=2.4159873179816542
+First 10 values: [ 1.06883469 -0.04284088  0.82250737 -1.33562184 -0.04810361  1.29778981
+  0.69102131  1.12154827  2.49293512  1.50510354]
+Last 10 values: [ 8.58138722  8.56095355 11.09898436  9.63483829 10.1080675   9.95326005
+  8.97271732  9.93732327 12.01411969  8.76662824]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 0 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Introducing anomalies: [(Timestamp('2023-09-15 00:00:00'), 41.629168509771596), (Timestamp('2024-02-12 00:00:00'), -34.1796073023603)]
+Starting data preparation for metric 1
+Handled missing values for metric 1
+Detected 2 outliers for metric 1
+Calculated data quality score for metric 1
+Completed data preparation for metric 1
+Data statistics before anomaly detection:
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       4.998917
+std        3.774564
+min      -34.179607
+25%        2.851796
+50%        5.071673
+75%        7.071134
+max       41.629169
+Name: value, dtype: float64
+Starting anomaly detection for metric 1
+Data shape: (365, 1)
+Data summary: count    365.000000
+mean       4.998917
+std        3.774564
+min      -34.179607
+25%        2.851796
+50%        5.071673
+75%        7.071134
+max       41.629169
+Name: value, dtype: float64
+Deseasonalized data summary: count    365.000000
+mean       4.812306
+std        3.751105
+min      -34.179607
+25%        2.750525
+50%        4.909662
+75%        6.918247
+max       41.629169
+Name: value, dtype: float64
+Modified z-scores summary: count    346.000000
+mean      -0.032469
+std        3.690814
+min      -51.701968
+25%       -0.639968
+50%       -0.005935
+75%        0.628479
+max       40.936381
+Name: value, dtype: float64
+Adaptive threshold summary: count    346.000000
+mean       2.634152
+std        0.027833
+min        2.571206
+25%        2.614074
+50%        2.630417
+75%        2.652334
+max        2.722071
+Name: value, dtype: float64
+Contextual z-scores summary: count    342.000000
+mean       0.006818
+std        0.899610
+min       -1.786733
+25%       -0.735790
+50%        0.037229
+75%        0.713908
+max        1.780270
+Name: value, dtype: float64
+Number of anomalies detected: 8
+Anomalies detected:
+               value  anomaly_score
+date                               
+2023-09-22  6.074282      40.936381
+2023-09-24  5.642175       3.107830
+2023-10-05  5.907963       2.682057
+2023-11-24  9.264448       3.001786
+2024-01-24  5.357275       4.268740
+2024-02-19  3.496938      51.701968
+2024-03-03  3.552749       3.768447
+2024-05-06  1.499295       2.709762
+Detected and saved 8 anomalies for metric 1
+Starting data preparation for metric 2
+Handled missing values for metric 2
+Detected 0 outliers for metric 2
+Calculated data quality score for metric 2
+Completed data preparation for metric 2
+Generated and saved SARIMA forecast for metric 2
+MAPE for forecast: 17.036388309489364
+Starting data preparation for metric 3
+Handled missing values for metric 3
+Detected 0 outliers for metric 3
+Calculated data quality score for metric 3
+Completed data preparation for metric 3
+No significant seasonality detected for metric 3
+No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.
+Starting data preparation for metric 4
+Handled missing values for metric 4
+Detected 0 outliers for metric 4
+Calculated data quality score for metric 4
+Completed data preparation for metric 4
+Analyzed and saved trend for metric 4: increasing (slope: 0.0017603523434509371, Mann-Kendall p-value: 0.5621836272840826, tau: 0.02032214360981484)
+Detected trend: increasing, slope: 0.0017603523434509371, notes: Mann-Kendall p-value: 0.5621836272840826, tau: 0.02032214360981484, R-squared: 0.005920226880041457
+Data summary: min=-0.479669358984274, max=11.635040478623763, mean=4.970057462853926, std=2.4106326755951297
+First 10 values: [-0.35014897  0.85973055 -0.25254604  1.23341745  0.58438239 -0.47966936
+  0.82152584  0.18632492  1.44911388  1.35611828]
+Last 10 values: [ 8.6332443  10.11498397  8.05836672  8.65759735  9.88213909 11.36983358
+  9.90990636  9.7012745  10.38538626 11.63504048]

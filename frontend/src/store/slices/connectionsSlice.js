@@ -1,8 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as api from '@/services/api.js';
 
-export const fetchConnections = createAsyncThunk('connections/fetchConnections', 
-  async ({ clientId, projectId }) => await api.fetchMetricConnections(clientId, projectId)
+export const fetchMetricConnections = createAsyncThunk(
+  'connections/fetchMetricConnections',
+  async ({ clientId, projectId, metricId }, { rejectWithValue }) => {
+    try {
+      console.log(`Fetching metric connections for clientId=${clientId}, projectId=${projectId}, metricId=${metricId}`);
+      const response = await api.fetchMetricConnections(clientId, projectId, metricId);
+      return response;
+    } catch (err) {
+      console.error('Error fetching connections:', err);
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
 );
 export const createConnection = createAsyncThunk('connections/createConnection', 
   async ({ clientId, projectId, connectionData }) => await api.createMetricConnection(clientId, projectId, connectionData)
@@ -17,6 +27,7 @@ export const deleteConnection = createAsyncThunk('connections/deleteConnection',
   }
 );
 
+
 const connectionsSlice = createSlice({
   name: 'connections',
   initialState: {
@@ -27,8 +38,17 @@ const connectionsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchConnections.fulfilled, (state, action) => {
-        state.connections = action.payload;
+      .addCase(fetchMetricConnections.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchMetricConnections.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.connections[action.meta.arg.metricId] = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchMetricConnections.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || 'Failed to fetch connections';
       })
       .addCase(createConnection.fulfilled, (state, action) => {
         state.connections.push(action.payload);
@@ -51,5 +71,7 @@ export const selectAllConnections = (state) => state.connections.connections;
 // You might also want to add this selector for future use
 export const selectConnectionById = (state, connectionId) => 
   state.connections.connections.find(connection => connection.id === connectionId);
+export const selectConnectionsByMetricId = (state, metricId) => 
+  state.connections.connections[metricId] || [];
 
 export default connectionsSlice.reducer;

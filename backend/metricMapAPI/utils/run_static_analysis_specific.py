@@ -17,24 +17,24 @@ def save_to_markdown(results, filename):
             f.write("\n```\n")
 
 def main():
-    project = "metricMapAPI"
-    app = "metrics"
+    # Get the absolute path to the permanent_computations.py file
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    target_file = os.path.join(base_dir,"metricMapAPI", "metrics", "computations", "permanent_computations.py")
+    
+    if not os.path.exists(target_file):
+        print(f"Error: The file {target_file} does not exist.")
+        return
+
     output_file = "static_analysis_results_specific.md"
 
     # Commands to run
     commands = {
-        "pylint": f"pylint metrics/computations",
-        "flake8": f"flake8 metrics/computations",
-        "mypy": f"mypy metrics/computations",
-        "bandit": f"bandit -r metrics/computations",
-        "black": f"black --check metrics/computations",
-        "isort": f"isort --check-only metrics/computations",
-        "pylint": f"pylint metrics/computations",
-        "flake8": f"flake8 metrics/computations",
-        "mypy": f"mypy metrics/computations",
-        "bandit": f"bandit -r metrics/computations",
-        "black": f"black --check metrics/computations",
-        "isort": f"isort --check-only metrics/computations"
+        "pylint": f"pylint {target_file}",
+        "flake8": f"flake8 {target_file}",
+        "mypy": f"mypy {target_file}",
+        "bandit": f"bandit -r {target_file}",
+        "black": f"black --check {target_file}",
+        "isort": f"isort --check-only {target_file}"
     }
 
     # Run each command and collect the output

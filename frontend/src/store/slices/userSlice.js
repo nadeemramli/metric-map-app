@@ -31,6 +31,57 @@ export const changePassword = createAsyncThunk('user/changePassword',
   async (passwordData) => await api.changePassword(passwordData)
 );
 
+export const setCurrentProject = createAsyncThunk(
+  'user/setCurrentProject',
+  async (projectId, { getState, rejectWithValue }) => {
+    try {
+      const { user } = getState();
+      // You might want to make an API call here to update the user's current project on the server
+      // For now, we'll just return the projectId
+      return projectId;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const handleSelectProject = createAsyncThunk(
+  'user/handleSelectProject',
+  async ({ projectId, navigate }, { getState, dispatch, rejectWithValue }) => {
+    console.log("handleSelectProject initiated", { projectId });
+    
+    const stateBefore = getState();
+    console.log("Current user state before setting project:", {
+      isAuthenticated: stateBefore.user.isAuthenticated,
+      currentClientId: stateBefore.user.currentClientId,
+      currentProjectId: stateBefore.user.currentProjectId
+    });
+
+    try {
+      const result = await dispatch(setCurrentProject(projectId)).unwrap();
+      console.log("setCurrentProject successful", { result });
+
+      // Assuming navigate is available in the context where this thunk is called
+      console.log("Attempting to navigate to dashboard");
+      navigate('/dashboard'); // Adjust based on actual routing in your app
+      console.log("Navigation function called, check if URL changed in browser");
+
+      const stateAfter = getState();
+      console.log("Current user state after setting project:", {
+        isAuthenticated: stateAfter.user.isAuthenticated,
+        currentClientId: stateAfter.user.currentClientId,
+        currentProjectId: stateAfter.user.currentProjectId
+      });
+      return result;
+    } catch (err) {
+      console.error("Error in handleSelectProject", err);
+      return rejectWithValue(err);
+    } finally {
+      console.log("handleSelectProject finished", { projectId });
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -58,7 +109,9 @@ const userSlice = createSlice({
       state.currentClientId = action.payload;
     },
     setCurrentProject: (state, action) => {
+      console.log("Setting current project in state:", action.payload);
       state.currentProjectId = action.payload;
+      console.log("New state after setting project:", state);
     },
   },
   extraReducers: (builder) => {
@@ -78,6 +131,7 @@ const userSlice = createSlice({
       })
       .addCase(logout.pending, (state) => {
         state.status.logout = 'loading';
+        state.isAuthenticated = false;
         state.error.logout = null;
       })
       .addCase(logout.fulfilled, (state) => {
@@ -125,12 +179,16 @@ const userSlice = createSlice({
       .addCase(changePassword.rejected, (state, action) => {
         state.status.changePassword = 'failed';
         state.error.changePassword = action.error.message;
+      })
+      .addCase(setCurrentProject.fulfilled, (state, action) => {
+        console.log("Updating state with new project ID", action.payload);
+        state.currentProjectId = action.payload; // This sets the project ID in the state
       });
   }
 });
 
 // Export actions
-export const { setCurrentClient, setCurrentProject } = userSlice.actions;
+export const { setCurrentClient } = userSlice.actions;
 
 // Export selectors
 export const selectUser = (state) => state.user.user;

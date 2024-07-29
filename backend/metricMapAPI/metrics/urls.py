@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework_nested import routers
-from rest_framework_simplejwt.views import TokenRefreshView
 from .views import *
 
 # Main router for tenants (clients) 
@@ -14,21 +13,34 @@ client_router.register(r'projects', ProjectViewSet, basename='client-projects')
 # Nested router for entities within a project
 project_router = routers.NestedSimpleRouter(client_router, r'projects', lookup='project')
 project_router.register(r'metrics', MetricViewSet, basename='project-metrics')
-project_router.register(r'dashboards', DashboardViewSet, basename='project-dashboards')
-project_router.register(r'experiments', ExperimentViewSet, basename='project-experiments')
 project_router.register(r'categories', CategoryViewSet, basename='project-categories')
 project_router.register(r'tags', TagViewSet, basename='project-tags')
-project_router.register(r'connections', ConnectionViewSet, basename='project-connections')
-project_router.register(r'targets', TargetViewSet, basename='project-targets')
+project_router.register(r'dashboards', DashboardViewSet, basename='project-dashboards')
+project_router.register(r'experiments', ExperimentViewSet, basename='project-experiments')
 project_router.register(r'reports', ReportViewSet, basename='project-reports')
+project_router.register(r'strategies', StrategyViewSet, basename='project-strategies')
+project_router.register(r'action-remarks', ActionRemarkViewSet, basename='project-action-remarks')
+project_router.register(r'tactical-solutions', TacticalSolutionViewSet, basename='project-tactical-solutions')
+project_router.register(r'time-dimensions', TimeDimensionViewSet, basename='project-time-dimensions')
 
-# Nested router for historical data within a metric
+
+# Nested router for metric-related entities
 metric_router = routers.NestedSimpleRouter(project_router, r'metrics', lookup='metric')
-metric_router.register(r'historical-data', HistoricalDataViewSet,  basename='metric-historical-data')
-metric_router.register(r'forecast', ForecastViewSet,  basename='metric-forecast')
-metric_router.register(r'anomaly', AnomalyViewSet,  basename='metric-anomaly')
-metric_router.register(r'trend', TrendViewSet,  basename='metric-trend')
-metric_router.register(r'action-remarks', ActionRemarkViewSet, basename='metric-action-remarks')
+metric_router.register(r'historical-data', HistoricalDataViewSet, basename='metric-historical-data')
+metric_router.register(r'metadata', MetricMetadataViewSet, basename='metric-metadata')
+metric_router.register(r'targets', MetricTargetViewSet, basename='metric-targets')
+metric_router.register(r'forecast', ForecastViewSet, basename='metric-forecast')
+metric_router.register(r'anomaly', AnomalyViewSet, basename='metric-anomaly')
+metric_router.register(r'trend', TrendViewSet, basename='metric-trend')
+metric_router.register(r'correlations', CorrelationViewSet, basename='metric-correlations')
+metric_router.register(r'connections', ConnectionViewSet, basename='metric-connections')
+metric_router.register(r'data-quality-scores', DataQualityScoreViewSet, basename='metric-data-quality-scores')
+
+
+# Router for non-nested viewsets
+router.register(r'users', CustomUserViewSet, basename='users')
+router.register(r'user-profiles', UserProfileViewSet, basename='user-profiles')
+router.register(r'teams', TeamViewSet, basename='teams')
 
 urlpatterns = [
     # Router URLs
@@ -37,7 +49,6 @@ urlpatterns = [
     path('', include(project_router.urls)),
     path('', include(metric_router.urls)),
 ]
-
 
 # Documentation for URL patterns
 """
@@ -50,63 +61,38 @@ URL Patterns:
 2. Project Level:
    - List/Create: /clients/{client_pk}/projects/
    - Retrieve/Update/Delete: /clients/{client_pk}/projects/{project_pk}/
+   
+   Project-related entities:
+   - Categories: /clients/{client_pk}/projects/{project_pk}/categories/
+   - Tags: /clients/{client_pk}/projects/{project_pk}/tags/
+   - Dashboards: /clients/{client_pk}/projects/{project_pk}/dashboards/
+   - Experiments: /clients/{client_pk}/projects/{project_pk}/experiments/
+   - Reports: /clients/{client_pk}/projects/{project_pk}/reports/
+   - Strategies: /clients/{client_pk}/projects/{project_pk}/strategies/
+   - Action Remarks: /clients/{client_pk}/projects/{project_pk}/action-remarks/
+   - Tactical Solutions: /clients/{client_pk}/projects/{project_pk}/tactical-solutions/
+   - Time Dimensions: /clients/{client_pk}/projects/{project_pk}/time-dimensions/
 
 3. Metric Level:
    - List/Create: /clients/{client_pk}/projects/{project_pk}/metrics/
    - Retrieve/Update/Delete: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/
    
-   Metric Actions:
-   - Analyze: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/analyze/
+   Metric-related entities:
    - Historical Data: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/
-   - Preprocess: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/preprocess/
-   - Manage Data: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/manage_data/
-   - Connections: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/connections/
-   - Action Remarks: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/action_remarks/
+   - Metadata: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/metadata/
    - Targets: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/targets/
-   - Reports: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/reports/
-   - Feedback: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/feedback/
-   - Visualization: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/visualization/
-   - Progress Tracking: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/progress_tracking/
+   - Forecast: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/forecast/
+   - Anomaly: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/anomaly/
+   - Trend: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/trend/
+   - Correlations: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/correlations/
+   - Connections: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/connections/
+   - Data Quality Scores: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/data-quality-scores/
 
-4. Dashboard Level:
-   - List/Create: /clients/{client_pk}/projects/{project_pk}/dashboards/
-   - Retrieve/Update/Delete: /clients/{client_pk}/projects/{project_pk}/dashboards/{dashboard_pk}/
-   
-   Dashboard Actions:
-   - Performance: /clients/{client_pk}/projects/{project_pk}/dashboards/performance/
-   - Decision Support: /clients/{client_pk}/projects/{project_pk}/dashboards/decision_support/
+4. Non-nested entities:
+   - Users: /users/
+   - User Profiles: /user-profiles/
+   - Teams: /teams/
 
-5. Experiment Level:
-   - List/Create: /clients/{client_pk}/projects/{project_pk}/experiments/
-   - Retrieve/Update/Delete: /clients/{client_pk}/projects/{project_pk}/experiments/{experiment_pk}/
-   
-   Experiment Actions:
-   - Run Experiment: /clients/{client_pk}/projects/{project_pk}/experiments/{experiment_pk}/run_experiment/
-
-6. Other Project-level Entities:
-   - Categories: /clients/{client_pk}/projects/{project_pk}/categories/
-   - Tags: /clients/{client_pk}/projects/{project_pk}/tags/
-   - Connections: /clients/{client_pk}/projects/{project_pk}/connections/
-   - Targets: /clients/{client_pk}/projects/{project_pk}/targets/
-   - Reports: /clients/{client_pk}/projects/{project_pk}/reports/
-
-7. Historical Data:
-   - List/Create: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/
-   - Retrieve/Update/Delete: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/{id}/
-   
-   Historical Data Actions:
-   - Bulk Import: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/bulk_import/
-   - Aggregated Views: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/aggregated_views/
-   - Advanced Statistics: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/advanced_statistics/
-
-8. Authentication:
-   - Obtain Token: /token/
-   - Refresh Token: /token/refresh/
-
-9. Health Check:
-   - Health Check: /health-check/
-   
-10. Forecast
-11. Anomaly
-12. Trends
+5. Home:
+   - Public Home: /
 """

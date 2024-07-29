@@ -10,6 +10,7 @@ import LoadingSpinner from '@/common/LoadingSpinner';
 const ClientSelector = () => {
   const dispatch = useDispatch();
   const clients = useSelector(selectAllClients);
+  const isAuthenticated = useSelector(state => state.user.isAuthenticated);
   const status = useSelector(selectClientsStatus);
   const error = useSelector(selectClientsError);
   const navigate = useNavigate();
@@ -35,8 +36,13 @@ const ClientSelector = () => {
   }, [error]);
 
   const handleClientSelect = (clientId) => {
-    dispatch(setCurrentClient(clientId));
-    navigate('/projects');
+    if (isAuthenticated) {
+      dispatch(setCurrentClient(clientId));
+      navigate('/projects');
+    } else {
+      // Handle unauthenticated state (e.g., redirect to login)
+      navigate('/login');
+    }
   };
 
   if (status === 'loading') {
