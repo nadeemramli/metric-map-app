@@ -2,7 +2,6 @@ import os
 import sys
 import time
 import uuid
-import time
 from io import StringIO
 from django.db import connection
 from django.test.runner import DiscoverRunner
@@ -11,16 +10,43 @@ from django_tenants.test.cases import TenantTestCase
 from django_tenants.test.client import TenantClient
 from django_tenants.utils import get_public_schema_name, schema_context, get_tenant_model, get_tenant_domain_model
 from rest_framework.test import APIClient
-from django_tenants.test.client import TenantClient
 from ..models import Client, Domain
 
 class TenantAPIClient(TenantClient, APIClient):
     pass
 
+class CustomTestResult(DiscoverRunner.test_runner.resultclass):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.test_run_name = None
+
+    def startTestRun(self):
+        super().startTestRun()
+        self._start_time = time.time()
+
+    def stopTestRun(self):
+        self._stop_time = time.time()
+        super().stopTestRun()
+
+    @property
+    def run_time(self):
+        return self._stop_time - self._start_time
+
 class CustomTenantTestRunner(DiscoverRunner):
     def setup_databases(self, **kwargs):
         connection.set_schema_to_public()
         return super().setup_databases(**kwargs)
+
+    def run_suite(self, suite, **kwargs):
+        test_run_name = kwargs.pop('test_run_name', None)
+        runner = self.test_runner(
+            verbosity=self.verbosity,
+            failfast=self.failfast,
+            resultclass=CustomTestResult,
+        )
+        result = runner.run(suite)
+        result.test_run_name = test_run_name
+        return result
 
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         self.setup_test_environment()
@@ -28,7 +54,8 @@ class CustomTenantTestRunner(DiscoverRunner):
         if extra_tests:
             for test in extra_tests:
                 suite.addTest(test)
-        old_config = self.setup_databases()
+        
+        test_run_name = test_labels[0] if test_labels else None  # Use the first test label as the run name
         
         connection.set_schema_to_public()
         
@@ -37,9 +64,8 @@ class CustomTenantTestRunner(DiscoverRunner):
         output = StringIO()
         sys.stdout = sys.stderr = output
         
-        start_time = time.time()
-        result = self.run_suite(suite)
-        time_taken = time.time() - start_time
+        old_config = self.setup_databases()
+        result = self.run_suite(suite, test_run_name=test_run_name)
         
         sys.stdout = old_stdout
         sys.stderr = old_stderr
@@ -51,9 +77,11 @@ class CustomTenantTestRunner(DiscoverRunner):
         output_dir = getattr(settings, 'TEST_OUTPUT_DIR', '.')
         os.makedirs(output_dir, exist_ok=True)
         timestamp = time.strftime("%Y%m%d-%H%M%S")
-        filename = os.path.join(output_dir, f'test_report_{timestamp}.txt')
+        test_name = getattr(result, 'test_run_name', None) or 'unknown'
+        filename = os.path.join(output_dir, f'test_report_{test_name}_{timestamp}.txt')
         with open(filename, 'w') as f:
-            f.write(f"Ran {suite.countTestCases()} tests in {time_taken:.3f} seconds\n\n")
+            f.write(f"Test Run: {test_name}\n")
+            f.write(f"Ran {suite.countTestCases()} tests in {getattr(result, 'run_time', 0):.3f} seconds\n\n")
             f.write(output.getvalue())
             f.write(f"\nTest Result: {'Success' if result.wasSuccessful() else 'Failure'}\n")
             f.write(f"Errors: {len(result.errors)}\n")
@@ -63,40 +91,6 @@ class CustomTenantTestRunner(DiscoverRunner):
         
         return result
 
-""""
-class MetricsTestCase(TenantTestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.public_schema_name = get_public_schema_name()
-        connection.set_schema_to_public()
-        
-        # Use a unique schema name for each test run
-        cls.schema_name = f'test_{uuid.uuid4().hex[:10]}'
-        
-        # Create the tenant with the unique schema name
-        cls.tenant = get_tenant_model()(schema_name=cls.schema_name)
-        cls.tenant.save()
-
-        # Create the tenant's domain
-        domain = get_tenant_domain_model()(tenant=cls.tenant, domain=f'{cls.schema_name}.localhost', is_primary=True)
-        domain.save()
-
-        # Now call super().setUpClass()
-        super().setUpClass()
-
-    @classmethod
-    def tearDownClass(cls):
-        connection.set_schema_to_public()
-        # Make sure to delete the tenant and its related objects
-        if hasattr(cls, 'tenant'):
-            cls.tenant.delete(force_drop=True)
-        super().tearDownClass()
-
-    def setUp(self):
-        self.client = TenantAPIClient(self.tenant)
-        connection.set_tenant(self.tenant)
-        super().setUp()
-"""
 class MetricsTestCase(TenantTestCase):
     @classmethod
     def setUpClass(cls):

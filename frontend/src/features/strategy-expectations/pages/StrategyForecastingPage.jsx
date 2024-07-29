@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { fetchMetrics, selectAllMetrics, selectInsightsByMetricId } from '@/store/slices/metricsSlice';
-import { selectAllConnections, fetchConnections } from '@/store/slices/connectionsSlice';
+import { selectAllConnections, fetchMetricConnections } from '@/store/slices/connectionsSlice';
 import { selectActionRemarksByMetricId, fetchActionRemarks } from '@/store/slices/actionRemarksSlice';
 
 const ChartTypes = {
@@ -25,7 +25,7 @@ const StrategyForecastingPage = () => {
 
   useEffect(() => {
     dispatch(fetchMetrics({ clientId, projectId }));
-    dispatch(fetchConnections({ clientId, projectId }));
+    dispatch(fetchMetricConnections({ clientId, projectId }));
     dispatch(fetchActionRemarks({ clientId, projectId }));
   }, [dispatch, clientId, projectId]);
 

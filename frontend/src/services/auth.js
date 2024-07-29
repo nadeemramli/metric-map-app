@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { API_BASE_URL } from './config';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
 
 const authApi = axios.create({
   baseURL: API_BASE_URL,
@@ -22,10 +24,18 @@ export const login = async (credentials) => {
   }
 };
 
-export const logout = () => {
-  localStorage.removeItem('token');
-  delete authApi.defaults.headers.common['Authorization'];
-};
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      // Call logout API if needed
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 
 export const refreshToken = async () => {
   const refreshToken = localStorage.getItem('refreshToken');

@@ -1,8 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as api from '@/services/api.js';
 
-export const fetchMetrics = createAsyncThunk('metrics/fetchMetrics', 
-  async ({ clientId, projectId }) => await api.fetchMetrics(clientId, projectId)
+export const fetchMetrics = createAsyncThunk(
+  'metrics/fetchMetrics',
+  async ({ clientId, projectId }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.fetchMetrics(clientId, projectId);
+      console.log('API Response:', response);  // Debug API response
+      return response;
+    } catch (err) {
+      console.error('API Fetch Error:', err);
+      return rejectWithValue(err.response.data);
+    }
+  }
 );
 
 export const createMetric = createAsyncThunk('metrics/createMetric', 
@@ -80,6 +90,7 @@ export const updateMetricPosition = createAsyncThunk(
 const metricsSlice = createSlice({
   name: 'metrics',
   initialState: {
+    metricsData: null,
     metrics: [],
     connections: [],
     historicalData: {},
@@ -181,21 +192,19 @@ export const { setMetrics, setConnections } = metricsSlice.actions;
 
 export const { setCurrentProject } = metricsSlice.actions;
 
-// Export a selector to get all metrics
-export const selectAllMetrics = (state) => state.metrics.metrics;
+export const selectAllMetrics = (state) => state.metrics.metricsData;
 
-// Export a selector to get a specific metric by ID
 export const selectMetricById = (state, metricId) => 
-state.metrics.metrics.find(metric => metric.id === metricId);
+  state.metrics.metricsData?.results.find(metric => metric.id === metricId);
 
-// Export a selector to get historical data for a specific metric
 export const selectHistoricalDataByMetricId = (state, metricId) => 
-state.metrics.historicalData[metricId] || [];
+  state.metrics.historicalData[metricId] || [];
 
-export const selectPerformanceMetrics = (state, metricId) => state.metrics.performanceMetrics[metricId];
+export const selectPerformanceMetrics = (state, metricId) => 
+  state.metrics.performanceMetrics[metricId];
 
-export const SelectMetricsByProject = (state) => 
-  state.metrics.metrics.filter(metric => metric.projectId === state.metrics.currentProjectId);
+export const selectMetricsByProject = (state) => 
+  state.metrics.metricsData?.results.filter(metric => metric.projectId === state.metrics.currentProjectId);
 
 export const selectAllConnections = (state) => state.metrics.connections;
 
@@ -205,5 +214,4 @@ export const selectActionRemarksByMetricId = (state, metricId) =>
 export const selectInsightsByMetricId = (state, metricId) =>
   state.metrics.insights.filter(insight => insight.metricId === metricId);
 
-// Export the reducer
 export default metricsSlice.reducer;

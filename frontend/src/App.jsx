@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,6 +26,7 @@ import { logout } from './store/slices/userSlice';
 const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.user.isAuthenticated);
+  const currentProjectId = useSelector(state => state.user.currentProjectId);
 
   useEffect(() => {
     setupInterceptors();
@@ -64,16 +65,16 @@ const App = () => {
                     <Route element={<ProtectedRoute requiredClient />}>
                       <Route path="/projects" element={<ProjectManagementPage />} />
                       
-                      <Route element={<ProtectedRoute requiredProject />}>
-                        <Route path="/dashboard" element={<MainDashboardPage />} />
-                        <Route path="/metrics" element={<MetricsManagementPage />} />
-                        <Route path="/metrics/new" element={<MetricDetailsPage />} />
+                      <Route element={<ProtectedRoute requiredProject currentProjectId={currentProjectId} />}>
+                        <Route path="/dashboard" element={<MainDashboardPage currentProjectId={currentProjectId}/>} />
+                        <Route path="/metrics" element={<MetricsManagementPage currentProjectId={currentProjectId}/>} />
+                        <Route path="/metrics/new" element={<MetricDetailsPage currentProjectId={currentProjectId}/>} />
                         <Route path="/metrics/:metricId" element={<MetricDetailsPage />} />
-                        <Route path="/metrics/:metricId/historical-data" element={<HistoricalDataManagementPage />} />
-                        <Route path="/strategy" element={<StrategyForecastingPage />} />
-                        <Route path="/execution" element={<ExecutionPage />} />
-                        <Route path="/relationships" element={<RelationshipsVisualizationPage />} />
-                        <Route path="/settings" element={<SettingsPage />} />
+                        <Route path="/metrics/:metricId/historical-data" element={<HistoricalDataManagementPage currentProjectId={currentProjectId}/>} />
+                        <Route path="/strategy" element={<StrategyForecastingPage currentProjectId={currentProjectId}/>} />
+                        <Route path="/execution" element={<ExecutionPage currentProjectId={currentProjectId}/>} />
+                        <Route path="/relationships" element={<RelationshipsVisualizationPage currentProjectId={currentProjectId}/>} />
+                        <Route path="/settings" element={<SettingsPage currentProjectId={currentProjectId}/>} />
                       </Route>
                     </Route>
                   </Route>

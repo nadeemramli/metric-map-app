@@ -12,6 +12,44 @@ const api = axios.create({
   },
 });
 
+// Add a request interceptor
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = 'Bearer ' + token;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor to handle token refresh
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = localStorage.getItem('refreshToken');
+        const response = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, { refresh: refreshToken });
+        const { access } = response.data;
+        localStorage.setItem('token', access);
+        api.defaults.headers['Authorization'] = 'Bearer ' + access;
+        return api(originalRequest);
+      } catch (refreshError) {
+        // Handle refresh token failure (e.g., logout user)
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+
 // Ensure your axios instance is configured to send CSRF token. For auth purposes
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -100,10 +138,24 @@ export const addHistoricalData = (clientId, projectId, metricId, data) => apiCal
 export const addBulkHistoricalData = (clientId, projectId, metricId, dataArray) => apiCall('post', `/clients/${clientId}/projects/${projectId}/metrics/${metricId}/historical-data/bulk/`, dataArray);
 
 // Metric Connections
-export const fetchMetricConnections = (clientId, projectId) => apiCall('get', `/clients/${clientId}/projects/${projectId}/metric-connections/`);
-export const createMetricConnection = (clientId, projectId, connectionData) => apiCall('post', `/clients/${clientId}/projects/${projectId}/metric-connections/`, connectionData);
-export const updateMetricConnection = (clientId, projectId, connectionId, connectionData) => apiCall('put', `/clients/${clientId}/projects/${projectId}/metric-connections/${connectionId}/`, connectionData);
-export const deleteMetricConnection = (clientId, projectId, connectionId) => apiCall('delete', `/clients/${clientId}/projects/${projectId}/metric-connections/${connectionId}/`);
+export const fetchMetricConnections = (clientId, projectId, metricId) => {
+  if (!clientId || !projectId || !metricId) {
+    console.error(`Invalid parameters: clientId=${clientId}, projectId=${projectId}, metricId=${metricId}`);
+    return Promise.reject(new Error('Invalid clientId, projectId, or metricId'));
+  }
+  const url = `/clients/${clientId}/projects/${projectId}/metrics/${metricId}/connections/`;
+  console.log(`Fetching metric connections with URL: ${url}`);
+  return apiCall('get', url);
+};
+
+export const createMetricConnection = (clientId, projectId, metricId, connectionData) => 
+  apiCall('post', `/clients/${clientId}/projects/${projectId}/metrics/${metricId}/connections/`, connectionData);
+
+export const updateMetricConnection = (clientId, projectId, metricId, connectionId, connectionData) => 
+  apiCall('put', `/clients/${clientId}/projects/${projectId}/metrics/${metricId}/connections/${connectionId}/`, connectionData);
+
+export const deleteMetricConnection = (clientId, projectId, metricId, connectionId) => 
+  apiCall('delete', `/clients/${clientId}/projects/${projectId}/metrics/${metricId}/connections/${connectionId}/`);
 
 // Dashboard Management
 export const fetchDashboards = (clientId, projectId) => apiCall('get', `/clients/${clientId}/projects/${projectId}/dashboards/`);
