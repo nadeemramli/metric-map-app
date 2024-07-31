@@ -1,43 +1,56 @@
 # analyze.py
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple, Any
 
 import logging
 import numpy as np
 import pandas as pd
-from prophet import Prophet
-from scipy import stats
-from sklearn.impute import SimpleImputer
-from statsmodels.tsa.seasonal import seasonal_decompose
-from statsmodels.tsa.statespace.sarimax import SARIMAX
-from statsmodels.tsa.stattools import adfuller
 from scipy.stats import kendalltau
-from pmdarima import auto_arima
 from sklearn.linear_model import LinearRegression
-import networkx as nx
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction
-
-from ..models import (
-    Metric, DataQualityScore, HistoricalData, Anomaly, Trend, Forecast,
-    SeasonalityResult, TrendChangePoint, MovingAverage,
-    NetworkAnalysisResult, Connection, Correlation, TechnicalIndicator
-)
+from .data_preparation import get_prepared_data
+from .feature_engineering import FeatureEngineering
 
 logger = logging.getLogger(__name__)
 
 class Analyzer:
-    def __init__(self, df: pd.DataFrame, metadata: dict):
-        self.df = df
-        self.metadata = metadata
+    def __init__(self, metric_id: int):
+        self.metric_id = metric_id
+        self.df, self.metadata = get_prepared_data(metric_id)
+        self.fe = FeatureEngineering(metric_id)
+        self.features = self.fe.engineer_features()
+        self.dynamic_params = self.fe.compute_dynamic_parameters()
+        self.metric = self.fe.metric
+        self.tenant = self.metric.tenant
+        self.project = self.metric.project
 
-    def calculate_technical_indicators(self, window: int = 14) -> None:
-        """Calculate technical indicators for the metric.
-
-        Args:
-            window (int): The window size for calculating indicators.
-        """
+    def calculate_moving_averages(self) -> Dict[str, Dict[str, float]]:
         try:
+            windows = self.dynamic_params.get('ma_windows', [7, 14, 30, 90])
+            moving_averages = {}
+
+            for window in windows:
+                sma = self.df['value'].rolling(window=window).mean().iloc[-1]
+                ema = self.df['value'].ewm(span=window, adjust=False).mean().iloc[-1]
+                
+                # Calculate WMA
+                weights = np.arange(1, window + 1)
+                wma = self.df['value'].rolling(window=window).apply(lambda x: np.dot(x, weights) / weights.sum(), raw=True).iloc[-1]
+
+                moving_averages[f'{window}_day'] = {
+                    'SMA': sma,
+                    'EMA': ema,
+                    'WMA': wma
+                }
+
+            logger.info(f"Calculated moving averages for metric {self.metric_id}")
+            return moving_averages
+        except Exception as e:
+            logger.error(f"Error calculating moving averages for metric {self.metric_id}: {str(e)}")
+            raise
+
+    def calculate_technical_indicators(self) -> Dict[str, float]:
+        try:
+            window = self.dynamic_params.get('window_size', 14)
             # Stochastic Oscillator
             low_min = self.df['value'].rolling(window=window).min()
             high_max = self.df['value'].rolling(window=window).max()
@@ -51,66 +64,73 @@ class Analyzer:
             rs = gain / loss
             rsi = 100 - (100 / (1 + rs))
             
-            logger.info(f"Calculated technical indicators for metric {self.metric.id}")
+            latest_date = self.df.index[-1]
+            indicators = {
+                'date': latest_date,
+                'stochastic_k': k.iloc[-1],
+                'stochastic_d': d.iloc[-1],
+                'rsi': rsi.iloc[-1],
+                'percent_change': self.df['value'].pct_change(periods=window).iloc[-1] * 100,
+            }
+            
+            # Add moving averages
+            moving_averages = self.calculate_moving_averages()
+            for window, ma_values in moving_averages.items():
+                indicators.update({f'{window}_{ma_type}': value for ma_type, value in ma_values.items()})
+            
+            logger.info(f"Calculated technical indicators for metric {self.metric_id}")
+            return indicators
         except Exception as e:
-            logger.error(f"Error calculating technical indicators for metric {self.metric.id}: {str(e)}")
+            logger.error(f"Error calculating technical indicators for metric {self.metric_id}: {str(e)}")
             raise
 
-    def calculate_moving_averages(self, periods: List[int] = [10, 20, 50, 100, 200]) -> None:
-        """Calculate moving averages for the metric.
-
-        Args:
-            periods (List[int]): List of periods for which to calculate moving averages.
-        """
+    def analyze_trend(self) -> Dict[str, Any]:
         try:
-            MovingAverage.objects.filter(metric=self.metric, tenant=self.tenant, project=self.project).delete() # type: ignore
-            for period in periods:
-                sma = self.df['value'].rolling(window=period).mean()
-                ema = self.df['value'].ewm(span=period, adjust=False).mean()
-                weights = np.arange(1, period + 1)
-                wma = self.df['value'].rolling(window=period).apply(lambda x: np.dot(x, weights) / weights.sum(), raw=True)
-                
-            logger.info(f"Calculated and saved moving averages for metric {self.metric.id}")
-        except Exception as e:
-            logger.error(f"Error calculating moving averages for metric {self.metric.id}: {str(e)}")
-            raise
-
-    def analyze_trend(self, window: int = 30) -> None:
-        """Analyze the trend of the metric data."""
-        try:
-            if len(self.df) < window:
-                logger.warning(f"Not enough data for trend analysis for metric {self.metric.id}")
-                return
+            if len(self.df) < 2:
+                logger.warning(f"Not enough data for trend analysis for metric {self.metric_id}")
+                return {}
 
             ts = self.df['value']
+            
+            window_size = self.dynamic_params.get('trend_window_size', 14)
+            trend_threshold = self.dynamic_params.get('trend_threshold', 0.05)
+
+            # Calculate rolling mean
+            rolling_mean = ts.rolling(window=window_size).mean()
+
+            # Perform Mann-Kendall test
+            tau, p_value = kendalltau(ts.index, ts.values)
+
+            # Fit linear regression
             X = np.arange(len(ts)).reshape(-1, 1)
             y = ts.values.reshape(-1, 1)
-            
-            model = LinearRegression()
-            model.fit(X, y)
-            
-            slope = model.coef_[0][0]
-            intercept = model.intercept_[0]
-            r_squared = model.score(X, y)
-            
-            # Perform Mann-Kendall test for trend
-            tau, p_value = kendalltau(X.ravel(), y.ravel())
-            
-            # Determine trend type based on slope and Mann-Kendall test
-            alpha = 0.1  # significance level
-            if p_value < alpha:
-                trend_type = 'increasing' if tau > 0 else 'decreasing'
+            reg = LinearRegression().fit(X, y)
+            slope = reg.coef_[0][0]
+            r_squared = reg.score(X, y)
+
+            # Determine trend type
+            if p_value <= trend_threshold:
+                trend_type = 'Upward' if tau > 0 else 'Downward'
             else:
-                # If Mann-Kendall test is not significant, use the slope direction
-                trend_type = 'increasing' if slope > 0 else 'decreasing' if slope < 0 else 'stable'
-            
-            logger.info(f"Analyzed and saved trend for metric {self.metric.id}: {trend_type} (slope: {slope}, Mann-Kendall p-value: {p_value}, tau: {tau})")
+                trend_type = 'No significant trend'
+
+            trend_results = {
+                'trend_type': trend_type,
+                'start_date': self.df.index[0],
+                'end_date': self.df.index[-1],
+                'trend_value': ts.iloc[-1],
+                'slope': slope,
+                'notes': f'Mann-Kendall p-value: {p_value}, tau: {tau}, R-squared: {r_squared}'
+            }
+
+            logger.info(f"Analyzed trend for metric {self.metric_id}")
+            return trend_results
+
         except Exception as e:
-            logger.error(f"Error analyzing trend for metric {self.metric.id}: {str(e)}")
+            logger.error(f"Error analyzing trend for metric {self.metric_id}: {str(e)}")
             raise
 
-    def detect_trend_changes(self) -> None:
-        """Detect trend changes using Pettitt's test."""
+    def detect_trend_changes(self) -> List[Dict[str, Any]]:
         try:
             def pettitt_test(x: np.ndarray) -> Tuple[int, float]:
                 n = len(x)
@@ -125,31 +145,33 @@ class Analyzer:
             change_date = self.df.index[change_point]
             change_type = 'upward' if self.df['value'].iloc[change_point] < self.df['value'].iloc[change_point+1] else 'downward'
             
-            TrendChangePoint.objects.create(
-                metric=self.metric,
-                tenant=self.tenant,
-                date=change_date,
-                change_type=change_type,
-                significance=1 - p_value
-            ) # type: ignore
-            logger.info(f"Detected and saved trend change point for metric {self.metric.id}")
+            trend_change = {
+                'date': change_date,
+                'change_type': change_type,
+                'significance': 1 - p_value
+            }
+            
+            logger.info(f"Detected trend change point for metric {self.metric_id}")
+            return [trend_change]
         except Exception as e:
-            logger.error(f"Error detecting trend changes for metric {self.metric.id}: {str(e)}")
+            logger.error(f"Error detecting trend changes for metric {self.metric_id}: {str(e)}")
             raise
-     
-    def detect_seasonality(self) -> None:
-        """Detect seasonality in the metric data."""
+
+    def detect_seasonality(self) -> Dict[str, Any]:
         try:
             if len(self.df) < 2:
-                logger.warning(f"Not enough data for seasonality detection for metric {self.metric.id}")
-                return
+                logger.warning(f"Not enough data for seasonality detection for metric {self.metric_id}")
+                return {}
 
             ts = self.df['value']
             
+            # Use the seasonality period from dynamic parameters
+            period = self.dynamic_params.get('seasonality_period', 365)
+            
             # If we don't have enough data for seasonal_decompose, use a simpler method
-            if len(ts) < 728:
+            if len(ts) < 2 * period:
                 # Simple seasonality strength estimation
-                seasonal_diff = ts.diff(365).dropna()
+                seasonal_diff = ts.diff(period).dropna()
                 trend_diff = ts.diff().dropna()
                 
                 if len(seasonal_diff) > 0 and len(trend_diff) > 0:
@@ -157,17 +179,19 @@ class Analyzer:
                     seasonality_strength = max(0, min(seasonality_strength, 1))  # Ensure strength is between 0 and 1
                 else:
                     seasonality_strength = 0
-                
-                period = 365
             else:
-                result = seasonal_decompose(ts, model='additive', period=365)
+                from statsmodels.tsa.seasonal import seasonal_decompose
+                result = seasonal_decompose(ts, model='additive', period=period)
                 seasonality_strength = 1 - np.var(result.resid) / np.var(result.seasonal + result.resid)
-                period = 365
 
-                logger.info(f"Detected and saved seasonality for metric {self.metric.id} with strength {seasonality_strength}")
-            else:
-                logger.info(f"No significant seasonality detected for metric {self.metric.id}")
+            seasonality_result = {
+                'seasonality_strength': seasonality_strength,
+                'period': period
+            }
+
+            logger.info(f"Detected seasonality for metric {self.metric_id} with strength {seasonality_strength}")
+            return seasonality_result
 
         except Exception as e:
-            logger.error(f"Error detecting seasonality for metric {self.metric.id}: {str(e)}")
+            logger.error(f"Error detecting seasonality for metric {self.metric_id}: {str(e)}")
             raise
