@@ -6,29 +6,37 @@ from scipy import stats
 import networkx as nx
 from typing import List, Dict, Tuple
 import logging
+from .data_preparation import get_prepared_data
+from .feature_engineering import FeatureEngineering
 
 logger = logging.getLogger(__name__)
 
 class RelationshipAnalyzer:
-    def __init__(self, metrics_data: Dict[int, pd.DataFrame], metadata: Dict[int, dict]):
-        """
-        Initialize the RelationshipComputer.
+    def __init__(self, metric_id: int):
+        self.metric_id = metric_id
+        self.df, self.metadata = get_prepared_data(metric_id)
+        self.fe = FeatureEngineering(metric_id)
+        self.features = self.fe.engineer_features()
+        self.dynamic_params = self.fe.compute_dynamic_parameters()
+        self.metric = self.fe.metric
 
-        Args:
-        metrics_data (Dict[int, pd.DataFrame]): A dictionary of DataFrames, keyed by metric_id
-        metadata (Dict[int, dict]): A dictionary of metadata for each metric, keyed by metric_id
-        """
-        self.metrics_data = metrics_data
-        self.metadata = metadata
+    def analyze_relationships(self, other_metric_ids: List[int]):
+        correlation_type = self.dynamic_params.get('correlation_type', 'pearson')
+        # Implement relationship analysis using the correlation_type
+        pass
 
-    def calculate_correlation(self, metric_id1: int, metric_id2: int, correlation_type: str = 'pearson') -> Dict[str, float]:
+    def detect_lagged_relationships(self, other_metric_ids: List[int]):
+        max_lag = self.dynamic_params.get('max_lag', 30)
+        # Implement lagged relationship detection using max_lag
+        pass
+
+    def calculate_correlation(self, metric_id1: int, metric_id2: int) -> Dict[str, float]:
         """
         Calculate correlation between two metrics.
 
         Args:
         metric_id1 (int): ID of the first metric
         metric_id2 (int): ID of the second metric
-        correlation_type (str): Type of correlation to calculate ('pearson' or 'spearman')
 
         Returns:
         Dict[str, float]: Dictionary containing correlation and p-value
@@ -42,6 +50,7 @@ class RelationshipAnalyzer:
             df1 = df1.loc[common_index]
             df2 = df2.loc[common_index]
 
+            correlation_type = self.dynamic_params[metric_id1].get('correlation_type', 'pearson')
             if correlation_type == 'pearson':
                 corr, p_value = stats.pearsonr(df1['value'], df2['value'])
             elif correlation_type == 'spearman':
@@ -73,7 +82,7 @@ class RelationshipAnalyzer:
             except Exception as e:
                 logger.error(f"Error analyzing connections for metric {self.metric.id}: {str(e)}")
 
-    def calculate_lagged_correlation(self, metric_id1: int, metric_id2: int, max_lag: int = 10) -> List[Dict[str, float]]:
+    def calculate_lagged_correlation(self, metric_id1: int, metric_id2: int) -> List[Dict[str, float]]:
         """
         Calculate lagged correlations between two metrics.
 
@@ -89,12 +98,13 @@ class RelationshipAnalyzer:
             df1 = self.metrics_data[metric_id1]
             df2 = self.metrics_data[metric_id2]
 
+            max_lag = self.dynamic_params.get('max_lag', 10)
             results = []
             for lag in range(-max_lag, max_lag + 1):
                 if lag < 0:
                     corr, p_value = df1['value'].corr(df2['value'].shift(-lag)), 0  # p-value calculation omitted for simplicity
                 else:
-                    corr, p_value = df1['value'].corr(df2['value'].shift(lag)), 0  # p-value calculation omitted for simplicity
+                    corr, p_value = df2['value'].corr(df1['value'].shift(-lag)), 0  # p-value calculation omitted for simplicity
                 results.append({'lag': lag, 'correlation': corr, 'p_value': p_value})
 
             logger.info(f"Calculated lagged correlations between metrics {metric_id1} and {metric_id2}")

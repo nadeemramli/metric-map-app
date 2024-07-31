@@ -4,21 +4,21 @@ from typing import Dict, Tuple, Any
 import numpy as np
 import pandas as pd
 from scipy import stats
-from statsmodels.tsa.seasonal import seasonal_decompose, STL
-from sklearn.impute import SimpleImputer
+from sklearn.impute import SimpleImputer, KNNImputer
 from django.core.exceptions import ObjectDoesNotExist
 from utils import log_exceptions, validate_metadata, safe_divide
 from config import config
 from ..models import ( Metric, DataQualityScore, HistoricalData )
 from django.db import transaction
-import logging
 from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.seasonal import seasonal_decompose
+import logging
 
 logger = logging.getLogger(__name__)
 
 class DataPreparation:
     def __init__(self, metric_id: int):
-        """Initialize the PermanentComputations object.
+        """Initialize the DataPreparation object.
 
         Args:
             metric_id (int): The ID of the metric to perform computations on.
@@ -29,10 +29,8 @@ class DataPreparation:
         self.project = None
         self._load_metric()  # This will set self.metric, self.tenant, and self.project
         self.raw_df = self._load_historical_data()
-        self.df = None
-        self.params = self._compute_parameters()
-        self.data_quality_score = None
-        self.outliers = None
+        self.cleaned_df = None
+        self.metadata = self._initialize_metadata()
 
     @log_exceptions
     def _load_metric(self) -> None:
@@ -45,12 +43,33 @@ class DataPreparation:
             logger.error(f"Metric with id {self.metric_id} does not exist")
             raise ValueError(f"Invalid metric_id: {self.metric_id}")
 
+    def _initialize_metadata(self) -> Dict[str, Any]:
+        return {
+            'metric_id': self.metric_id,
+            'tenant_id': self.tenant.id,
+            'project_id': self.project.id,
+            'metric_name': self.metric.name,
+            'value_type': self.metric.value_type
+        }
+
     def _validate_data(self) -> None:
         if not isinstance(self.raw_df.index, pd.DatetimeIndex):
             raise ValueError("DataFrame index must be a DatetimeIndex")
         if 'value' not in self.raw_df.columns:
             raise ValueError("DataFrame must have a 'value' column")
-    
+        
+        # Check for data integrity
+        if self.raw_df.empty:
+            logger.warning(f"No data available for metric {self.metric_id}")
+            raise ValueError("No data available for processing")
+        
+        # Verify referential integrity
+        unique_tenants = self.raw_df['tenant_id'].nunique()
+        unique_projects = self.raw_df['project_id'].nunique()
+        if unique_tenants != 1 or unique_projects != 1:
+            logger.error(f"Data integrity issue: multiple tenants or projects found for metric {self.metric_id}")
+            raise ValueError("Data integrity violation: multiple tenants or projects found")
+
     @log_exceptions
     def _load_historical_data(self):
         try:
@@ -58,7 +77,7 @@ class DataPreparation:
                 metric=self.metric,
                 tenant=self.tenant,
                 metric__project=self.project
-            ).values('date', 'value')
+            ).values('date', 'value', 'tenant_id', 'project_id')
             df = pd.DataFrame(historical_data)
             if df.empty:
                 logger.warning(f"No historical data found for metric {self.metric_id}")
@@ -67,68 +86,42 @@ class DataPreparation:
             df.set_index('date', inplace=True)
             df.sort_index(inplace=True)
             return df
-        except ObjectDoesNotExist:
-            logger.error(f"Metric with id {self.metric_id} does not exist")
-            raise ValueError(f"Invalid metric_id: {self.metric_id}")
         except Exception as e:
             logger.error(f"Error loading historical data for metric {self.metric_id}: {str(e)}")
             return pd.DataFrame()
-    
-    def _compute_parameters(self) -> Dict[str, Any]:
-        return {
-            'imputation_method': 'mean' if self.raw_df['value'].isnull().sum() / len(self.raw_df) < 0.1 else 'interpolate',
-            'outlier_method': 'iqr' if self.raw_df['value'].skew() < 1 else 'zscore',
-            'outlier_threshold': 1.5 if self.raw_df['value'].kurtosis() < 3 else 3
-        }
-    
-    @log_exceptions
-    def prepare_data(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
-        """Prepare data for computations."""
-        if self.raw_df.empty:
-            logger.error(f"No data available for metric {self.metric_id}")
-            raise ValueError("No historical data available for this metric")
-        
-        self.handle_missing_values()
-        self.handle_outliers()
-        self.calculate_data_quality_score()
-        
-        metadata = {
-            'metric_id': self.metric_id,
-            'tenant_id': self.metric.tenant.id,
-            'project_id': self.metric.project.id,
-            'metric_name': self.metric.name,
-            'data_quality_score': self.data_quality_score.overall_score if self.data_quality_score else None
-        }
-        
-        if not validate_metadata(metadata, ['metric_id', 'tenant_id', 'project_id', 'metric_name']):
-            logger.warning(f"Incomplete metadata for metric {self.metric_id}")
-        
-        return self.df, metadata
 
-    def check_missing_values(self) -> None:
-        missing_values = self.raw_df['value'].isnull().sum()
-        if missing_values > 0:
-            logger.warning(f"Found {missing_values} missing values in the data")
+    def _normalize_data(self):
+        if self.metric.value_type == 'percentage':
+            self.raw_df['value'] = self.raw_df['value'].astype(float) / 100
+        elif self.metric.value_type == 'currency':
+            self.raw_df['value'] = self.raw_df['value'].astype(float)
+        # Add more normalization logic as needed
 
     @log_exceptions
     def handle_missing_values(self) -> None:
-        if self.params['imputation_method'] == 'mean':
+        missing_pct = self.raw_df['value'].isnull().sum() / len(self.raw_df) * 100
+        logger.info(f"Found {missing_pct:.2f}% missing values in the data")
+
+        if missing_pct < 5:
+            imputation_method = 'mean'
             imputer = SimpleImputer(strategy='mean')
-            imputed_values = imputer.fit_transform(self.raw_df)
-            self.df = pd.DataFrame(imputed_values, columns=self.raw_df.columns, index=self.raw_df.index)
+        elif missing_pct < 15:
+            imputation_method = 'interpolate'
+            self.raw_df['value'] = self.raw_df['value'].interpolate(method='time')
         else:
-            self.df = self.raw_df.interpolate()
-        
-        # Update the database with imputed values
-        self._update_database_with_imputed_values()
-        
-        logger.info(f"Handled missing values for metric {self.metric_id}")
-    
+            imputation_method = 'knn'
+            imputer = KNNImputer(n_neighbors=5)
+
+        if imputation_method in ['mean', 'knn']:
+            self.raw_df['value'] = imputer.fit_transform(self.raw_df[['value']])
+
+        logger.info(f"Handled missing values using {imputation_method} method")
+
     @log_exceptions
     def _update_database_with_imputed_values(self) -> None:
         try:
             with transaction.atomic():
-                for index, row in self.df.iterrows():
+                for index, row in self.raw_df.iterrows():
                     HistoricalData.objects.update_or_create(
                         metric=self.metric,
                         tenant=self.tenant,
@@ -139,69 +132,52 @@ class DataPreparation:
         except Exception as e:
             logger.error(f"Failed to update database with imputed values for metric {self.metric_id}: {str(e)}")
             raise
-    
+
     def handle_outliers(self) -> None:
-        """Detect outliers in the data.
+        Q1 = self.raw_df['value'].quantile(0.25)
+        Q3 = self.raw_df['value'].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        
+        self.raw_df['value'] = np.clip(self.raw_df['value'], lower_bound, upper_bound)
+        logger.info("Handled outliers using IQR method")
 
-        Args:
-            method (str): Method to use for outlier detection. Either 'iqr' or 'zscore'.
+    def handle_extreme_values(self) -> None:
+        lower_bound = self.raw_df['value'].quantile(0.01)
+        upper_bound = self.raw_df['value'].quantile(0.99)
+        self.raw_df['value'] = np.clip(self.raw_df['value'], lower_bound, upper_bound)
+        logger.info("Handled extreme values by capping at 1st and 99th percentiles")
 
-        Returns:
-            pd.DataFrame: DataFrame containing outliers.
-        """
-        try:
-            if self.params['outlier_method'] == 'iqr':
-                q1 = self.raw_df['value'].quantile(0.25)
-                q3 = self.raw_df['value'].quantile(0.75)
-                iqr = q3 - q1
-                lower_bound = q1 - self.params['outlier_threshold'] * iqr
-                upper_bound = q3 + self.params['outlier_threshold'] * iqr
-                self.df = self.df[(self.df['value'] >= lower_bound) & (self.df['value'] <= upper_bound)]
-            elif self.params['outlier_method'] == 'zscore':
-                z_scores = np.abs((self.df['value'] - self.df['value'].mean()) / self.df['value'].std())
-                self.df = self.df[z_scores < self.params['outlier_threshold']]
-            else:
-                raise ValueError("Method must be either 'iqr' or 'zscore'")
-            
-            logger.info(f"Detected {len(self.df)} outliers for metric {self.metric_id}")
-            return self.df
-        except Exception as e:
-            logger.error(f"Error detecting outliers for metric {self.metric_id}: {str(e)}")
-            raise
+    def calculate_data_quality_score(self) -> float:
+        completeness = 1 - (self.raw_df['value'].isnull().sum() / len(self.raw_df))
+        accuracy = 1 - (len(self.cleaned_df) / len(self.raw_df))
+        consistency = self._calculate_consistency_score()
+        timeliness = safe_divide(1, 1 + np.log1p((pd.Timestamp.now() - self.cleaned_df.index.max()).days))
+        
+        overall_score = np.mean([completeness, accuracy, consistency, timeliness]) * 100
+        
+        self.data_quality_score, _ = DataQualityScore.objects.update_or_create(
+            metric=self.metric,
+            tenant=self.metric.tenant,
+            project=self.metric.project,
+            defaults={
+                'data_entry': f"Metric_{self.metric_id}",
+                'completeness_score': completeness * 100,
+                'accuracy_score': accuracy * 100,
+                'consistency_score': consistency * 100,
+                'timeliness_score': timeliness * 100,
+                'overall_score': overall_score
+            }
+        )
+        logger.info(f"Calculated data quality score for metric {self.metric_id}: {overall_score:.2f}%")
+        return overall_score
 
-    def calculate_data_quality_score(self) -> None:
-        try:
-            completeness = 1 - (self.raw_df['value'].isnull().sum() / len(self.raw_df))
-            accuracy = 1 - (len(self.df) / len(self.raw_df))
-            consistency = self._calculate_consistency_score()
-            timeliness = safe_divide(1, 1 + np.log1p((pd.Timestamp.now() - self.df.index.max()).days))
-            
-            overall_score = np.mean([completeness, accuracy, consistency, timeliness])
-            
-            self.data_quality_score, _ = DataQualityScore.objects.update_or_create(
-                metric=self.metric,
-                tenant=self.metric.tenant,
-                project=self.metric.project,
-                defaults={
-                    'data_entry': f"Metric_{self.metric_id}",
-                    'completeness_score': completeness,
-                    'accuracy_score': accuracy,
-                    'consistency_score': consistency,
-                    'timeliness_score': timeliness,
-                    'overall_score': overall_score
-                }
-            )
-            logger.info(f"Calculated data quality score for metric {self.metric_id}")
-        except Exception as e:
-            logger.error(f"Error calculating data quality score for metric {self.metric_id}: {str(e)}")
-            raise
-    
     def _calculate_consistency_score(self) -> float:
         trend_consistency = self._calculate_trend_consistency()
         volatility_score = self._calculate_volatility_score()
         seasonality_consistency = self._calculate_seasonality_consistency()
         
-        # Combine the scores, giving more weight to trend consistency and volatility
         consistency_score = (0.4 * trend_consistency + 
                              0.4 * volatility_score + 
                              0.2 * seasonality_consistency)
@@ -209,83 +185,88 @@ class DataPreparation:
         return consistency_score
 
     def _calculate_trend_consistency(self) -> float:
-        # Use linear regression to check how well the data follows a consistent trend
-        x = np.arange(len(self.df)).reshape(-1, 1)
-        y = self.df['value'].values
+        x = np.arange(len(self.cleaned_df)).reshape(-1, 1)
+        y = self.cleaned_df['value'].values
         _, _, r_value, _, _ = stats.linregress(x.flatten(), y)
-        return r_value ** 2  # R-squared value as a measure of trend consistency
+        return r_value ** 2
 
     def _calculate_volatility_score(self) -> float:
-        # Calculate the coefficient of variation (lower is better)
-        cv = self.df['value'].std() / self.df['value'].mean()
-        # Convert to a score where higher is better
+        cv = self.cleaned_df['value'].std() / self.cleaned_df['value'].mean()
         return 1 / (1 + cv)
 
     def _calculate_seasonality_consistency(self) -> float:
-        if len(self.df) < 2:  # Not enough data for seasonality analysis
+        if len(self.cleaned_df) < 2:
             return 1.0
         
         try:
-            # Try to decompose the time series
-            result = seasonal_decompose(self.df['value'], model='additive', period=self._detect_seasonality())
-            # Calculate the strength of seasonality
+            result = seasonal_decompose(self.cleaned_df['value'], model='additive', period=self._detect_seasonality())
             seasonality_strength = 1 - np.var(result.resid) / np.var(result.observed - result.trend)
-            return max(0, min(seasonality_strength, 1))  # Ensure the score is between 0 and 1
+            return max(0, min(seasonality_strength, 1))
         except Exception as e:
             logger.warning(f"Error in seasonality calculation for metric {self.metric_id}: {str(e)}")
-            return 1.0  # Default to 1.0 if seasonality can't be calculated
+            return 1.0
 
     def _detect_seasonality(self) -> int:
-        # Simple seasonality detection using autocorrelation
-        if len(self.df) < 4:  # Not enough data for autocorrelation
+        if len(self.cleaned_df) < 4:
             return 1
         
-        acf = pd.Series(self.df['value']).autocorr(lag=1000)
+        acf = pd.Series(self.cleaned_df['value']).autocorr(lag=1000)
         peaks = np.where((acf[1:] > acf[:-1]) & (acf[1:] > acf[2:]))[0] + 1
         
         if len(peaks) > 0:
             return int(peaks[0])
         
-        potential_periods = [7, 12, 52, 365]  # weekly, monthly, yearly for daily data
+        potential_periods = [7, 12, 52, 365]
         max_acf = 0
         best_period = 1
         
         for period in potential_periods:
-            if len(self.df) > 2 * period:
-                acf = self.df['value'].autocorr(lag=period)
+            if len(self.cleaned_df) > 2 * period:
+                acf = self.cleaned_df['value'].autocorr(lag=period)
                 if acf > max_acf:
                     max_acf = acf
                     best_period = period
         return best_period
 
-    def decompose_time_series(self) -> Dict[str, pd.Series]:
-        stl = STL(self.df['value'], period=self._detect_seasonality())
-        result = stl.fit()
-        return {
-            'trend': result.trend,
-            'seasonal': result.seasonal,
-            'residual': result.resid
-        }
-
-    def get_data_profile(self) -> Dict[str, float]:
-        profile = super().get_data_profile()
-        profile.update({
-            "count": len(self.df),
-            "mean": self.df['value'].mean(),
-            "median": self.df['value'].median(),
-            "std": self.df['value'].std(),
-            "min": self.df['value'].min(),
-            "max": self.df['value'].max(),
-            "skew": self.df['value'].skew(),
-            "kurtosis": self.df['value'].kurtosis(),
-            "q1": self.df['value'].quantile(0.25),
-            "q3": self.df['value'].quantile(0.75),
-            "iqr": self.df['value'].quantile(0.75) - self.df['value'].quantile(0.25),
-            "autocorrelation": self.df['value'].autocorr(),
-            "is_stationary": self._check_stationarity()
-        })
-        return profile
-    
-    def _check_stationarity(self) -> bool:
-        result = adfuller(self.df['value'].dropna())
+    def check_stationarity(self) -> bool:
+        result = adfuller(self.cleaned_df['value'].dropna())
         return result[1] <= 0.05  # p-value <= 0.05 indicates stationarity
+
+    @log_exceptions
+    def prepare_data(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        """Prepare data for computations."""
+        if self.raw_df.empty:
+            logger.error(f"No data available for metric {self.metric_id}")
+            raise ValueError("No historical data available for this metric")
+        
+        self._validate_data()
+        self._normalize_data()
+        self.handle_missing_values()
+        self._update_database_with_imputed_values()
+        self.handle_outliers()
+        self.handle_extreme_values()
+        
+        self.cleaned_df = self.raw_df.copy()
+        
+        data_quality_score = self.calculate_data_quality_score()
+        if data_quality_score < 30:
+            logger.warning(f"Data quality score ({data_quality_score:.2f}%) is below threshold. Stopping processing.")
+            raise ValueError("Data quality is insufficient for further processing")
+
+        is_stationary = self.check_stationarity()
+        self.metadata['is_stationary'] = is_stationary
+        
+        if not validate_metadata(self.metadata, ['metric_id', 'tenant_id', 'project_id', 'metric_name', 'is_stationary']):
+            logger.warning(f"Incomplete metadata for metric {self.metric_id}")
+        
+        return self.cleaned_df, self.metadata
+
+    def get_cleaned_data(self):
+        if self.cleaned_df is None:
+            self.cleaned_df, _ = self.prepare_data()
+        return self.cleaned_df
+
+def get_prepared_data(metric_id: int):
+    data_prep = DataPreparation(metric_id)
+    cleaned_df, metadata = data_prep.prepare_data()
+    return cleaned_df, metadata
