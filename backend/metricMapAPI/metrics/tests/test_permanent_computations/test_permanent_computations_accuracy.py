@@ -2,28 +2,51 @@ import logging
 import unittest
 from django.test import TestCase
 from django.utils import timezone
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from unittest.mock import patch, MagicMock
 import pandas as pd
 import numpy as np
+from scipy import stats
+import time
+from datetime import timedelta
 
-from ...models import (Metric, HistoricalData, Anomaly, Trend, 
-                      Forecast, SeasonalityResult, Client, Domain, Project, MetricType, ValueType)
-
+from ...models import (
+    Client, Domain, Project, Metric, HistoricalData, SeasonalityResult,
+    Forecast, Anomaly, Trend, Correlation, MetricType, ValueType
+)
 from ...computations.permanent_computations import PermanentComputations
+from ...computations.data_preparation import DataPreparation
+from ...computations.feature_engineering import FeatureEngineering
+from ...computations.computations_analyzer import Analyzer
+from ...computations.computations_forecaster import Forecaster
+from ...computations.computations_anomalies import AnomalyDetector
+from ...computations.computations_relationships import RelationshipAnalyzer
 
 logger = logging.getLogger(__name__)
 
 class TestPermanentComputationsAccuracy(TestCase):
     def setUp(self):
+        print("Starting setUp")
         # Create a test tenant
-        self.tenant = Client.objects.create(name="Test Tenant", schema_name="test_tenant")
-        Domain.objects.create(domain="test.localhost", tenant=self.tenant, is_primary=True)
+        self.tenant = Client.objects.create(
+            name="Test Tenant",
+            schema_name="test_tenant",
+        )
+        logger.info(f"Created test tenant: {self.tenant}")
+        
+        # Create a domain for the tenant
+        self.domain = Domain.objects.create(
+            domain="test.localhost",
+            tenant=self.tenant,
+            is_primary=True
+        )
+        logger.info(f"Created domain: {self.domain}")
         
         # Create a test project
         self.project = Project.objects.create(name="Test Project", tenant=self.tenant)
+        logger.info(f"Created test project: {self.project}")
         
-        # Create a test metric
+        # Create a test metric with the tenant and project
         self.metric = Metric.objects.create(
             tenant=self.tenant,
             project=self.project,
@@ -31,137 +54,181 @@ class TestPermanentComputationsAccuracy(TestCase):
             type=MetricType.KPI.name,
             value_type=ValueType.COUNT.name
         )
+        logger.info(f"Created test metric: {self.metric}")
         
-        # Generate fake historical data
-        self.start_date = timezone.now().date() - timezone.timedelta(days=365)
-        self.dates = [self.start_date + timezone.timedelta(days=i) for i in range(365)]
-        self.values = self.generate_benchmark_data()
+        self.related_metric = Metric.objects.create(
+            tenant=self.tenant,
+            project=self.project,
+            name="Related Test Metric",
+            type=MetricType.KPI.name,
+            value_type=ValueType.COUNT.name
+        )
+        logger.info(f"Created related test metric: {self.related_metric}")
+        self.start_date = timezone.now().date() - timedelta(days=365)
+        self.generate_historical_data()
         
-        # Create historical data using bulk_create
-        HistoricalData.objects.bulk_create([
+        self.pc = PermanentComputations([self.metric.id], self.tenant)
+
+    def generate_historical_data(self):
+        dates = [self.start_date + timedelta(days=i) for i in range(365)]
+        values = self.generate_benchmark_data()
+        
+        historical_data = [
             HistoricalData(
                 tenant=self.tenant,
                 metric=self.metric,
                 date=date,
                 value=value
-            ) for date, value in zip(self.dates, self.values)
-        ])
-        
-        self.pc = PermanentComputations(self.metric.id)
-        self.pc.prepare_data()  # Prepare the data after creating historical data
+            ) for date, value in zip(dates, values)
+        ]
+        HistoricalData.objects.bulk_create(historical_data)
 
     def generate_benchmark_data(self):
-        trend = np.linspace(0, 10, 365)
-        seasonality = 5 * np.sin(np.linspace(0, 2*np.pi, 365))
-        noise = np.random.normal(0, 1, 365)
-        return trend + seasonality + noise
+        trend = np.linspace(100, 200, 365)
+        seasonality = 20 * np.sin(np.linspace(0, 2*np.pi, 365))
+        noise = np.random.normal(0, 5, 365)
+        
+        # Add an obvious anomaly
+        anomaly_index = np.random.randint(0, 365)
+        anomaly = np.zeros(365)
+        anomaly[anomaly_index] = 20  # A large spike
+        
+        return trend + seasonality + noise + anomaly
 
     def test_seasonality_accuracy(self):
-        self.assertIsNotNone(self.pc.df, "Data frame should not be None")
-        self.pc.detect_seasonality()
+        data_prep = DataPreparation(self.metric.id)
+        prepared_data, metadata = data_prep.prepare_data()
+        
+        fe = FeatureEngineering(self.metric.id)
+        dynamic_params = fe.compute_dynamic_parameters()
+        engineered_features = fe.engineer_features()
+        
+        analyzer = Analyzer(self.metric.id, prepared_data, dynamic_params, engineered_features)
+        analysis_results = analyzer.analyze()
         
         seasonality = SeasonalityResult.objects.filter(metric=self.metric, tenant=self.tenant).first()
         
-        if seasonality:
-            self.assertGreater(seasonality.strength, 0, "Seasonality strength should be positive")
-            self.assertLess(seasonality.strength, 1, "Seasonality strength should be less than 1")
-            self.assertIn(seasonality.period, [7, 30, 365], "Period should be weekly, monthly, or yearly")
-        else:
-            logger.warning("No seasonality detected. This may be normal if there's not enough data or no clear seasonal pattern.")
+        self.assertIsNotNone(seasonality)
+        self.assertGreater(seasonality.strength, 0)
+        self.assertLess(seasonality.strength, 1)
+        self.assertIn(seasonality.period, [7, 30, 365])
 
     def test_forecast_accuracy(self):
-        self.assertIsNotNone(self.pc.df, "Data frame should not be None")
-        self.pc.sarima_forecast(steps=30)
+        data_prep = DataPreparation(self.metric.id)
+        prepared_data, metadata = data_prep.prepare_data()
+        
+        fe = FeatureEngineering(self.metric.id)
+        dynamic_params = fe.compute_dynamic_parameters()
+        engineered_features = fe.engineer_features()
+        
+        forecaster = Forecaster(self.metric.id, prepared_data, dynamic_params, engineered_features)
+        forecast_results = forecaster.forecast()
+        
         forecasts = Forecast.objects.filter(metric=self.metric, tenant=self.tenant, model_used='SARIMA')
-        self.assertGreater(forecasts.count(), 0, "No forecasts were generated")
+        self.assertGreater(forecasts.count(), 0)
 
-        future_values = self.generate_benchmark_data()[-30:]
+        future_values = self.generate_benchmark_data()[-dynamic_params['forecast_horizon']:]
         forecast_values = [f.forecast_value for f in forecasts]
         
-        # Calculate MAPE
         mape = np.mean(np.abs((future_values - forecast_values) / future_values)) * 100
-        
-        # Log the MAPE for debugging
-        logger.info(f"MAPE for forecast: {mape}")
-
-        # Adjust the threshold to allow for some forecasting error
-        self.assertLess(mape, 35, f"MAPE ({mape}) is higher than expected. This may indicate issues with the forecasting model or the benchmark data.")
+        self.assertLess(mape, 20)
 
     def test_anomaly_detection_accuracy(self):
-        self.assertIsNotNone(self.pc.df, "Data frame should not be None")
+        fe = FeatureEngineering(self.metric.id)
+        dynamic_params = fe.compute_dynamic_parameters()
         
-        # Introduce known anomalies
-        anomaly_dates = [self.pc.df.index[50], self.pc.df.index[200]]
-        original_values = [self.pc.df.iloc[50]['value'], self.pc.df.iloc[200]['value']]
-        std_dev = self.pc.df['value'].std()
-        anomaly_values = [original_values[0] + 15 * std_dev,
-                        original_values[1] - 15 * std_dev]
+        # Assert that we're using dynamic parameters
+        self.assertEqual(fe._parameter_type, "dynamic", "Test data should trigger dynamic parameter computation")
         
-        logger.info(f"Introducing anomalies: {list(zip(anomaly_dates, anomaly_values))}")
+        # Check if all expected parameters are present
+        expected_params = ['seasonality_period', 'forecast_horizon', 'correlation_window', 'trend_window',
+                           'anomaly_detection_window', 'base_threshold', 'window_size', 'context_window',
+                           'global_threshold', 'imputation_method']
+        for param in expected_params:
+            self.assertIn(param, dynamic_params, f"Missing expected parameter: {param}")
         
-        HistoricalData.objects.filter(metric=self.metric, date=anomaly_dates[0].date()).update(value=anomaly_values[0])
-        HistoricalData.objects.filter(metric=self.metric, date=anomaly_dates[1].date()).update(value=anomaly_values[1])
+        # Perform anomaly detection
+        anomaly_detector = AnomalyDetector(self.metric.id)
+        anomalies = anomaly_detector.detect_anomalies()
         
-        # Refresh the data in PermanentComputations object
-        self.pc.prepare_data()
+        # Check if anomalies were detected
+        self.assertGreater(len(anomalies), 0, "No anomalies detected")
         
-        # Log data statistics before anomaly detection
-        logger.info(f"Data statistics before anomaly detection:")
-        logger.info(f"Data shape: {self.pc.df.shape}")
-        logger.info(f"Data summary: {self.pc.df['value'].describe()}")
+        # Check if the injected anomalies were detected
+        detected_anomaly_dates = anomalies['date'].dt.dayofyear.tolist()
+        for injected_anomaly in [31, 91, 181, 271]:  # day of year for injected anomalies
+            self.assertIn(injected_anomaly, detected_anomaly_dates, f"Failed to detect injected anomaly on day {injected_anomaly}")
         
-        self.pc.detect_anomalies(window=20, base_threshold=2.5, seasonality_period=7, context_window=5)
-        anomalies = Anomaly.objects.filter(metric=self.metric, tenant=self.tenant)
-        
-        self.assertGreaterEqual(anomalies.count(), 2, f"Expected at least 2 anomalies, but found {anomalies.count()}")
-        self.assertTrue(anomalies.filter(detection_date=anomaly_dates[0].date()).exists(), f"Anomaly not detected on {anomaly_dates[0]}")
-        self.assertTrue(anomalies.filter(detection_date=anomaly_dates[1].date()).exists(), f"Anomaly not detected on {anomaly_dates[1]}")
+        # Check false positive rate
+        false_positive_rate = (len(anomalies) - 4) / 365  # 4 is the number of injected anomalies
+        self.assertLess(false_positive_rate, 0.05, f"False positive rate too high: {false_positive_rate:.2%}")
 
-        # Log additional information about detected anomalies
-        logger.info(f"Number of anomalies detected: {anomalies.count()}")
-        for anomaly in anomalies:
-            logger.info(f"Anomaly detected on {anomaly.detection_date}: value = {anomaly.anomaly_value}, score = {anomaly.anomaly_score}")
-
-        # Log information about the data around the introduced anomalies
-        for date in anomaly_dates:
-            surrounding_data = self.pc.df.loc[date - pd.Timedelta(days=5):date + pd.Timedelta(days=5)]
-            logger.info(f"Data around {date}:\n{surrounding_data}")
-
-        # Restore original values
-        HistoricalData.objects.filter(metric=self.metric, date=anomaly_dates[0].date()).update(value=original_values[0])
-        HistoricalData.objects.filter(metric=self.metric, date=anomaly_dates[1].date()).update(value=original_values[1])
-
-        # Refresh the data again to ensure we're back to the original state
-        self.pc.prepare_data()
-    
     def test_trend_accuracy(self):
-            self.assertIsNotNone(self.pc.df, "Data frame should not be None")
-            self.pc.analyze_trend()
-            trend = Trend.objects.get(metric=self.metric, tenant=self.tenant)
-            
-            expected_trend = 'increasing'
-            self.assertEqual(trend.trend_type, expected_trend, 
-                            f"Expected {expected_trend} trend, but got {trend.trend_type}. "
-                            f"Slope: {trend.slope}, Notes: {trend.notes}")
-            
-            self.assertGreater(trend.slope, 0, f"Expected positive slope, but got {trend.slope}")
-            
-            # Log trend information for debugging
-            logger.info(f"Detected trend: {trend.trend_type}, slope: {trend.slope}, notes: {trend.notes}")
-            
-            # Additional debugging information
-            values = self.pc.df['value'].values
-            logger.info(f"Data summary: min={values.min()}, max={values.max()}, mean={values.mean()}, std={values.std()}")
-            logger.info(f"First 10 values: {values[:10]}")
-            logger.info(f"Last 10 values: {values[-10:]}")
+        data_prep = DataPreparation(self.metric.id)
+        prepared_data, metadata = data_prep.prepare_data()
+        
+        fe = FeatureEngineering(self.metric.id)
+        dynamic_params = fe.compute_dynamic_parameters()
+        engineered_features = fe.engineer_features()
+        
+        analyzer = Analyzer(self.metric.id, prepared_data, dynamic_params, engineered_features)
+        analysis_results = analyzer.analyze()
+        
+        trend = Trend.objects.get(metric=self.metric, tenant=self.tenant)
+        
+        self.assertEqual(trend.trend_type, 'increasing')
+        self.assertGreater(trend.slope, 0)
+
+    def test_relationship_analysis_accuracy(self):
+        related_metric, created = Metric.objects.get_or_create(
+            name="Related Test Metric",
+            project=self.project,
+            tenant=self.tenant,
+            defaults={
+                'description': "A related test metric",
+                'unit': "count",
+                'data_type': "integer",
+                'aggregation_type': "sum",
+            }
+        )
+        
+        correlated_values = self.generate_benchmark_data() + np.random.normal(0, 1, 365)
+        dates = [self.start_date + timedelta(days=i) for i in range(365)]
+        
+        HistoricalData.objects.bulk_create([
+            HistoricalData(
+                tenant=self.tenant,
+                metric=related_metric,
+                date=date,
+                value=value
+            ) for date, value in zip(dates, correlated_values)
+        ])
+        
+        data_prep = DataPreparation(self.metric.id)
+        prepared_data, metadata = data_prep.prepare_data()
+        
+        fe = FeatureEngineering(self.metric.id)
+        dynamic_params = fe.compute_dynamic_parameters()
+        engineered_features = fe.engineer_features()
+        
+        relationship_analyzer = RelationshipAnalyzer(self.metric.id, prepared_data, dynamic_params, engineered_features)
+        relationship_results = relationship_analyzer.analyze_relationships()
+        
+        correlation = Correlation.objects.filter(metric1=self.metric, metric2=related_metric, tenant=self.tenant).first()
+        self.assertIsNotNone(correlation)
+        
+        df1 = pd.DataFrame({'value': self.generate_benchmark_data()}, index=dates)
+        df2 = pd.DataFrame({'value': correlated_values}, index=dates)
+        expected_pearson, _ = stats.pearsonr(df1['value'], df2['value'])
+        self.assertAlmostEqual(correlation.pearson_correlation, expected_pearson, delta=0.1)
 
     def tearDown(self):
-        # Clean up created data
-        HistoricalData.objects.filter(tenant=self.tenant).delete()
+        try:
+            with transaction.atomic():
+                HistoricalData.objects.filter(tenant=self.tenant).delete()
+        except Exception as e:
+            print(f"Error in tearDown: {e}")
         Metric.objects.filter(tenant=self.tenant).delete()
         Project.objects.filter(tenant=self.tenant).delete()
         Domain.objects.filter(tenant=self.tenant).delete()
         self.tenant.delete()
-
-if __name__ == '__main__':
-    unittest.main()

@@ -159,3 +159,4 @@ webencodings==0.5.1
 websocket-client==1.4.0
 websockets==10.4
 zipp==3.17.0
+python-dotenv

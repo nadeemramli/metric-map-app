@@ -9,19 +9,43 @@ from scipy.stats import kendalltau
 from sklearn.linear_model import LinearRegression
 from .data_preparation import get_prepared_data
 from .feature_engineering import FeatureEngineering
+from django.apps import apps
 
 logger = logging.getLogger(__name__)
 
 class Analyzer:
-    def __init__(self, metric_id: int):
+    def __init__(self, metric_id: int, prepared_data=None, dynamic_params=None, engineered_features=None):
         self.metric_id = metric_id
-        self.df, self.metadata = get_prepared_data(metric_id)
+        if prepared_data is not None:
+            self.df, self.metadata = prepared_data, {}
+        else:
+            self.df, self.metadata = self.get_prepared_data()
+        
         self.fe = FeatureEngineering(metric_id)
-        self.features = self.fe.engineer_features()
-        self.dynamic_params = self.fe.compute_dynamic_parameters()
-        self.metric = self.fe.metric
-        self.tenant = self.metric.tenant
-        self.project = self.metric.project
+        self.features = engineered_features if engineered_features is not None else self.fe.engineer_features()
+        self.dynamic_params = dynamic_params if dynamic_params is not None else self.fe.compute_dynamic_parameters()
+        self.metric = self.get_metric()
+        self.client = self.metric.client
+
+    def get_metric(self):
+        Metric = apps.get_model('metrics', 'Metric')
+        return Metric.objects.get(id=self.metric_id)
+
+    def get_prepared_data(self):
+        DataPreparation = apps.get_model('metrics', 'DataPreparation')
+        return DataPreparation(metric_id=self.metric_id, client=self.client).get_prepared_data()
+
+    def analyze(self):
+        trend_analysis = self.analyze_trend()
+        technical_indicators = self.calculate_technical_indicators()
+        seasonality = self.detect_seasonality()
+        trend_changes = self.detect_trend_changes()
+        return {
+            'trend': trend_analysis,
+            'technical_indicators': technical_indicators,
+            'seasonality': seasonality,
+            'trend_changes': trend_changes
+        }
 
     def calculate_moving_averages(self) -> Dict[str, Dict[str, float]]:
         try:
@@ -95,6 +119,11 @@ class Analyzer:
             window_size = self.dynamic_params.get('trend_window_size', 14)
             trend_threshold = self.dynamic_params.get('trend_threshold', 0.05)
 
+            # Validate input data
+            if not isinstance(ts, pd.Series) or ts.empty:
+                logger.error(f"Invalid input data for trend analysis for metric {self.metric_id}")
+                return {}
+
             # Calculate rolling mean
             rolling_mean = ts.rolling(window=window_size).mean()
 
@@ -128,7 +157,7 @@ class Analyzer:
 
         except Exception as e:
             logger.error(f"Error analyzing trend for metric {self.metric_id}: {str(e)}")
-            raise
+            return {}
 
     def detect_trend_changes(self) -> List[Dict[str, Any]]:
         try:
@@ -159,39 +188,21 @@ class Analyzer:
 
     def detect_seasonality(self) -> Dict[str, Any]:
         try:
-            if len(self.df) < 2:
-                logger.warning(f"Not enough data for seasonality detection for metric {self.metric_id}")
+            FeatureEngineering = apps.get_model('metrics', 'FeatureEngineering')
+            seasonality_result = FeatureEngineering(metric_id=self.metric_id).detect_seasonality()
+            if seasonality_result is None:
                 return {}
-
-            ts = self.df['value']
             
-            # Use the seasonality period from dynamic parameters
-            period = self.dynamic_params.get('seasonality_period', 365)
-            
-            # If we don't have enough data for seasonal_decompose, use a simpler method
-            if len(ts) < 2 * period:
-                # Simple seasonality strength estimation
-                seasonal_diff = ts.diff(period).dropna()
-                trend_diff = ts.diff().dropna()
-                
-                if len(seasonal_diff) > 0 and len(trend_diff) > 0:
-                    seasonality_strength = 1 - np.var(seasonal_diff) / np.var(trend_diff)
-                    seasonality_strength = max(0, min(seasonality_strength, 1))  # Ensure strength is between 0 and 1
-                else:
-                    seasonality_strength = 0
-            else:
-                from statsmodels.tsa.seasonal import seasonal_decompose
-                result = seasonal_decompose(ts, model='additive', period=period)
-                seasonality_strength = 1 - np.var(result.resid) / np.var(result.seasonal + result.resid)
-
-            seasonality_result = {
-                'seasonality_strength': seasonality_strength,
-                'period': period
+            return {
+                'seasonality_strength': seasonality_result.strength,
+                'period': seasonality_result.period,
+                'seasonality_type': seasonality_result.seasonality_type
             }
-
-            logger.info(f"Detected seasonality for metric {self.metric_id} with strength {seasonality_strength}")
-            return seasonality_result
-
         except Exception as e:
             logger.error(f"Error detecting seasonality for metric {self.metric_id}: {str(e)}")
-            raise
+            return {}
+
+    def calculate_percent_change(self, old_value: float, new_value: float) -> float:
+        if old_value == 0:
+            return 0
+        return ((new_value - old_value) / old_value) * 100

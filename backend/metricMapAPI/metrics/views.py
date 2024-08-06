@@ -1,6 +1,6 @@
 
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, throttle_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
@@ -20,7 +20,7 @@ from .models import (
     Client, Domain, CustomUser, UserProfile, Team, Project, Category, Tag, Metric,
     MetricMetadata, MetricTarget, Correlation, Connection, HistoricalData,
     Experiment, Forecast, Anomaly, Trend, Dashboard, Report, ActionRemark,
-    Strategy, TacticalSolution, DataQualityScore, TimeDimension
+    Strategy, TacticalSolution, DataQualityScore, TimeDimension, ComputationStatus, Notification, PendingComputation
 )
 from .serializers import (
     ClientSerializer, DomainSerializer, CustomUserSerializer, UserProfileSerializer,
@@ -31,6 +31,8 @@ from .serializers import (
     ReportSerializer, ActionRemarkSerializer, StrategySerializer,
     TacticalSolutionSerializer, DataQualityScoreSerializer, TimeDimensionSerializer
 )
+from .tasks import run_computations
+from .throttles import ComputationTriggerThrottle
 
 import logging
 
@@ -752,3 +754,66 @@ class TimeDimensionViewSet(TenantViewSet):
     queryset = TimeDimension.objects.all()
     serializer_class = TimeDimensionSerializer
     filterset_fields = ['date', 'year', 'month', 'is_weekend', 'is_holiday']
+
+@api_view(['POST'])
+@throttle_classes([ComputationTriggerThrottle])
+@permission_classes([IsAuthenticated])
+def trigger_computations(request):
+    tenant = request.user.tenant
+    pending_computations = PendingComputation.objects.filter(tenant=tenant)
+    metric_ids = list(pending_computations.values_list('metric_id', flat=True))
+    
+    if metric_ids:
+        run_computations.delay(tenant.id, metric_ids)
+        pending_computations.delete()
+        return Response({"message": "Computations queued successfully"})
+    else:
+        return Response({"message": "No pending computations"})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_computation_status(request):
+    tenant = request.user.tenant
+    latest_status = ComputationStatus.objects.filter(tenant=tenant).first()
+    if latest_status:
+        return Response({
+            "status": latest_status.status,
+            "updated_at": latest_status.updated_at
+        })
+    else:
+        return Response({"message": "No computation status found"})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_notifications(request):
+    tenant = request.user.tenant
+    notifications = Notification.objects.filter(tenant=tenant, is_read=False)
+    return Response({
+        "notifications": [
+            {"id": n.id, "message": n.message, "created_at": n.created_at}
+            for n in notifications
+        ]
+    })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark_notification_read(request, notification_id):
+    tenant = request.user.tenant
+    try:
+        notification = Notification.objects.get(id=notification_id, tenant=tenant)
+        notification.is_read = True
+        notification.save()
+        return Response({"message": "Notification marked as read"})
+    except Notification.DoesNotExist:
+        return Response({"error": "Notification not found"}, status=404)
+
+@api_view(['POST'])
+def mark_notification_read(request, notification_id):
+    tenant = request.user.tenant
+    try:
+        notification = Notification.objects.get(id=notification_id, tenant=tenant)
+        notification.is_read = True
+        notification.save()
+        return Response({"message": "Notification marked as read"})
+    except Notification.DoesNotExist:
+        return Response({"error": "Notification not found"}, status=404)
