@@ -1,36 +1,24 @@
-# tasks.py
-
 from celery import shared_task
-from .computations import TimeSeriesManager, ExperimentManager, ImpactAnalyzer, RelationshipAnalyzer, StatisticsAnalyzer, DashboardManager, DataPreprocessor, DataManager
+from .models import ComputationStatus, Notification, Client
+from .computations.permanent_computations import PermanentComputations
 
 @shared_task
-def run_time_series_analysis(metric_id, analysis_type, **params):
-    return TimeSeriesManager.run_analysis(metric_id, analysis_type, **params)
-
-@shared_task
-def run_experiment(experiment_id, experiment_type, **params):
-    return ExperimentManager.run_analysis(experiment_id, experiment_type, **params)
-
-@shared_task
-def run_impact_analysis(metric_id, analysis_type, **params):
-    return ImpactAnalyzer.run_analysis(metric_id, analysis_type, **params) 
-
-@shared_task
-def run_relationship_analysis(metric_id, analysis_type, **params):
-    return RelationshipAnalyzer.run_analysis(metric_id, analysis_type, **params)
-
-@shared_task
-def run_statistics_analysis(metric_id, analysis_type, **params):
-    return StatisticsAnalyzer.run_analysis(metric_id, analysis_type, **params)
-
-@shared_task
-def run_dashboard_analysis(dashboard_id, analysis_type, **params):
-    return DashboardManager.run_analysis(dashboard_id, analysis_type, **params)
-
-@shared_task
-def run_data_preprocessing(metric_id, process_type, **params):
-    return DataPreprocessor.run_process(metric_id, process_type, **params)
-
-@shared_task
-def run_data_management(metric_id, operation_type, **params):
-    return DataManager.run_operation(metric_id, operation_type, **params)
+def run_computations(tenant_id, metric_ids):
+    try:
+        computation_status = ComputationStatus.objects.create(tenant_id=tenant_id, status='IN_PROGRESS')
+        tenant = Client.objects.get(id=tenant_id)
+        PermanentComputations(metric_ids, tenant).run_all_computations()
+        computation_status.status = 'COMPLETED'
+        computation_status.save()
+        Notification.objects.create(
+            tenant_id=tenant_id,
+            message='Computations completed successfully.'
+        )
+    except Exception as e:
+        computation_status.status = 'FAILED' 
+        computation_status.error_message = str(e)
+        computation_status.save()
+        Notification.objects.create(
+            tenant_id=tenant_id,
+            message='Computations failed with error: {e}'.format(e=e)
+        )

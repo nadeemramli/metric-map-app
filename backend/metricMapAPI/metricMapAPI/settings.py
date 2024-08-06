@@ -1,5 +1,9 @@
 from pathlib import Path
 from datetime import timedelta
+import sys
+
+
+print("Python path in settings:", sys.path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -218,30 +222,62 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+if 'test' in sys.argv:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
         },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-    },
-    'root': {
-        'handlers': ['console','file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
+        'root': {
             'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
+            'level': 'DEBUG',
         },
-    },
-}
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'INFO',
+                'propagate': False,
+            },
+            'metrics': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': False,
+            },
+        },
+    }
+else:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+            'file': {
+                'class': 'logging.FileHandler',
+                'filename': 'debug.log',
+            },
+        },
+        'root': {
+            'handlers': ['console','file'],
+            'level': 'INFO',
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'INFO',
+                'propagate': False,
+            },
+            'metrics': {
+                'handlers': ['console'],
+                'level': 'INFO',
+                'propagate': False,
+            },
+        },
+    }
 
 # TEST_RUNNER = 'metrics.management.commands.custom_test_runner.FileOutputTestRunner'
 TEST_RUNNER = 'metrics.tests.test_utils.CustomTenantTestRunner'
@@ -275,3 +311,4 @@ SIMPLE_JWT = {
 }
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+

@@ -1,0 +1,4 @@
+{
+    "python.envFile": "${workspaceFolder}/backend/metricMapAPI/.env",
+    "python.analysis.extraPaths": ["${workspaceFolder}/backend/metricMapAPI"]
+}

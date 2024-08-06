@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django_tenants.models import TenantMixin, DomainMixin
+from .computations.permanent_computations import PermanentComputations
+from django.db.models import Manager
 
 ''' 
 Tenant, Organization and User Management: Setting Up
@@ -14,7 +16,6 @@ Tenant, Organization and User Management: Setting Up
      5. Team: Represents groups within a tenant's organization.
      6. Project: Represents projects within a tenant.
 '''
-
 class Client(TenantMixin):
     name = models.CharField(max_length=100, db_index=True)
     created_on = models.DateField(auto_now_add=True)
@@ -208,6 +209,14 @@ class Tag(TenantAwareMixin):
         - `name`: The name of the tag.
         - `project`: The project to which the tag belongs.
     '''
+class MetricManager(Manager):
+    def bulk_create(self, objs, **kwargs):
+        result = super().bulk_create(objs, **kwargs)
+        client = objs[0].client if objs else None
+        if client:
+            metric_ids = [obj.id for obj in result]
+            PermanentComputations(metric_ids, client).run_all_computations()
+        return result
 
 class Metric(TenantAwareMixin):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='metrics')
@@ -381,6 +390,28 @@ class Correlation(TenantAwareMixin):
         - `pearson_correlation`: Pearson correlation coefficient.
         - `spearman_correlation`: Spearman correlation coefficient.
     '''
+class ConnectionManager(Manager):
+    def bulk_create(self, objs, **kwargs):
+        result = super().bulk_create(objs, **kwargs)
+        affected_metric_ids = set()
+        for obj in objs:
+            affected_metric_ids.add(obj.from_metric_id)
+            affected_metric_ids.add(obj.to_metric_id)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
+
+    def bulk_update(self, objs, fields, **kwargs):
+        result = super().bulk_update(objs, fields, **kwargs)
+        affected_metric_ids = set()
+        for obj in objs:
+            affected_metric_ids.add(obj.from_metric_id)
+            affected_metric_ids.add(obj.to_metric_id)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
 
 class Connection(TenantAwareMixin):
     from_metric = models.ForeignKey(Metric, related_name='outgoing_connections', on_delete=models.CASCADE)
@@ -786,14 +817,16 @@ class MovingAverage(TenantAwareMixin):
     or cycles in the data.
     '''
 
-class SeasonalityResult(TenantAwareMixin):
+class SeasonalityResult(models.Model):  # Remove TenantAwareMixin
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name='seasonality_results')
     seasonality_type = models.CharField(max_length=20)  # e.g., 'daily', 'weekly', 'yearly'
     strength = models.FloatField()
     period = models.IntegerField()
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+
     class Meta:
-        unique_together = ('tenant', 'metric')
+        unique_together = ('metric', 'seasonality_type')  # Changed from ('tenant', 'metric')
+        get_latest_by = 'created_at'
 
     def __str__(self):
         return f"Seasonality for {self.metric.name}: {self.seasonality_type}"
@@ -828,9 +861,16 @@ class SeasonalityResult(TenantAwareMixin):
 class TrendChangePoint(TenantAwareMixin):
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name='trend_change_points')
     date = models.DateTimeField()
-    change_type = models.CharField(max_length=20)  # e.g., 'upward', 'downward'
-    significance = models.FloatField()
+    direction = models.CharField(max_length=20)  # e.g., 'upward', 'downward'
+    significance = models.FloatField(null=True, blank=True)
     
+    def __str__(self):
+        return f"Trend change for {self.metric.name} on {self.date}: {self.change_type}"
+
+    @property
+    def tenant(self):
+        return self.metric.tenant
+
     '''
     Represents detected significant changes in the trend of a metric.
 
@@ -876,6 +916,23 @@ Utilities
     2. TimeDimension: A utility model for time-based operations. We can forecast a year of time using this.
     3. Dashboard and Report: Stores Data For creating customizable dashboards and reports.
 '''
+class HistoricalDataManager(Manager):
+    def bulk_create(self, objs, **kwargs):
+        result = super().bulk_create(objs, **kwargs)
+        affected_metric_ids = set(obj.metric_id for obj in objs)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
+
+    def bulk_update(self, objs, fields, **kwargs):
+        result = super().bulk_update(objs, fields, **kwargs)
+        affected_metric_ids = set(obj.metric_id for obj in objs)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
+
 class HistoricalData(TenantAwareMixin):
     metric = models.ForeignKey(Metric, related_name='historical_data', on_delete=models.CASCADE)
     date = models.DateField(db_index=True)
@@ -946,8 +1003,17 @@ class Dashboard(TenantAwareMixin):
     '''
 
 class Report(TenantAwareMixin):
+    metric = models.ForeignKey(Metric, related_name='report', on_delete=models.CASCADE)
+    tenant = models.ForeignKey(Client, related_name='tenant_report', on_delete=models.CASCADE)
     name = models.CharField(max_length=100, db_index=True)
     configuration = models.JSONField(default=dict, blank=True)
+    analysis_result = models.JSONField(null=True, blank=True)
+    forecast_result = models.JSONField(null=True, blank=True)
+    anomaly_result = models.JSONField(null=True, blank=True)
+    relationship_result = models.JSONField(null=True, blank=True)
+    report = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     '''
         Stores data for creating customizable reports.
@@ -955,6 +1021,33 @@ class Report(TenantAwareMixin):
         name: The name of the report.
         configuration: JSON field to store the configuration of the report.
     '''
+
+class ComputationStatus(TenantAwareMixin):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('IN_PROGRESS', 'In Progress'),
+        ('COMPLETED', 'Completed'),
+        ('FAILED', 'Failed'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    error_message = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+class Notification(TenantAwareMixin):
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+class PendingComputation(TenantAwareMixin):
+    metric = models.ForeignKey('Metric', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('tenant', 'metric')
 
 '''
 Summary of related_name Attributes

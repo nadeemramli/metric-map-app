@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/metricMapAPI/manage.py",
+            "args": ["runserver", "--noreload", "--settings=metricMapAPI.debug_settings"],
+            "django": true,
+            "justMyCode": false,
+            "python": "${workspaceFolder}/backend/metricMapAPI/venv/bin/python",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/backend/metricMapAPI:${workspaceFolder}/backend/metricMapAPI/venv/lib/python3.10/site-packages:/home/nadeemramli/.pyenv/versions/3.10.7/lib/python3.10/site-packages:${env:PYTHONPATH}",
+                "DJANGO_SETTINGS_MODULE": "metricMapAPI.debug_settings"
+            },
+            "envFile": "${workspaceFolder}/backend/metricMapAPI/.env",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Setup Django Environment"
+        },
+        {
+            "name": "Python: Django Test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/metricMapAPI/manage.py",
+            "args": [
+                "test",
+                "metrics.tests.test_permanent_computations.test_permanent_computations_setup"
+            ],
+            "django": true,
+            "python": "${workspaceFolder}/backend/metricMapAPI/venv/bin/python",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/backend/metricMapAPI:${env:PYTHONPATH}"
+            },
+            "envFile": "${workspaceFolder}/backend/metricMapAPI/.env",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Activate venv"
+        }
+    ]
+}

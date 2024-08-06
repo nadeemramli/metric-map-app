@@ -3,110 +3,143 @@
 import pandas as pd
 import numpy as np
 import logging
+from typing import Tuple
 from .data_preparation import get_prepared_data
 from .feature_engineering import FeatureEngineering
+from django.apps import apps
 
 logger = logging.getLogger(__name__)
 
 class AnomalyDetector:
-    def __init__(self, metric_id: int):
+    def __init__(self, metric_id, prepared_data=None, dynamic_params=None, engineered_features=None):
         self.metric_id = metric_id
-        self.df, self.metadata = get_prepared_data(metric_id)
-        self.fe = FeatureEngineering(metric_id)
-        self.features = self.fe.engineer_features()
-        self.dynamic_params = self.fe.compute_dynamic_parameters()
+        if prepared_data is not None:
+            self.df, self.metadata = prepared_data, {}
+        else:
+            Metric = apps.get_model('metrics', 'Metric')
+            self.metric = Metric.objects.get(id=self.metric_id)
+            self.df, self.metadata = get_prepared_data(self.metric)
+        
+        self.fe = FeatureEngineering(self.metric)
+        self.features = engineered_features if engineered_features is not None else self.fe.engineer_features()
+        self.dynamic_params = dynamic_params if dynamic_params is not None else self.fe.compute_dynamic_parameters()
+        self.tenant = self.metric.client
+        
+        required_params = ['seasonality_period', 'window_size', 'base_threshold', 'context_window', 'global_threshold']
+        
+        missing_params = [param for param in required_params if param not in self.dynamic_params]
+        if missing_params:
+            raise ValueError(f"Missing required dynamic parameters: {', '.join(missing_params)}")
+
+        # Initialize dynamic parameters
+        self.seasonality_period = self.dynamic_params['seasonality_period']
+        self.window_size = self.dynamic_params['window_size']
+        self.base_threshold = self.dynamic_params['base_threshold']
+        self.context_window = self.dynamic_params['context_window']
+        self.global_threshold = self.dynamic_params['global_threshold']
+
+        logger.info(f"Initialized AnomalyDetector for metric {self.metric_id}")
+        logger.info(f"Seasonality period: {self.seasonality_period}")
+        logger.info(f"Window size: {self.window_size}")
+        logger.info(f"Base threshold: {self.base_threshold}")
+        logger.info(f"Context window: {self.context_window}")
+        logger.info(f"Global threshold: {self.global_threshold}")
 
     def detect_anomalies(self) -> pd.DataFrame:
         try:
-            if len(self.df) < 14:
-                logger.warning("Not enough data for anomaly detection")
-                return pd.DataFrame()
+            if self.df is None or len(self.df) < self.window_size:
+                logger.warning(f"Not enough data for anomaly detection for metric {self.metric_id}")
+                return pd.DataFrame(columns=['date', 'value', 'anomaly_score', 'type'])
 
-            self.seasonality_period = self.dynamic_params.get('seasonality_period')
-            self.window_size = self.dynamic_params.get('window_size')
-            self.base_threshold = self.dynamic_params.get('base_threshold')
-            self.context_window = self.dynamic_params.get('context_window')
+            logger.info(f"Starting anomaly detection for metric {self.metric_id}")
+            self._log_data_summary()
 
-            logger.info(f"Detected seasonality period: {self.seasonality_period}")
-            logger.info(f"Determined window size: {self.window_size}")
-            logger.info(f"Determined base threshold: {self.base_threshold}")
-            logger.info(f"Determined context window: {self.context_window}")
+            self._ensure_datetime_index()
+            deseasonalized = self._deseasonalize_data()
+            modified_z_scores = self._calculate_modified_z_scores(deseasonalized)
+            adaptive_threshold = self._calculate_adaptive_threshold(deseasonalized)
+            context_z_scores = self._calculate_contextual_z_scores(modified_z_scores)
+            global_mean, global_std = self._calculate_global_statistics(deseasonalized)
 
-            """
-            Detect anomalies in the metric data.
+            anomaly_mask = self._create_anomaly_mask(modified_z_scores, context_z_scores, deseasonalized, adaptive_threshold, global_mean, global_std)
+            anomalies = self._create_anomalies_dataframe(anomaly_mask, modified_z_scores, context_z_scores, deseasonalized, global_mean, global_std)
 
-            Args:
-                window (int): Rolling window size for anomaly detection.
-                base_threshold (float): Base threshold for z-score to consider a point anomalous.
-                seasonality_period (Optional[int]): Period of seasonality in the data. If None, it will be automatically detected.
-                context_window (int): Window size for contextual anomaly detection.
-            """
-
-            logger.info(f"Starting anomaly detection for metric {self.metric.id}")
-            logger.info(f"Data shape: {self.df.shape}")
-            logger.info(f"Data summary: {self.df['value'].describe()}")
-            
-            # Automatically detect seasonality if not provided
-            if seasonality_period is None:
-                seasonality_period = self._detect_seasonality_period()
-                logger.info(f"Automatically detected seasonality period: {seasonality_period}")
-
-            # Calculate seasonal component
-            seasonal = self.df['value'].diff(seasonality_period).fillna(0)
-            
-            # Remove seasonality from the data
-            deseasonalized = self.df['value'] - seasonal
-            
-            logger.info(f"Deseasonalized data summary: {deseasonalized.describe()}")
-            
-            # Calculate rolling median and MAD
-            rolling_median = deseasonalized.rolling(window=window, center=True).median()
-            rolling_mad = deseasonalized.rolling(window=window, center=True).apply(lambda x: np.median(np.abs(x - np.median(x))))
-
-            # Calculate modified z-scores
-            modified_z_scores = 0.6745 * (deseasonalized - rolling_median) / rolling_mad
-            
-            logger.info(f"Modified z-scores summary: {modified_z_scores.describe()}")
-
-            # Calculate adaptive threshold
-            adaptive_threshold = base_threshold * (1 + 0.1 * np.log1p(rolling_mad))
-            
-            logger.info(f"Adaptive threshold summary: {adaptive_threshold.describe()}")
-            
-            # Calculate contextual z-scores
-            context_z_scores =  modified_z_scores.rolling(window=context_window, center=True).apply(lambda x: (x[context_window//2] - x.mean()) / x.std())
-
-            logger.info(f"Contextual z-scores summary: {context_z_scores.describe()}")
-            
-            # Global outlier detection
-            global_mean = deseasonalized.mean()
-            global_std = deseasonalized.std()
-            global_threshold = 5  # Detect values more than 5 standard deviations from the mean
-
-            # Combine global and local anomaly detection
-            anomaly_mask = (
-                (abs(modified_z_scores) > adaptive_threshold) |
-                (abs(context_z_scores) > base_threshold) |
-                (abs(deseasonalized - global_mean) > global_threshold * global_std)
-            )
-            
-            logger.info(f"Number of anomalies detected: {anomaly_mask.sum()}")
-
-            # Get anomalies using the mask
-            anomalies = self.df[anomaly_mask].copy()
-            anomalies['anomaly_score'] = np.maximum(
-                abs(modified_z_scores[anomaly_mask]),
-                abs(context_z_scores[anomaly_mask]),
-                abs(deseasonalized[anomaly_mask] - global_mean) / global_std
-            )
-
-            logger.info(f"Anomalies detected:\n{anomalies}")
-
-            
-            logger.info(f"Detected and saved {len(anomalies)} anomalies for metric {self.metric.id}")
-
+            logger.info(f"Detected {len(anomalies)} anomalies for metric {self.metric_id}")
             return anomalies
 
         except Exception as e:
             logger.error(f"Error in anomaly detection for metric {self.metric_id}: {str(e)}")
-            return pd.DataFrame()
+            return pd.DataFrame(columns=['date', 'value', 'anomaly_score', 'type'])
+
+    def _log_data_summary(self) -> None:
+        logger.info(f"Data shape: {self.df.shape}")
+        logger.info(f"Data summary: {self.df['value'].describe()}")
+
+    def _ensure_datetime_index(self) -> None:
+        if not isinstance(self.df.index, pd.DatetimeIndex):
+            if 'date' in self.df.columns:
+                self.df = self.df.set_index('date')
+            else:
+                raise ValueError("DataFrame does not have a 'date' column to set as index")
+        self.df.index = pd.to_datetime(self.df.index)
+
+    def _deseasonalize_data(self) -> pd.Series:
+        if self.seasonality_period:
+            seasonal = self.df['value'].diff(self.seasonality_period).fillna(0)
+            deseasonalized = self.df['value'] - seasonal
+        else:
+            deseasonalized = self.df['value']
+        logger.info(f"Deseasonalized data summary: {deseasonalized.describe()}")
+        return deseasonalized
+
+    def _calculate_modified_z_scores(self, deseasonalized: pd.Series) -> pd.Series:
+        rolling_median = deseasonalized.rolling(window=self.window_size, center=True).median()
+        rolling_mad = deseasonalized.rolling(window=self.window_size, center=True).apply(lambda x: np.median(np.abs(x - np.median(x))))
+        modified_z_scores = 0.6745 * (deseasonalized - rolling_median) / rolling_mad
+        logger.info(f"Modified z-scores range: {modified_z_scores.min()} to {modified_z_scores.max()}")
+        logger.info(f"Modified z-scores summary: {modified_z_scores.describe()}")
+        return modified_z_scores
+
+    def _calculate_adaptive_threshold(self, deseasonalized: pd.Series) -> pd.Series:
+        rolling_mad = deseasonalized.rolling(window=self.window_size, center=True).apply(lambda x: np.median(np.abs(x - np.median(x))))
+        adaptive_threshold = self.base_threshold * (1 + 0.1 * np.log1p(rolling_mad))
+        logger.info(f"Adaptive threshold range: {adaptive_threshold.min()} to {adaptive_threshold.max()}")
+        logger.info(f"Adaptive threshold summary: {adaptive_threshold.describe()}")
+        return adaptive_threshold
+
+    def _calculate_contextual_z_scores(self, modified_z_scores: pd.Series) -> pd.Series:
+        context_z_scores = modified_z_scores.rolling(window=self.context_window, center=True).apply(lambda x: (x[self.context_window//2] - x.mean()) / x.std())
+        logger.info(f"Contextual z-scores range: {context_z_scores.min()} to {context_z_scores.max()}")
+        logger.info(f"Contextual z-scores summary: {context_z_scores.describe()}")
+        return context_z_scores
+
+    def _calculate_global_statistics(self, deseasonalized: pd.Series) -> Tuple[float, float]:
+        global_mean = deseasonalized.mean()
+        global_std = deseasonalized.std()
+        logger.info(f"Global mean: {global_mean}, Global std: {global_std}")
+        return global_mean, global_std
+
+    def _create_anomaly_mask(self, modified_z_scores: pd.Series, context_z_scores: pd.Series, 
+                             deseasonalized: pd.Series, adaptive_threshold: pd.Series, 
+                             global_mean: float, global_std: float) -> pd.Series:
+        anomaly_mask = (
+            (abs(modified_z_scores) > adaptive_threshold) |
+            (abs(context_z_scores) > self.base_threshold) |
+            (abs(deseasonalized - global_mean) > self.global_threshold * global_std)
+        )
+        logger.info(f"Number of anomalies detected: {anomaly_mask.sum()}")
+        return anomaly_mask
+
+    def _create_anomalies_dataframe(self, anomaly_mask: pd.Series, modified_z_scores: pd.Series, 
+                                    context_z_scores: pd.Series, deseasonalized: pd.Series, 
+                                    global_mean: float, global_std: float) -> pd.DataFrame:
+        anomalies = self.df[anomaly_mask].copy()
+        anomalies['anomaly_score'] = np.maximum(
+            abs(modified_z_scores[anomaly_mask]),
+            abs(context_z_scores[anomaly_mask]),
+            abs(deseasonalized[anomaly_mask] - global_mean) / global_std
+        )
+        anomalies['type'] = 'point'  # You can add more sophisticated type detection if needed
+        anomalies = anomalies.reset_index()
+        anomalies = anomalies[['date', 'value', 'anomaly_score', 'type']]
+        return anomalies

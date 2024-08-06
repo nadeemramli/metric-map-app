@@ -11,12 +11,27 @@ from .feature_engineering import FeatureEngineering
 logger = logging.getLogger(__name__)
 
 class Forecaster:
-    def __init__(self, metric_id: int):
+    def __init__(self, metric_id: int, prepared_data=None, dynamic_params=None, engineered_features=None):
         self.metric_id = metric_id
-        self.df, self.metadata = get_prepared_data(metric_id)
+        if prepared_data is not None:
+            self.df, self.metadata = prepared_data, {}
+        else:
+            self.df, self.metadata = get_prepared_data(metric_id)
+        
         self.fe = FeatureEngineering(metric_id)
-        self.dynamic_params = self.fe.compute_dynamic_parameters()
+        self.features = engineered_features if engineered_features is not None else self.fe.engineer_features()
+        self.dynamic_params = dynamic_params if dynamic_params is not None else self.fe.compute_dynamic_parameters()
         self.metric = self.fe.metric
+        self.tenant = self.metric.tenant
+        self.project = self.metric.project
+    
+    def forecast(self):
+        sarima_results = self.sarima_forecast()
+        prophet_results = self.prophet_forecast()
+        return {
+            'sarima': sarima_results,
+            'prophet': prophet_results
+        }
 
     def sarima_forecast(self, steps: int = 30):
         """Generate SARIMA forecast for the metric."""
