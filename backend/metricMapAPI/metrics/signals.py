@@ -3,9 +3,15 @@ from django.dispatch import receiver
 from .models import HistoricalData, Connection, Metric
 from .computations.permanent_computations import PermanentComputations
 
-@receiver([post_save, post_delete], sender=HistoricalData)
-def trigger_computations_on_historical_data_change(sender, instance, **kwargs):
-    PermanentComputations([instance.metric_id], instance.tenant).run_all_computations()
+@receiver(post_save, sender=HistoricalData)
+def trigger_computations_on_historical_data_change(sender, instance, created, **kwargs):
+    if not hasattr(instance, '_bulk_operation'):
+        PermanentComputations([instance.metric_id], instance.tenant).run_all_computations()
+
+@receiver(post_delete, sender=HistoricalData)
+def trigger_computations_on_historical_data_delete(sender, instance, **kwargs):
+    if not hasattr(instance, '_bulk_operation'):
+        PermanentComputations([instance.metric_id], instance.tenant).run_all_computations()
 
 @receiver([post_save, post_delete], sender=Connection)
 def trigger_computations_on_connection_change(sender, instance, **kwargs):

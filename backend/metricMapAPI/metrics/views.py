@@ -5,17 +5,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.views import TokenObtainPairView
-'''
-from django.db import models
+from django.db import models, transaction
 from django_tenants.utils import tenant_context
 from rest_framework.exceptions import NotFound, ValidationError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from celery.result import AsyncResult
-'''
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-
 from .models import (
     Client, Domain, CustomUser, UserProfile, Team, Project, Category, Tag, Metric,
     MetricMetadata, MetricTarget, Correlation, Connection, HistoricalData,
@@ -29,10 +26,17 @@ from .serializers import (
     ConnectionSerializer, HistoricalDataSerializer, ExperimentSerializer,
     ForecastSerializer, AnomalySerializer, TrendSerializer, DashboardSerializer,
     ReportSerializer, ActionRemarkSerializer, StrategySerializer,
-    TacticalSolutionSerializer, DataQualityScoreSerializer, TimeDimensionSerializer
+    TacticalSolutionSerializer, DataQualityScoreSerializer, TimeDimensionSerializer,
+    TenantCreationSerializer, ProjectCreationSerializer, TeamCreationSerializer, TeamMemberAssignmentSerializer
 )
 from .tasks import run_computations
 from .throttles import ComputationTriggerThrottle
+from .interim.dashboard_computations import generate_automated_suggestions, performance_dashboard
+from .interim.performance_analysis import forecast_vs_actual_comparison, probability_analysis, process_progress_tracking
+from .interim.statistical_analysis import calculate_advanced_stats, calculate_aggregated_views, calculate_basic_stats
+from .interim.experiment_analysis import ab_test_analysis, difference_in_differences
+from .interim.data_export import bulk_export_data, prepare_data_for_bulk_import
+from .tasks import run_long_computation
 
 import logging
 
@@ -61,24 +65,17 @@ class TenantViewSet(viewsets.ModelViewSet):
         serializer.save(tenant=self.request.tenant)
 
 class ClientViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
 
-'''
-class ClientViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializer
-    
     def get_queryset(self):
         # Add logging
         print(f"User {self.request.user} is fetching clients")
         queryset = Client.objects.all()
         print(f"Found {queryset.count()} clients")
         return queryset
-'''
 
 class DomainViewSet(TenantViewSet):
     queryset = Domain.objects.all()
@@ -101,52 +98,34 @@ class TeamViewSet(TenantViewSet):
     filterset_fields = ['name']
 
 class ProjectViewSet(TenantViewSet):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-    filterset_fields = ['name']
-
-'''
-class ProjectViewSet(TenantViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     basename='client-projects'
-    
+    filterset_fields = ['name']
+
     def get_queryset(self):
         return Project.objects.filter(tenant=self.request.tenant)
-'''
 
 class CategoryViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filterset_fields = ['name']
-
-'''
-class CategoryViewSet(TenantViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
     basename='project-categories'
 
     def get_queryset(self):
         return Category.objects.filter(tenant=self.request.tenant)
-'''
 
 class TagViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     filterset_fields = ['name', 'project']
-
-'''
-class TagViewSet(TenantViewSet):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
-    permission_classes = [IsAuthenticated]
     basename='project-tags'
-
+    
     def get_queryset(self):
         return Tag.objects.filter(tenant=self.request.tenant)
-'''
 
 class MetricViewSet(TenantViewSet):
     queryset = Metric.objects.all()
@@ -442,20 +421,14 @@ class MetricViewSet(viewsets.ModelViewSet):
 '''
 
 class MetricTargetViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = MetricTarget.objects.all()
     serializer_class = MetricTargetSerializer
     filterset_fields = ['metric', 'target_date']
-
-'''
-class TargetViewSet(TenantViewSet):
-    queryset = Target.objects.all()
-    serializer_class = TargetSerializer
-    permission_classes = [IsAuthenticated]
     basename='project-targets'
 
     def get_queryset(self):
-        return Target.objects.filter(tenant=self.request.tenant)
-'''
+        return MetricTarget.objects.filter(tenant=self.request.tenant)
 
 class CorrelationViewSet(TenantViewSet):
     queryset = Correlation.objects.all()
@@ -466,13 +439,12 @@ class ConnectionViewSet(TenantViewSet):
     queryset = Connection.objects.all()
     serializer_class = ConnectionSerializer
     filterset_fields = ['from_metric', 'to_metric']
-
-'''
-class ConnectionViewSet(TenantViewSet):
-    serializer_class = ConnectionSerializer
-    permission_classes = [IsAuthenticated]
     basename = 'metric-connections'
 
+    def get_queryset(self):
+        return Connection.objects.filter(tenant=self.request.tenant)
+
+'''
     def get_queryset(self):
         client_pk = self.kwargs.get('client_pk')
         project_pk = self.kwargs.get('project_pk')
@@ -512,21 +484,17 @@ class ConnectionViewSet(TenantViewSet):
 '''
 
 class HistoricalDataViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = HistoricalData.objects.all()
     serializer_class = HistoricalDataSerializer
     filterset_fields = ['metric', 'date', 'anomaly_detected']
-
-'''
-class HistoricalDataViewSet(TenantViewSet):
-    queryset = HistoricalData.objects.all()
-    serializer_class = HistoricalDataSerializer
-    permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
     basename = 'metric-historical-data'
 
     def get_queryset(self):
-        return super().get_queryset().select_related('metric')
+        return HistoricalData.objects.filter(tenant=self.request.tenant)
 
+'''
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
@@ -595,17 +563,13 @@ class ExperimentViewSet(TenantViewSet):
     queryset = Experiment.objects.all()
     serializer_class = ExperimentSerializer
     filterset_fields = ['name', 'status', 'start_date', 'end_date']
-
-'''
-class ExperimentViewSet(TenantViewSet):
-    queryset = Experiment.objects.all()
-    serializer_class = ExperimentSerializer
     permission_classes = [IsAuthenticated]
     basename='project-experiments'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('metrics')
+        return Experiment.objects.filter(tenant=self.request.tenant)
 
+'''
     @action(detail=True, methods=['post'])
     def run_experiment(self, request):
         experiment = self.get_object()
@@ -618,65 +582,43 @@ class ExperimentViewSet(TenantViewSet):
 '''
 
 class ForecastViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Forecast.objects.all()
     serializer_class = ForecastSerializer
     filterset_fields = ['metric', 'forecast_date', 'model_used']
-
-'''
-class ForecastViewSet(TenantViewSet):
-    queryset = Forecast.objects.all()
-    serializer_class = ForecastSerializer
     basename='metric-forecast'
 
     def get_queryset(self):
-        return super().get_queryset().select_related('metric')
-'''
+        return Forecast.objects.filter(tenant=self.request.tenant)
 
 class AnomalyViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Anomaly.objects.all()
     serializer_class = AnomalySerializer
     filterset_fields = ['metric', 'detection_date', 'anomaly_type', 'quality']
-
-'''
-class AnomalyViewSet(TenantViewSet):
-    queryset = Anomaly.objects.all()
-    serializer_class = AnomalySerializer
     basename='metric-anomaly'
 
     def get_queryset(self):
-        return super().get_queryset().select_related('metric')
-'''
+        return Anomaly.objects.filter(tenant=self.request.tenant)
 
 class TrendViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Trend.objects.all()
     serializer_class = TrendSerializer
     filterset_fields = ['metric', 'trend_type', 'start_date', 'end_date']
-
-'''
-class TrendViewSet(TenantViewSet):
-    queryset = Trend.objects.all()
-    serializer_class = TrendSerializer
     basename='metric-trend'
 
     def get_queryset(self):
-        return super().get_queryset().select_related('metric')
-'''
+        return Trend.objects.filter(tenant=self.request.tenant)
 
 class DashboardViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Dashboard.objects.all()
     serializer_class = DashboardSerializer
     filterset_fields = ['name']
-
-'''
-class DashboardViewSet(TenantViewSet):
-    queryset = Dashboard.objects.all()
-    serializer_class = DashboardSerializer
-    permission_classes = [IsAuthenticated]
     basename='project-dashboards'
 
-    def get_queryset(self):
-        return Dashboard.objects.filter(tenant=self.request.tenant)
-
+'''
     @action(detail=False, methods=['get'])
     def performance(self, request):
         with tenant_context(self.request.tenant):
@@ -691,36 +633,26 @@ class DashboardViewSet(TenantViewSet):
 '''
 
 class ReportViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
     filterset_fields = ['name']
-
-'''
-class ReportViewSet(TenantViewSet):
-    queryset = Report.objects.all()
-    serializer_class = ReportSerializer
-    permission_classes = [IsAuthenticated]
     basename='project-reports'
 
     def get_queryset(self):
         return Report.objects.filter(tenant=self.request.tenant)
-'''
 
 class ActionRemarkViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = ActionRemark.objects.all()
     serializer_class = ActionRemarkSerializer
     filterset_fields = ['metric', 'date', 'impact', 'importance']
-
-'''
-class ActionRemarkViewSet(TenantViewSet):
-    queryset = ActionRemark.objects.all()
-    serializer_class = ActionRemarkSerializer
-    permission_classes = [IsAuthenticated]
     basename='metric-action-remarks'
 
     def get_queryset(self):
         return ActionRemark.objects.filter(tenant=self.request.tenant)
 
+'''
     def perform_create(self, serializer):
         metric_id = self.kwargs.get('metric_pk')
         metric = Metric.objects.get(id=metric_id, tenant=self.request.tenant)
@@ -736,30 +668,47 @@ class ActionRemarkViewSet(TenantViewSet):
 '''
 
 class StrategyViewSet(TenantViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Strategy.objects.all()
     serializer_class = StrategySerializer
     filterset_fields = ['title', 'team']
+    basename='project-strategies'
+
+    def get_queryset(self):
+        return Strategy.objects.filter(tenant=self.request.tenant)
 
 class TacticalSolutionViewSet(TenantViewSet):
     queryset = TacticalSolution.objects.all()
     serializer_class = TacticalSolutionSerializer
     filterset_fields = ['metric', 'title']
+    basename='metric-tactical-solutions'
+
+    def get_queryset(self):
+        return TacticalSolution.objects.filter(tenant=self.request.tenant)
 
 class DataQualityScoreViewSet(TenantViewSet):
     queryset = DataQualityScore.objects.all()
     serializer_class = DataQualityScoreSerializer
     filterset_fields = ['data_entry']
+    basename='metric-data-quality-scores'
+
+    def get_queryset(self):
+        return DataQualityScore.objects.filter(tenant=self.request.tenant)
 
 class TimeDimensionViewSet(TenantViewSet):
     queryset = TimeDimension.objects.all()
     serializer_class = TimeDimensionSerializer
     filterset_fields = ['date', 'year', 'month', 'is_weekend', 'is_holiday']
+    basename='metric-time-dimensions'
+
+    def get_queryset(self):
+        return TimeDimension.objects.filter(tenant=self.request.tenant)
 
 @api_view(['POST'])
 @throttle_classes([ComputationTriggerThrottle])
 @permission_classes([IsAuthenticated])
 def trigger_computations(request):
-    tenant = request.user.tenant
+    tenant = request.tenant
     pending_computations = PendingComputation.objects.filter(tenant=tenant)
     metric_ids = list(pending_computations.values_list('metric_id', flat=True))
     
@@ -773,7 +722,7 @@ def trigger_computations(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_computation_status(request):
-    tenant = request.user.tenant
+    tenant = request.tenant
     latest_status = ComputationStatus.objects.filter(tenant=tenant).first()
     if latest_status:
         return Response({
@@ -786,7 +735,7 @@ def get_computation_status(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_notifications(request):
-    tenant = request.user.tenant
+    tenant = request.tenant
     notifications = Notification.objects.filter(tenant=tenant, is_read=False)
     return Response({
         "notifications": [
@@ -797,15 +746,88 @@ def get_notifications(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def mark_notification_read(request, notification_id):
-    tenant = request.user.tenant
+def prepare_bulk_import(request, metric_id):
+    sheet_url = request.data.get('sheet_url')
+    if not sheet_url:
+        return Response({"error": "Google Sheet URL is required"}, status=400)
+    
+    result = data_export.prepare_data_for_bulk_import(sheet_url)
+    return Response(result)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def import_historical_data(request, metric_id):
+    data = request.data.get('data')
+    if not data:
+        return Response({"error": "No data provided for import"}, status=400)
+    
     try:
-        notification = Notification.objects.get(id=notification_id, tenant=tenant)
-        notification.is_read = True
-        notification.save()
-        return Response({"message": "Notification marked as read"})
-    except Notification.DoesNotExist:
-        return Response({"error": "Notification not found"}, status=404)
+        metric = Metric.objects.get(id=metric_id)
+    except Metric.DoesNotExist:
+        return Response({"error": "Metric not found"}, status=404)
+    
+    try:
+        with transaction.atomic():
+            for item in data:
+                HistoricalData.objects.create(
+                    metric=metric,
+                    date=item['date'],
+                    value=item['value'],
+                    tenant=request.tenant  # Assuming you're using multi-tenancy
+                )
+        return Response({"message": f"Successfully imported {len(data)} data points"})
+    except Exception as e:
+        return Response({"error": f"Error during import: {str(e)}"}, status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_statistical_analysis(request, metric_id):
+    analysis_type = request.query_params.get('type', 'basic')
+    if analysis_type == 'basic':
+        stats = statistical_analysis.calculate_basic_stats(metric_id)
+    elif analysis_type == 'advanced':
+        stats = statistical_analysis.calculate_advanced_stats(metric_id)
+    elif analysis_type == 'aggregated':
+        stats = statistical_analysis.calculate_aggregated_views(metric_id)
+    else:
+        return Response({"error": "Invalid analysis type"}, status=400)
+    return Response(stats)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_performance_analysis(request, metric_id):
+    analysis_type = request.query_params.get('type')
+    if analysis_type == 'forecast_comparison':
+        result = performance_analysis.forecast_vs_actual_comparison(metric_id)
+    elif analysis_type == 'probability':
+        result = performance_analysis.probability_analysis(metric_id)
+    elif analysis_type == 'progress_tracking':
+        result = performance_analysis.process_progress_tracking(metric_id)
+    else:
+        return Response({"error": "Invalid analysis type"}, status=400)
+    return Response(result)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def run_experiment_analysis(request, metric_id):
+    analysis_type = request.data.get('type')
+    if analysis_type == 'ab_test':
+        result = experiment_analysis.ab_test_analysis(
+            metric_id,
+            request.data.get('control_group'),
+            request.data.get('treatment_group')
+        )
+    elif analysis_type == 'difference_in_differences':
+        result = experiment_analysis.difference_in_differences(
+            metric_id,
+            request.data.get('pre_period'),
+            request.data.get('post_period'),
+            request.data.get('control_group'),
+            request.data.get('treatment_group')
+        )
+    else:
+        return Response({"error": "Invalid analysis type"}, status=400)
+    return Response(result)
 
 @api_view(['POST'])
 def mark_notification_read(request, notification_id):
@@ -817,3 +839,94 @@ def mark_notification_read(request, notification_id):
         return Response({"message": "Notification marked as read"})
     except Notification.DoesNotExist:
         return Response({"error": "Notification not found"}, status=404)
+    
+@permission_classes([IsAuthenticated])
+def trigger_long_computation(request, metric_id):
+    computation_type = request.data.get('computation_type')
+    task = run_long_computation.delay(metric_id, computation_type)
+    return Response({'task_id': task.id})
+
+@permission_classes([IsAuthenticated])
+def get_automated_suggestions(request, metric_id):
+    suggestions = dashboard_computations.generate_automated_suggestions(metric_id)
+    return Response(suggestions)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_performance_dashboard(request, metric_id):
+    current_date = request.query_params.get('current_date')
+    dashboard = dashboard_computations.performance_dashboard(metric_id, current_date)
+    return Response(dashboard)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def export_data(request, metric_id):
+    start_date = request.query_params.get('start_date')
+    end_date = request.query_params.get('end_date')
+    data_type = request.query_params.get('data_type', 'raw')
+    data = bulk_export_data(metric_id, start_date, end_date, data_type)
+    return Response(data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_tenant(request):
+    serializer = TenantCreationSerializer(data=request.data)
+    if serializer.is_valid():
+        with transaction.atomic():
+            # Create the tenant
+            tenant = Client(
+                schema_name=serializer.validated_data['domain'],
+                name=serializer.validated_data['name']
+            )
+            tenant.save()
+
+            # Add domain for the tenant
+            domain = Domain()
+            domain.domain = f"{serializer.validated_data['domain']}.example.com"  # replace with your actual domain
+            domain.tenant = tenant
+            domain.is_primary = True
+            domain.save()
+
+            # Create a user profile for the tenant
+            with tenant_context(tenant):
+                UserProfile.objects.create(user=request.user, tenant=tenant)
+
+        return Response({"message": "Tenant created successfully"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_project(request):
+    serializer = ProjectCreationSerializer(data=request.data)
+    if serializer.is_valid():
+        project = serializer.save(tenant=request.tenant)
+        return Response({"message": "Project created successfully", "id": project.id}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_team(request):
+    serializer = TeamCreationSerializer(data=request.data)
+    if serializer.is_valid():
+        team = serializer.save(tenant=request.tenant)
+        return Response({"message": "Team created successfully", "id": team.id}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def assign_team_members(request):
+    serializer = TeamMemberAssignmentSerializer(data=request.data)
+    if serializer.is_valid():
+        team_id = serializer.validated_data['team_id']
+        user_ids = serializer.validated_data['user_ids']
+        
+        try:
+            team = Team.objects.get(id=team_id, tenant=request.tenant)
+        except Team.DoesNotExist:
+            return Response({"error": "Team not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        users = CustomUser.objects.filter(id__in=user_ids, tenant=request.tenant)
+        team.members.add(*users)
+        
+        return Response({"message": "Team members assigned successfully"}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

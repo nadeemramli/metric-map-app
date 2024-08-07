@@ -390,29 +390,6 @@ class Correlation(TenantAwareMixin):
         - `pearson_correlation`: Pearson correlation coefficient.
         - `spearman_correlation`: Spearman correlation coefficient.
     '''
-class ConnectionManager(Manager):
-    def bulk_create(self, objs, **kwargs):
-        result = super().bulk_create(objs, **kwargs)
-        affected_metric_ids = set()
-        for obj in objs:
-            affected_metric_ids.add(obj.from_metric_id)
-            affected_metric_ids.add(obj.to_metric_id)
-        client = objs[0].client if objs else None
-        if client:
-            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
-        return result
-
-    def bulk_update(self, objs, fields, **kwargs):
-        result = super().bulk_update(objs, fields, **kwargs)
-        affected_metric_ids = set()
-        for obj in objs:
-            affected_metric_ids.add(obj.from_metric_id)
-            affected_metric_ids.add(obj.to_metric_id)
-        client = objs[0].client if objs else None
-        if client:
-            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
-        return result
-
 class Connection(TenantAwareMixin):
     from_metric = models.ForeignKey(Metric, related_name='outgoing_connections', on_delete=models.CASCADE)
     to_metric = models.ForeignKey(Metric, related_name='incoming_connections', on_delete=models.CASCADE)
@@ -453,6 +430,29 @@ class Connection(TenantAwareMixin):
         - `to_metric`: The target metric of the connection.
         - `relationship`: Description of the relationship between the metrics.
     '''
+
+class ConnectionManager(Manager):
+    def bulk_create(self, objs, **kwargs):
+        result = super().bulk_create(objs, **kwargs)
+        affected_metric_ids = set()
+        for obj in objs:
+            affected_metric_ids.add(obj.from_metric_id)
+            affected_metric_ids.add(obj.to_metric_id)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
+
+    def bulk_update(self, objs, fields, **kwargs):
+        result = super().bulk_update(objs, fields, **kwargs)
+        affected_metric_ids = set()
+        for obj in objs:
+            affected_metric_ids.add(obj.from_metric_id)
+            affected_metric_ids.add(obj.to_metric_id)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
 
 ''' 
 Execution and Qualitative Data:
@@ -817,7 +817,7 @@ class MovingAverage(TenantAwareMixin):
     or cycles in the data.
     '''
 
-class SeasonalityResult(models.Model):  # Remove TenantAwareMixin
+class SeasonalityResult(TenantAwareMixin):  # Remove TenantAwareMixin
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name='seasonality_results')
     seasonality_type = models.CharField(max_length=20)  # e.g., 'daily', 'weekly', 'yearly'
     strength = models.FloatField()
@@ -865,7 +865,7 @@ class TrendChangePoint(TenantAwareMixin):
     significance = models.FloatField(null=True, blank=True)
     
     def __str__(self):
-        return f"Trend change for {self.metric.name} on {self.date}: {self.change_type}"
+        return f"Trend change for {self.metric.name} on {self.date}: {self.direction}"
 
     @property
     def tenant(self):
