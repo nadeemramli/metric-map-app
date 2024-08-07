@@ -36,15 +36,7 @@ To calculate and analyze the correlation coefficients between connected metrics,
 - **Correlation Calculations:** Identify the most influential metrics and understand the dynamic between different data points.
 - **Accuracy:** Ensures that correlations are calculated using matching date ranges.
 
-### 5. User Interface
-#### Goal:
-To provide a user-friendly, intuitive interface for interacting with metrics and their relationships.
-#### Features:
-- **Forms:** Forms for inputting and updating metrics.
-- **Visual Representations:** Visual representations of metrics and their connections.
-- **Customization:** Customizable tags and categories to enhance user experience.
-
-### 6. Advanced Statistics
+### 5. Statistics
 #### Goal:
 To provide in-depth statistical analysis of metrics and their relationships.
 #### Features:
@@ -52,23 +44,8 @@ To provide in-depth statistical analysis of metrics and their relationships.
 - **Advanced Statistics:** More complex statistical analyses for deeper insights.
 - **Variance Analysis:** Tools to analyze and understand the variance in metric data.
 - **Time Series Analysis:** Specialized analysis for time-based metric data.
-
-### 7. Multi-tenancy Support
-#### Goal:
-To support multiple organizations or projects within the same application instance.
-#### Features:
-- **Tenant Isolation:** Separate data and access for different tenants.
-- **Custom Domain Support:** Ability to use custom domains for different tenants.
-
-### 8. Documentation
-#### Goal:
-To provide comprehensive documentation for the project and its components.
-#### Features:
-- **API Documentation:** Detailed documentation of the API endpoints and their usage.
-- **User Guides:** Guides for using different features of the application.
-- **Developer Documentation:** Technical documentation for developers working on the project.
-
-### 9. Forecasting
+  
+### 6. Forecasting
 #### Goal:
 To predict future values of metrics based on historical data and trends.
 #### Features:
@@ -76,7 +53,7 @@ To predict future values of metrics based on historical data and trends.
 - **Forecast Visualization:** Display forecasted values alongside historical data for easy comparison.
 - **Confidence Intervals:** Provide confidence intervals for forecasts to indicate prediction uncertainty.
 
-### 10. Anomaly Detection
+### 7. Anomaly Detection
 #### Goal:
 To identify unusual patterns or outliers in metric data that deviate from expected behavior.
 #### Features:
@@ -84,7 +61,7 @@ To identify unusual patterns or outliers in metric data that deviate from expect
 - **Machine Learning-based Detection:** Implement more advanced anomaly detection algorithms for complex patterns.
 - **Real-time Alerts:** Set up notifications for detected anomalies to enable quick responses.
 
-### 11. Data Preparation and Feature Engineering
+### 8. Data Preparation and Feature Engineering
 #### Goal:
 To clean, transform, and enhance raw data for improved analysis and model performance.
 #### Features:
@@ -92,6 +69,13 @@ To clean, transform, and enhance raw data for improved analysis and model perfor
 - **Feature Extraction:** Create new features from existing data to capture more complex relationships.
 - **Data Transformation:** Apply scaling, normalization, and other transformations to prepare data for various analyses.
 - **Time Series Preprocessing:** Specific techniques for handling time-based data, such as resampling and lag feature creation.
+
+### 9. Multi-tenancy Support
+#### Goal:
+To support multiple organizations or projects within the same application instance.
+#### Features:
+- **Tenant Isolation:** Separate data and access for different tenants.
+- **Custom Domain Support:** Ability to use custom domains for different tenants.
 
 ## Technical Stack
 - **Frontend:** React with React Router, styled using Tailwind CSS.
