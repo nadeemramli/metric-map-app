@@ -5,8 +5,9 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 from pmdarima import auto_arima
 from prophet import Prophet
 import logging
-from .data_preparation import get_prepared_data
+from .data_preparation import DataPreparation
 from .feature_engineering import FeatureEngineering
+from django.apps import apps
 
 logger = logging.getLogger(__name__)
 
@@ -14,17 +15,24 @@ class Forecaster:
     def __init__(self, metric_id: int, prepared_data=None, dynamic_params=None, engineered_features=None):
         self.metric_id = metric_id
         if prepared_data is not None:
-            self.df, self.metadata = prepared_data, {}
+            self.df, self.metadata = prepared_data
         else:
-            self.df, self.metadata = get_prepared_data(metric_id)
+            Metric = apps.get_model('metrics', 'Metric')
+            metric = Metric.objects.get(id=metric_id)
+            data_prep = DataPreparation(metric_id, metric.tenant)
+            self.df, self.metadata = data_prep.prepare_data()
         
         self.fe = FeatureEngineering(metric_id)
         self.features = engineered_features if engineered_features is not None else self.fe.engineer_features()
         self.dynamic_params = dynamic_params if dynamic_params is not None else self.fe.compute_dynamic_parameters()
-        self.metric = self.fe.metric
+        self.metric = self.get_metric()
         self.tenant = self.metric.tenant
         self.project = self.metric.project
     
+    def get_metric(self):
+        Metric = apps.get_model('metrics', 'Metric')
+        return Metric.objects.get(id=self.metric_id)
+
     def forecast(self):
         sarima_results = self.sarima_forecast()
         prophet_results = self.prophet_forecast()
