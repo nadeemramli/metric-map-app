@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from django_tenants.utils import get_public_schema_name
+from django_tenants.utils import get_public_schema_name, get_tenant_model
 from django_tenants.admin import TenantAdminMixin
 from django.utils.html import format_html
 from django.db import connection
