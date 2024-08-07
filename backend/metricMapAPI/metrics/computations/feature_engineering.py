@@ -5,18 +5,20 @@ from statsmodels.tsa.stattools import acf
 from statsmodels.tsa.seasonal import seasonal_decompose
 from scipy.signal import find_peaks
 from typing import Dict, List, Tuple, Optional
-from ..models import Metric, SeasonalityResult, TrendChangePoint
+from django.apps import apps
 from django.db import transaction
 import logging
 from .data_preparation import DataPreparation
 from .config import Config
+from functools import lru_cache
+import hashlib
 
 logger = logging.getLogger(__name__)
 
 class FeatureEngineering:
     def __init__(self, metric_id: int):
         self.metric_id = metric_id
-        self.metric = Metric.objects.get(id=metric_id)
+        self.metric = self.get_metric()
         self.tenant = self.metric.tenant
         data_prep = DataPreparation(metric_id)
         try:
@@ -29,10 +31,19 @@ class FeatureEngineering:
         self._engineered_features: Optional[Dict] = None
         self._parameter_type: str = "unknown"
 
+    def get_metric(self):
+        Metric = apps.get_model('metrics', 'Metric')
+        return Metric.objects.get(id=self.metric_id)
+
     def get_data(self) -> Tuple[pd.DataFrame, Dict]:
         return self.df, self.metadata
 
+    @lru_cache(maxsize=32)
     def compute_dynamic_parameters(self) -> Dict:
+        df_hash = hashlib.md5(pd.util.hash_pandas_object(self.df).values).hexdigest()
+        return self._compute_dynamic_parameters(df_hash)
+
+    def _compute_dynamic_parameters(self, df_hash) -> Dict:
         if self._dynamic_parameters is None:
             try:
                 data_length = len(self.df)
@@ -93,7 +104,12 @@ class FeatureEngineering:
             'imputation_method': 'mean'
         }
 
+    @lru_cache(maxsize=32)
     def _compute_seasonality_period(self) -> Optional[int]:
+        df_hash = hashlib.md5(pd.util.hash_pandas_object(self.df).values).hexdigest()
+        return self.__compute_seasonality_period(df_hash)
+
+    def __compute_seasonality_period(self, df_hash) -> Optional[int]:
         logger.debug(f"Starting _compute_seasonality_period for metric {self.metric_id}")
         try:
             seasonality_result = self.detect_seasonality()
@@ -293,7 +309,12 @@ class FeatureEngineering:
         except Exception:
             return {'count': 0, 'percentage': 0}
 
+    @lru_cache(maxsize=32)
     def detect_seasonality(self) -> Dict:
+        df_hash = hashlib.md5(pd.util.hash_pandas_object(self.df).values).hexdigest()
+        return self._detect_seasonality(df_hash)
+
+    def _detect_seasonality(self, df_hash) -> Dict:
         try:
             if len(self.df) < 2:
                 logger.warning("Not enough data points to detect seasonality")
@@ -332,6 +353,7 @@ class FeatureEngineering:
                 strength = 1 - np.var(residual) / np.var(seasonal + residual)
                 amplitude = np.max(seasonal) - np.min(seasonal)
 
+                SeasonalityResult = apps.get_model('metrics', 'SeasonalityResult')
                 with transaction.atomic():
                     seasonality_result, created = SeasonalityResult.objects.update_or_create(
                         metric=self.metric,
@@ -375,14 +397,19 @@ class FeatureEngineering:
         else:
             return 'custom', period
     
+    @lru_cache(maxsize=32)
     def engineer_features(self) -> Dict:
+        df_hash = hashlib.md5(pd.util.hash_pandas_object(self.df).values).hexdigest()
+        return self._engineer_features(df_hash)
+
+    def _engineer_features(self, df_hash) -> Dict:
         if self._engineered_features is None:
             try:
                 if len(self.df) == 0:
                     raise ValueError("No data available for feature engineering")
 
                 # Get dynamic parameters
-                dynamic_params = self._dynamic_parameters()
+                dynamic_params = self.compute_dynamic_parameters()
 
                 features = {
                     'profile': self.profile_data(),
@@ -486,6 +513,7 @@ class FeatureEngineering:
             
             significant_changes = self.df[trend_changes].index
 
+            TrendChangePoint = apps.get_model('metrics', 'TrendChangePoint')
             with transaction.atomic():
                 TrendChangePoint.objects.filter(metric=self.metric).delete()
                 for change_point in significant_changes:

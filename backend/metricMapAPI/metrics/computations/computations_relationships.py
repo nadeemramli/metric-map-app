@@ -6,8 +6,9 @@ from scipy import stats
 import networkx as nx
 from typing import List, Dict, Tuple, Any
 import logging
-from .data_preparation import get_prepared_data
+from .data_preparation import DataPreparation
 from .feature_engineering import FeatureEngineering
+from django.apps import apps
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +18,21 @@ class RelationshipAnalyzer:
         if prepared_data is not None:
             self.df, self.metadata = prepared_data
         else:
-            self.df, self.metadata = get_prepared_data(metric_id)
+            Metric = apps.get_model('metrics', 'Metric')
+            metric = Metric.objects.get(id=metric_id)
+            data_prep = DataPreparation(metric_id, metric.tenant)
+            self.df, self.metadata = data_prep.prepare_data()
         
         self.fe = FeatureEngineering(metric_id)
         self.features = engineered_features if engineered_features is not None else self.fe.engineer_features()
         self.dynamic_params = dynamic_params if dynamic_params is not None else self.fe.compute_dynamic_parameters()
-        self.metric = self.fe.metric
+        self.metric = self.get_metric()
         self.tenant = self.metric.tenant
         self.project = self.metric.project
+
+    def get_metric(self):
+        Metric = apps.get_model('metrics', 'Metric')
+        return Metric.objects.get(id=self.metric_id)
 
     def analyze_relationships(self, other_metric_ids: List[int]) -> List[Dict]:
         correlations = []
@@ -49,28 +57,32 @@ class RelationshipAnalyzer:
                     'lagged_correlations': lagged_results
                 })
         return lagged_correlations
-
-    def calculate_correlation(self, other_metric_id: int, correlation_type: str = 'pearson') -> Dict[str, float]:
+    
+    def calculate_correlation(self, other_metric_id: int, method: str) -> Dict[str, float]:
         try:
-            df2, _ = get_prepared_data(other_metric_id)
+            Metric = apps.get_model('metrics', 'Metric')
+            other_metric = Metric.objects.get(id=other_metric_id)
+            data_prep = DataPreparation(other_metric_id, other_metric.tenant)
+            df2, _ = data_prep.prepare_data()
 
-            # Ensure the DataFrames have the same index
+             # Ensure the DataFrames have the same index
             common_index = self.df.index.intersection(df2.index)
             df1 = self.df.loc[common_index]
             df2 = df2.loc[common_index]
-
-            if correlation_type == 'pearson':
-                corr, p_value = stats.pearsonr(df1['value'], df2['value'])
-            elif correlation_type == 'spearman':
-                corr, p_value = stats.spearmanr(df1['value'], df2['value'])
-            else:
-                raise ValueError("Correlation type must be 'pearson' or 'spearman'")
             
-            logger.info(f"Calculated {correlation_type} correlation between metrics {self.metric_id} and {other_metric_id}")
+            merged_df = pd.merge(self.df, df2, left_index=True, right_index=True, suffixes=('_1', '_2'))
+            if method == 'pearson':
+                corr, p_value = stats.pearsonr(merged_df['value_1'], merged_df['value_2'])
+            elif method == 'spearman':
+                corr, p_value = stats.spearmanr(merged_df['value_1'], merged_df['value_2'])
+            else:
+                raise ValueError(f"Unsupported correlation method: {method}")
+
+            logger.info(f"Calculated {method} correlation between metrics {self.metric_id} and {other_metric_id}")
             return {'correlation': corr, 'p_value': p_value}
         except Exception as e:
-            logger.error(f"Error calculating {correlation_type} correlation between metrics {self.metric_id} and {other_metric_id}: {str(e)}")
-            return {}
+            logger.error(f"Error calculating {method} correlation between metrics {self.metric_id} and {other_metric_id}: {str(e)}")
+            return {'correlation': None, 'p_value': None}
 
     def analyze_connections(self) -> None:
         try:
@@ -91,7 +103,10 @@ class RelationshipAnalyzer:
 
     def calculate_lagged_correlation(self, other_metric_id: int) -> List[Dict[str, float]]:
         try:
-            df2, _ = get_prepared_data(other_metric_id)
+            Metric = apps.get_model('metrics', 'Metric')
+            other_metric = Metric.objects.get(id=other_metric_id)
+            data_prep = DataPreparation(other_metric_id, other_metric.tenant)
+            df2, _ = data_prep.prepare_data()
 
             max_lag = self.dynamic_params.get('max_lag', 10)
             results = []

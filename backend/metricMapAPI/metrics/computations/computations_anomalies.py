@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import logging
 from typing import Tuple
-from .data_preparation import get_prepared_data
+from .data_preparation import DataPreparation
 from .feature_engineering import FeatureEngineering
 from django.apps import apps
 
@@ -14,16 +14,18 @@ class AnomalyDetector:
     def __init__(self, metric_id, prepared_data=None, dynamic_params=None, engineered_features=None):
         self.metric_id = metric_id
         if prepared_data is not None:
-            self.df, self.metadata = prepared_data, {}
+            self.df, self.metadata = prepared_data
         else:
             Metric = apps.get_model('metrics', 'Metric')
             self.metric = Metric.objects.get(id=self.metric_id)
-            self.df, self.metadata = get_prepared_data(self.metric)
+            data_prep = DataPreparation(metric_id, self.metric.tenant)
+            self.df, self.metadata = data_prep.prepare_data()
         
-        self.fe = FeatureEngineering(self.metric)
+        self.fe = FeatureEngineering(self.metric_id)
         self.features = engineered_features if engineered_features is not None else self.fe.engineer_features()
         self.dynamic_params = dynamic_params if dynamic_params is not None else self.fe.compute_dynamic_parameters()
-        self.tenant = self.metric.client
+        self.metric = self.get_metric()
+        self.tenant = self.metric.tenant
         
         required_params = ['seasonality_period', 'window_size', 'base_threshold', 'context_window', 'global_threshold']
         
@@ -44,6 +46,10 @@ class AnomalyDetector:
         logger.info(f"Base threshold: {self.base_threshold}")
         logger.info(f"Context window: {self.context_window}")
         logger.info(f"Global threshold: {self.global_threshold}")
+
+    def get_metric(self):
+        Metric = apps.get_model('metrics', 'Metric')
+        return Metric.objects.get(id=self.metric_id)
 
     def detect_anomalies(self) -> pd.DataFrame:
         try:

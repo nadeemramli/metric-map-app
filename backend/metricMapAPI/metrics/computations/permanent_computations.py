@@ -5,15 +5,11 @@ import logging
 from django.db import transaction
 import pandas as pd
 from django.core.exceptions import ValidationError
-from .data_preparation import DataPreparation
-from .feature_engineering import FeatureEngineering
-from .computations_analyzer import Analyzer
-from .computations_forecaster import Forecaster
-from .computations_anomalies import AnomalyDetector
-from .computations_relationships import RelationshipAnalyzer
 from django.apps import apps
 from .utils import log_exceptions, validate_metadata
 from .config import Config
+from .data_preparation import DataPreparation
+from .feature_engineering import FeatureEngineering
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +46,7 @@ class PermanentComputations:
             # Data Preparation
             logger.info(f"Starting data preparation for metric {metric_id}")
             try:
-                data_prep = self.perform_data_preparation(metric_id)
+                data_prep = DataPreparation(metric_id, self.client)
                 prepared_data, metadata = data_prep.prepare_data()
             except ValueError as ve:
                 logger.warning(f"Data preparation failed for metric {metric_id}: {str(ve)}")
@@ -79,6 +75,7 @@ class PermanentComputations:
 
             # Analysis
             try:
+                from .computations_analyzer import Analyzer
                 logger.info(f"Starting analysis for metric {metric_id}")
                 analyzer = Analyzer(metric_id, prepared_data, dynamic_params, engineered_features)
                 analysis_results = analyzer.analyze()
@@ -93,6 +90,7 @@ class PermanentComputations:
 
             # Forecasting
             try:
+                from .computations_forecaster import Forecaster
                 logger.info(f"Starting forecasting for metric {metric_id}")
                 forecaster = Forecaster(metric_id, prepared_data, dynamic_params, engineered_features)
                 forecast_results = forecaster.forecast()
@@ -105,6 +103,7 @@ class PermanentComputations:
 
             # Anomaly Detection
             try:
+                from .computations_anomalies import AnomalyDetector
                 logger.info(f"Starting anomaly detection for metric {metric_id}")
                 anomaly_detector = AnomalyDetector(metric_id, prepared_data, dynamic_params, engineered_features)
                 anomaly_results = anomaly_detector.detect_anomalies()
@@ -117,6 +116,7 @@ class PermanentComputations:
 
             # Relationship Analysis
             try:
+                from .computations_relationships import RelationshipAnalyzer
                 logger.info(f"Starting relationship analysis for metric {metric_id}")
                 relationship_analyzer = RelationshipAnalyzer(metric_id, prepared_data, dynamic_params, engineered_features)
                 relationship_results = relationship_analyzer.analyze_relationships()
@@ -192,6 +192,7 @@ class PermanentComputations:
 
     def perform_analysis(self, metric_id: int, fe: FeatureEngineering) -> Dict:
         try:
+            from .computations_analyzer import Analyzer
             analyzer = Analyzer(metric_id)
             trend_analysis = analyzer.analyze_trend()
             technical_indicators = analyzer.calculate_technical_indicators()
@@ -220,6 +221,7 @@ class PermanentComputations:
     def perform_forecasting(self, metric_id: int, data_prep: DataPreparation) -> Dict:
         logger.info(f"Starting forecasting for metric {metric_id}")
         try:
+            from .computations_forecaster import Forecaster
             forecaster = Forecaster(data_prep.cleaned_df, data_prep.metadata)
             forecast_results = forecaster.forecast()
             if not forecast_results:
@@ -248,6 +250,7 @@ class PermanentComputations:
 
     def perform_anomaly_detection(self, metric_id: int, fe: FeatureEngineering) -> Dict:
         try:
+            from .computations_anomalies import AnomalyDetector
             anomaly_detector = AnomalyDetector(metric_id)
             anomalies = anomaly_detector.detect_anomalies()
             if isinstance(anomalies, pd.DataFrame):
@@ -261,6 +264,7 @@ class PermanentComputations:
 
     def perform_relationship_analysis(self, metric_id: int, fe: FeatureEngineering) -> Dict:
         try:
+            from .computations_relationships import RelationshipAnalyzer
             relationship_analyzer = RelationshipAnalyzer(metric_id)
             correlations = relationship_analyzer.analyze_relationships(self.metric_ids)
             lagged_correlations = relationship_analyzer.detect_lagged_relationships(self.metric_ids)
@@ -346,23 +350,31 @@ class PermanentComputations:
                 )
 
     def save_anomaly_results(self, metric_id: int, results: Dict):
-        Metric = apps.get_model('metrics', 'Metric')
-        metric = Metric.objects.get(id=metric_id)
-        
-        Anomaly = apps.get_model('metrics', 'Anomaly')
-        for anomaly in results['anomalies']:
-            Anomaly.objects.update_or_create(
-                metric=metric,
-                client=self.client,
-                detection_date=anomaly['date'],
-                defaults={
-                    'anomaly_value': anomaly['value'],
-                    'anomaly_score': anomaly['score'],
-                    'notes': anomaly.get('notes', ''),
-                    'anomaly_type': anomaly.get('type', AnomalyType.IGNORE.name),
-                    'quality': anomaly.get('quality', QualityType.LOW.name)
-                }
-            )
+        try:
+            Metric = apps.get_model('metrics', 'Metric')
+            metric = Metric.objects.get(id=metric_id)
+            
+            Anomaly = apps.get_model('metrics', 'Anomaly')
+            for anomaly in results['anomalies']:
+                Anomaly.objects.update_or_create(
+                    metric=metric,
+                    client=self.client,
+                    detection_date=anomaly['date'],
+                    defaults={
+                        'anomaly_value': anomaly['value'],
+                        'anomaly_score': anomaly['score'],
+                        'notes': anomaly.get('notes', ''),
+                        'anomaly_type': anomaly.get('type', 'UNKNOWN'),
+                        'quality': anomaly.get('quality', 'LOW')
+                    }
+                )
+            logger.info(f"Successfully saved anomaly results for metric {metric_id}")
+        except Metric.DoesNotExist:
+            logger.error(f"Metric with id {metric_id} does not exist")
+        except KeyError as e:
+            logger.error(f"Missing key in anomaly results for metric {metric_id}: {str(e)}")
+        except Exception as e:
+            logger.error(f"Error in saving anomaly results for metric {metric_id}: {str(e)}")
 
     def save_relationship_results(self, metric_id: int, results: Dict):
         Metric = apps.get_model('metrics', 'Metric')
