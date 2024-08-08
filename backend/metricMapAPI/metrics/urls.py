@@ -89,44 +89,424 @@ urlpatterns = [
 URL Patterns:
 
 1. Client (Tenant) Level:
-   - List/Create: /clients/
-   - Retrieve/Update/Delete: /clients/{client_pk}/
+   - List/Create: 
+     GET, POST /clients/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Client Name",
+         "created_at": "2023-05-20T10:30:00Z",
+         "updated_at": "2023-05-20T10:30:00Z"
+       },
+       ...
+     ]
+   - Retrieve/Update/Delete: 
+     GET, PUT, PATCH, DELETE /clients/{client_pk}/
+     Output: 
+     {
+       "id": 1,
+       "name": "Client Name",
+       "created_at": "2023-05-20T10:30:00Z",
+       "updated_at": "2023-05-20T10:30:00Z"
+     }
 
 2. Project Level:
-   - List/Create: /clients/{client_pk}/projects/
-   - Retrieve/Update/Delete: /clients/{client_pk}/projects/{project_pk}/
+   - List/Create: 
+     GET, POST /clients/{client_pk}/projects/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Project Name",
+         "client": client_pk,
+         "description": "Project description",
+         "start_date": "2023-05-01",
+         "end_date": "2023-12-31",
+         "status": "active",
+         "created_at": "2023-05-01T09:00:00Z",
+         "updated_at": "2023-05-01T09:00:00Z"
+       },
+       ...
+     ]
+   - Retrieve/Update/Delete: 
+     GET, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/
+     Output: 
+     {
+       "id": 1,
+       "name": "Project Name",
+       "client": client_pk,
+       "description": "Project description",
+       "start_date": "2023-05-01",
+       "end_date": "2023-12-31",
+       "status": "active",
+       "created_at": "2023-05-01T09:00:00Z",
+       "updated_at": "2023-05-01T09:00:00Z"
+     }
    
    Project-related entities:
-   - Categories: /clients/{client_pk}/projects/{project_pk}/categories/
-   - Tags: /clients/{client_pk}/projects/{project_pk}/tags/
-   - Dashboards: /clients/{client_pk}/projects/{project_pk}/dashboards/
-   - Experiments: /clients/{client_pk}/projects/{project_pk}/experiments/
-   - Reports: /clients/{client_pk}/projects/{project_pk}/reports/
-   - Strategies: /clients/{client_pk}/projects/{project_pk}/strategies/
-   - Action Remarks: /clients/{client_pk}/projects/{project_pk}/action-remarks/
-   - Tactical Solutions: /clients/{client_pk}/projects/{project_pk}/tactical-solutions/
-   - Time Dimensions: /clients/{client_pk}/projects/{project_pk}/time-dimensions/
+   - Categories: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/categories/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Category Name",
+         "project": project_pk,
+         "description": "Category description",
+         "created_at": "2023-05-02T10:00:00Z",
+         "updated_at": "2023-05-02T10:00:00Z"
+       },
+       ...
+     ]
+   - Tags: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/tags/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Tag Name",
+         "project": project_pk,
+         "created_at": "2023-05-02T11:00:00Z",
+         "updated_at": "2023-05-02T11:00:00Z"
+       },
+       ...
+     ]
+   - Dashboards: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/dashboards/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Dashboard Name",
+         "project": project_pk,
+         "layout": {...},
+         "created_at": "2023-05-03T09:00:00Z",
+         "updated_at": "2023-05-03T09:00:00Z"
+       },
+       ...
+     ]
+      - Experiments: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/experiments/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Experiment Name",
+         "project": project_pk,
+         "description": "Experiment description",
+         "start_date": "2023-06-01",
+         "end_date": "2023-06-30",
+         "status": "running",
+         "created_at": "2023-06-01T09:00:00Z",
+         "updated_at": "2023-06-01T09:00:00Z"
+       },
+       ...
+     ]
+   - Reports: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/reports/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Report Name",
+         "project": project_pk,
+         "content": "Report content",
+         "created_at": "2023-06-02T10:00:00Z",
+         "updated_at": "2023-06-02T10:00:00Z"
+       },
+       ...
+     ]
+   - Strategies: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/strategies/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Strategy Name",
+         "project": project_pk,
+         "description": "Strategy description",
+         "status": "active",
+         "created_at": "2023-06-03T11:00:00Z",
+         "updated_at": "2023-06-03T11:00:00Z"
+       },
+       ...
+     ]
+   - Action Remarks: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/action-remarks/
+     Output: 
+     [
+       {
+         "id": 1,
+         "content": "Action Remark Content",
+         "project": project_pk,
+         "author": 1,
+         "created_at": "2023-06-04T12:00:00Z",
+         "updated_at": "2023-06-04T12:00:00Z"
+       },
+       ...
+     ]
+   - Tactical Solutions: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/tactical-solutions/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Tactical Solution Name",
+         "project": project_pk,
+         "description": "Tactical solution description",
+         "status": "implemented",
+         "created_at": "2023-06-05T13:00:00Z",
+         "updated_at": "2023-06-05T13:00:00Z"
+       },
+       ...
+     ]
+   - Time Dimensions: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/time-dimensions/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Time Dimension Name",
+         "project": project_pk,
+         "type": "daily",
+         "start_date": "2023-01-01",
+         "end_date": "2023-12-31",
+         "created_at": "2023-06-06T14:00:00Z",
+         "updated_at": "2023-06-06T14:00:00Z"
+       },
+       ...
+     ]
 
 3. Metric Level:
-   - List/Create: /clients/{client_pk}/projects/{project_pk}/metrics/
-   - Retrieve/Update/Delete: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/
+   - List/Create: 
+     GET, POST /clients/{client_pk}/projects/{project_pk}/metrics/
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Metric Name",
+         "project": project_pk,
+         "type": "KPI",
+         "value_type": "numeric",
+         "description": "Metric description",
+         "created_at": "2023-06-07T09:00:00Z",
+         "updated_at": "2023-06-07T09:00:00Z"
+       },
+       ...
+     ]
+   - Retrieve/Update/Delete: 
+     GET, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/
+     Output: 
+     {
+       "id": 1,
+       "name": "Metric Name",
+       "project": project_pk,
+       "type": "KPI",
+       "value_type": "numeric",
+       "description": "Metric description",
+       "created_at": "2023-06-07T09:00:00Z",
+       "updated_at": "2023-06-07T09:00:00Z"
+     }
    
    Metric-related entities:
-   - Historical Data: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/
-   - Metadata: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/metadata/
-   - Targets: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/targets/
-   - Forecast: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/forecast/
-   - Anomaly: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/anomaly/
-   - Trend: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/trend/
-   - Correlations: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/correlations/
-   - Connections: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/connections/
-   - Data Quality Scores: /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/data-quality-scores/
+   - Historical Data: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/historical-data/
+     Output: 
+     [
+       {
+         "id": 1,
+         "date": "2023-05-20",
+         "value": 100,
+         "metric": metric_pk,
+         "created_at": "2023-06-07T10:00:00Z",
+         "updated_at": "2023-06-07T10:00:00Z"
+       },
+       ...
+     ]
+   - Metadata: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/metadata/
+     Output: 
+     {
+       "id": 1,
+       "key": "metadata_key",
+       "value": "metadata_value",
+       "metric": metric_pk,
+       "created_at": "2023-06-07T11:00:00Z",
+       "updated_at": "2023-06-07T11:00:00Z"
+     }
+   - Targets: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/targets/
+     Output: 
+     [
+       {
+         "id": 1,
+         "target_value": 1000,
+         "target_date": "2023-12-31",
+         "metric": metric_pk,
+         "created_at": "2023-06-07T12:00:00Z",
+         "updated_at": "2023-06-07T12:00:00Z"
+       },
+       ...
+     ]
+   - Forecast: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/forecast/
+     Output: 
+     [
+       {
+         "id": 1,
+         "forecast_date": "2023-06-01",
+         "forecast_value": 150,
+         "metric": metric_pk,
+         "created_at": "2023-06-07T13:00:00Z",
+         "updated_at": "2023-06-07T13:00:00Z"
+       },
+       ...
+     ]
+   - Anomaly: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/anomaly/
+     Output: 
+     [
+       {
+         "id": 1,
+         "date": "2023-05-25",
+         "value": 200,
+         "is_anomaly": true,
+         "metric": metric_pk,
+         "created_at": "2023-06-07T14:00:00Z",
+         "updated_at": "2023-06-07T14:00:00Z"
+       },
+       ...
+     ]
+   - Trend: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/trend/
+     Output: 
+     [
+       {
+         "id": 1,
+         "start_date": "2023-05-01",
+         "end_date": "2023-05-31",
+         "trend_value": 0.05,
+         "metric": metric_pk,
+         "created_at": "2023-06-07T15:00:00Z",
+         "updated_at": "2023-06-07T15:00:00Z"
+       },
+       ...
+     ]
+   - Correlations: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/correlations/
+     Output: 
+     [
+       {
+         "id": 1,
+         "correlated_metric": 2,
+         "correlation_coefficient": 0.75,
+         "metric": metric_pk,
+         "created_at": "2023-06-07T16:00:00Z",
+         "updated_at": "2023-06-07T16:00:00Z"
+       },
+       ...
+     ]
+   - Connections: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/connections/
+     Output: 
+     [
+       {
+         "id": 1,
+         "connected_metric": 3,
+         "connection_type": "causal",
+         "metric": metric_pk,
+         "created_at": "2023-06-07T17:00:00Z",
+         "updated_at": "2023-06-07T17:00:00Z"
+       },
+       ...
+     ]
+   - Data Quality Scores: 
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/data-quality-scores/
+     Output: 
+     [
+       {
+         "id": 1,
+         "score": 0.95,
+         "date": "2023-05-20",
+         "metric": metric_pk,
+         "created_at": "2023-06-07T18:00:00Z",
+         "updated_at": "2023-06-07T18:00:00Z"
+       },
+       ...
+     ]
 
 4. Non-nested entities:
-   - Users: /users/
-   - User Profiles: /user-profiles/
-   - Teams: /teams/
+   - Users: 
+     GET, POST, PUT, PATCH, DELETE /users/
+     Output: [{"id": 1, "username": "user1", "email": "user1@example.com", ...}, ...]
+   - User Profiles: 
+     GET, POST, PUT, PATCH, DELETE /user-profiles/
+     Output: [{"id": 1, "user": 1, "bio": "User bio", ...}, ...]
+   - Teams: 
+     GET, POST, PUT, PATCH, DELETE /teams/
+     Output: [{"id": 1, "name": "Team Name", "members": [1, 2, 3], ...}, ...]
 
-5. Home:
-   - Public Home: /
+5. Interim computation routes:
+   - Automated Suggestions: 
+     GET /metrics/{metric_id}/suggestions/
+     Output: {"suggestions": ["Suggestion 1", "Suggestion 2", ...]}
+   - Performance Dashboard: 
+     GET /metrics/{metric_id}/performance-dashboard/
+     Output: {"current_value": 100, "trend": 0.05, "forecast": 120, ...}
+   - Export Data: 
+     GET /metrics/{metric_id}/export/
+     Output: [{"date": "2023-05-20", "value": 100}, ...]
+   - Import Data: 
+     POST /metrics/{metric_id}/import/
+     Input: [{"date": "2023-05-20", "value": 100}, ...]
+     Output: {"message": "Data imported successfully"}
+   - Statistical Analysis: 
+     GET /metrics/{metric_id}/statistical-analysis/
+     Output: {"mean": 100, "median": 95, "std_dev": 10, ...}
+   - Performance Analysis: 
+     GET /metrics/{metric_id}/performance-analysis/
+     Output: {"current_performance": "above_average", "trend": "increasing", ...}
+   - Experiment Analysis: 
+     POST /metrics/{metric_id}/experiment-analysis/
+     Input: {"control_group": "A", "treatment_group": "B", ...}
+     Output: {"p_value": 0.05, "effect_size": 0.2, ...}
+   - Prepare Import: 
+     POST /metrics/{metric_id}/prepare-import/
+     Input: {"file_url": "https://example.com/data.csv"}
+     Output: {"preview": [{"date": "2023-05-20", "value": 100}, ...], "column_mapping": {...}}
+   - Forecast vs Actual: 
+     GET /metrics/{metric_id}/forecast-vs-actual/
+     Output: [{"date": "2023-05-20", "forecast": 100, "actual": 105}, ...]
+   - Probability Analysis: 
+     GET /metrics/{metric_id}/probability-analysis/
+     Output: {"probability_of_achieving_target": 0.75, ...}
+   - Aggregated Views: 
+     GET /metrics/{metric_id}/aggregated-views/
+     Output: {"daily": {...}, "weekly": {...}, "monthly": {...}}
+   - Basic Stats: 
+     GET /metrics/{metric_id}/basic-stats/
+     Output: {"mean": 100, "median": 95, "min": 80, "max": 120, ...}
+   - Difference in Differences: 
+     POST /metrics/{metric_id}/difference-in-differences/
+     Input: {"control_group": "A", "treatment_group": "B", "pre_period": "2023-04-01", "post_period": "2023-05-01"}
+     Output: {"diff_in_diff": 0.15, "p_value": 0.03, ...}
+
+6. Tenant and project creation flow routes:
+   - Create Tenant: 
+     POST /create-tenant/
+     Input: {"name": "New Tenant", ...}
+     Output: {"id": 1, "name": "New Tenant", ...}
+   - Create Project: 
+     POST /create-project/
+     Input: {"name": "New Project", "client": 1, ...}
+     Output: {"id": 1, "name": "New Project", "client": 1, ...}
+   - Create Team: 
+     POST /create-team/
+     Input: {"name": "New Team", "members": [1, 2, 3], ...}
+     Output: {"id": 1, "name": "New Team", "members": [1, 2, 3], ...}
+   - Assign Team Members: 
+     POST /assign-team-members/
+     Input: {"team": 1, "members": [4, 5, 6]}
+     Output: {"message": "Team members assigned successfully"}
 """

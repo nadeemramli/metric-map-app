@@ -128,14 +128,19 @@ SHARED_APPS = (
 )
 
 TENANT_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
+    'django_tenants',
     'django.contrib.contenttypes',
+    'django.contrib.auth',
     'django.contrib.sessions',
+    'django.contrib.admin',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'corsheaders',
+    'debug_toolbar',
     'metrics',
-    # ... any other app that should be isolated per tenant
 )
 
 DEFAULT_FILE_STORAGE = 'django_tenants.files.storage.TenantFileSystemStorage'

@@ -25,6 +25,8 @@ class Client(TenantMixin):
     def __str__(self):
         return self.name
     
+    def generate_schema_name(self):
+        return slugify(self.name).replace("-", "_")
     '''
         Represents a tenant in the multi-tenant system.
         - `name`: The name of the client (tenant).
