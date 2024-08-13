@@ -1,0 +1,6 @@
+# Ignore node_modules directory in the frontend
+node_modules/
+
+# Optionally, ignore build files if applicable
+dist/
+build/
