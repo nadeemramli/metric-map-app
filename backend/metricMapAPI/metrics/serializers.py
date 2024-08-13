@@ -1,26 +1,7 @@
 from rest_framework import serializers
-from .models import (
-    Client, Domain, CustomUser, UserProfile, Team, Project, Category, Tag, Metric,
-    MetricMetadata, MetricTarget, Correlation, Connection, HistoricalData,
-    Experiment, Forecast, Anomaly, Trend, Dashboard, Report, ActionRemark,
-    Strategy, TacticalSolution, DataQualityScore, TimeDimension, ValueType, MetricType,
-    Rhythm, ExperimentStatus, Impact, Importance, AnomalyType, QualityType, Confidence,
-    Insight, Trend, MovingAverage, TechnicalIndicator, ImpactAnalysis, SeasonalityResult,
-    TrendChangePoint, NetworkAnalysisResult, ComputationStatus, Notification, PendingComputation
-)
+from .models import *
 
-class ClientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Client
-        fields = ['id', 'name', 'created_on', 'schema_name']
-        read_only_fields = ['schema_name']
-
-class DomainSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Domain
-        fields = ['id', 'domain', 'tenant', 'is_primary']
-        read_only_fields = ['tenant']
-
+# Client nested serializers
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
@@ -28,27 +9,38 @@ class TeamSerializer(serializers.ModelSerializer):
         read_only_fields = ['tenant', 'created_at', 'updated_at']
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'team', 'tenant']
-        read_only_fields = ['tenant']
+        fields = ['id', 'username', 'email', 'password', 'team', 'tenant']  # include other fields
+        read_only_fields = ['id']
 
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        user = CustomUser.objects.create(**validated_data)
+        if password:
+            user.set_password(password)
+            user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        if password:
+            instance.set_password(password)
+        return super().update(instance, validated_data)
+    
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['id', 'user', 'tenant']
         read_only_fields = ['tenant']
 
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ['id', 'name', 'created_on', 'tenant']
-        read_only_fields = ['tenant', 'created_on']
-
+# Project nested serializers
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'tenant']
+        fields = ['id', 'project', 'name', 'tenant']
         read_only_fields = ['tenant']
 
 class TagSerializer(serializers.ModelSerializer):
@@ -57,44 +49,89 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'project', 'tenant']
         read_only_fields = ['tenant']
 
-class MetricSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
-    tags = TagSerializer(many=True, read_only=True)
-    type = serializers.ChoiceField(choices=[(t.name, t.value) for t in MetricType])
-    value_type = serializers.ChoiceField(choices=[(vt.name, vt.value) for vt in ValueType])
-    rhythm = serializers.ChoiceField(choices=[(r.name, r.value) for r in Rhythm])
+class ActionRemarkSerializer(serializers.ModelSerializer):
+    impact = serializers.ChoiceField(choices=[(impact.name, impact.value) for impact in Impact])
+    importance = serializers.ChoiceField(choices=[(importance.name, importance.value) for importance in Importance])
 
     class Meta:
-        model = Metric
-        fields = ['id', 'name', 'type', 'value_type', 'category', 'tags', 'description', 
-                  'hypothesis', 'technical_description', 'last_updated', 'source', 'tenant']
-        read_only_fields = ['tenant', 'last_updated']
+        model = ActionRemark
+        fields = ['id', 'project', 'title', 'date', 'summary', 'impact', 'importance', 'tenant']
+        read_only_fields = ['tenant']
 
-    def validate_type(self, value):
+    def validate_impact(self, value):
         try:
-            return MetricType[value].name
+            return Impact[value].name
         except KeyError:
-            raise serializers.ValidationError(f"Invalid metric type: {value}")
+            raise serializers.ValidationError(f"Invalid impact: {value}")
 
-    def validate_value_type(self, value):
+    def validate_importance(self, value):
         try:
-            return ValueType[value].name
+            return Importance[value].name
         except KeyError:
-            raise serializers.ValidationError(f"Invalid value type: {value}")
-
-    def validate_rhythm(self, value):
-        try:
-            return Rhythm[value].name
-        except KeyError:
-            raise serializers.ValidationError(f"Invalid rhythm: {value}")
+            raise serializers.ValidationError(f"Invalid importance: {value}")
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['type'] = MetricType[instance.type].value
-        representation['value_type'] = ValueType[instance.value_type].value
-        representation['rhythm'] = Rhythm[instance.rhythm].value
+        representation['impact'] = Impact[instance.impact].value
+        representation['importance'] = Importance[instance.importance].value
         return representation
 
+class StrategySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Strategy
+        fields = ['id', 'project', 'title', 'description', 'team', 'estimated_time', 'artifacts_url', 'created_at', 'updated_at', 'tenant']
+        read_only_fields = ['tenant', 'created_at', 'updated_at']
+
+class TacticalSolutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TacticalSolution
+        fields = ['id', 'project', 'title', 'description', 'artifact_url', 'created_at', 'updated_at', 'tenant']
+        read_only_fields = ['tenant', 'created_at', 'updated_at']
+
+class TimeDimensionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeDimension
+        fields = ['id', 'project', 'date', 'day', 'day_of_week', 'day_name', 'week', 'month', 'month_name', 'quarter', 'year', 'is_weekend', 'is_holiday', 'tenant']
+        read_only_fields = ['tenant']
+      
+class DashboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dashboard
+        fields = ['id', 'project', 'name', 'layout', 'tenant']
+        read_only_fields = ['tenant']
+
+class NetworkAnalysisResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkAnalysisResult
+        fields = ['id', 'project', 'metric', 'analysis_type', 'result', 'tenant']
+        read_only_fields = ['tenant']
+
+class ComputationStatusSerializer(serializers.ModelSerializer):
+    status = serializers.ChoiceField(choices=ComputationStatus.STATUS_CHOICES)
+
+    class Meta:
+        model = ComputationStatus
+        fields = ['id', 'project', 'status', 'created_at', 'updated_at', 'error_message', 'tenant']
+        read_only_fields = ['tenant', 'created_at', 'updated_at']
+
+    def validate_status(self, value):
+        if value not in dict(ComputationStatus.STATUS_CHOICES):
+            raise serializers.ValidationError(f"Invalid status: {value}")
+        return value
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'project', 'message', 'created_at', 'is_read', 'tenant']
+        read_only_fields = ['tenant', 'created_at']
+
+class PendingComputationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PendingComputation
+        fields = ['id', 'project', 'metric', 'created_at', 'tenant']
+        read_only_fields = ['tenant', 'created_at']
+
+# Metric nested serializers
 class DataQualityScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataQualityScore
@@ -139,7 +176,7 @@ class MetricTargetSerializer(serializers.ModelSerializer):
 class CorrelationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Correlation
-        fields = ['id', 'metric1', 'metric2', 'lag', 'pearson_correlation', 'spearman_correlation', 'tenant']
+        fields = ['id','metric1', 'metric2', 'lag', 'pearson_correlation', 'spearman_correlation', 'tenant']
         read_only_fields = ['tenant']
 
 class ConnectionSerializer(serializers.ModelSerializer):
@@ -148,82 +185,10 @@ class ConnectionSerializer(serializers.ModelSerializer):
         fields = ['id', 'from_metric', 'to_metric', 'relationship', 'tenant']
         read_only_fields = ['tenant']
 
-class ExperimentSerializer(serializers.ModelSerializer):
-    status = serializers.ChoiceField(choices=[(status.name, status.value) for status in ExperimentStatus])
-    metrics = MetricSerializer(many=True, read_only=True)
-    results = serializers.JSONField(required=False)
-
-    class Meta:
-        model = Experiment
-        fields = ['id', 'name', 'description', 'start_date', 'end_date', 'status', 'results', 'metrics', 'tenant']
-        read_only_fields = ['tenant']
-
-    def validate_status(self, value):
-        try:
-            return ExperimentStatus[value].name
-        except KeyError:
-            raise serializers.ValidationError(f"Invalid experiment status: {value}")
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['status'] = ExperimentStatus[instance.status].value
-        return representation
-
-    def create(self, validated_data):
-        metrics_data = self.context.get('metrics', [])
-        experiment = Experiment.objects.create(**validated_data)
-        experiment.metrics.set(metrics_data)
-        return experiment
-
-    def update(self, instance, validated_data):
-        metrics_data = self.context.get('metrics', [])
-        instance = super().update(instance, validated_data)
-        instance.metrics.set(metrics_data)
-        return instance
-
-class ActionRemarkSerializer(serializers.ModelSerializer):
-    impact = serializers.ChoiceField(choices=[(impact.name, impact.value) for impact in Impact])
-    importance = serializers.ChoiceField(choices=[(importance.name, importance.value) for importance in Importance])
-
-    class Meta:
-        model = ActionRemark
-        fields = ['id', 'metric', 'title', 'date', 'summary', 'impact', 'importance', 'tenant']
-        read_only_fields = ['tenant']
-
-    def validate_impact(self, value):
-        try:
-            return Impact[value].name
-        except KeyError:
-            raise serializers.ValidationError(f"Invalid impact: {value}")
-
-    def validate_importance(self, value):
-        try:
-            return Importance[value].name
-        except KeyError:
-            raise serializers.ValidationError(f"Invalid importance: {value}")
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['impact'] = Impact[instance.impact].value
-        representation['importance'] = Importance[instance.importance].value
-        return representation
-
 class InsightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Insight
         fields = ['id', 'metric', 'user', 'date', 'title', 'content', 'created_at', 'updated_at', 'tenant']
-        read_only_fields = ['tenant', 'created_at', 'updated_at']
-
-class StrategySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Strategy
-        fields = ['id', 'title', 'description', 'team', 'estimated_time', 'artifacts_url', 'created_at', 'updated_at', 'tenant']
-        read_only_fields = ['tenant', 'created_at', 'updated_at']
-
-class TacticalSolutionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TacticalSolution
-        fields = ['id', 'metric', 'title', 'description', 'artifact_url', 'created_at', 'updated_at', 'tenant']
         read_only_fields = ['tenant', 'created_at', 'updated_at']
 
 class ForecastSerializer(serializers.ModelSerializer):
@@ -265,12 +230,6 @@ class AnomalySerializer(serializers.ModelSerializer):
         representation['quality'] = QualityType[instance.quality].value
         return representation
 
-class ImpactAnalysisSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ImpactAnalysis
-        fields = ['id', 'experiment', 'metric', 'before_value', 'after_value', 'percentage_change', 'confidence', 'artifact_link', 'tenant']
-        read_only_fields = ['tenant']
-
 class TrendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trend
@@ -295,30 +254,12 @@ class TrendChangePointSerializer(serializers.ModelSerializer):
         fields = ['id', 'metric', 'date', 'direction', 'significance', 'tenant']
         read_only_fields = ['tenant']
 
-class NetworkAnalysisResultSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NetworkAnalysisResult
-        fields = ['id', 'metric', 'analysis_type', 'result', 'tenant']
-        read_only_fields = ['tenant']
-
 class HistoricalDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = HistoricalData
-        fields = ['id', 'metric', 'date', 'value', 'forecasted_value', 'anomaly_detected', 'trend_component', 'tenant']
+        fields = ['id', 'metric', 'date', 'value', 'tenant']
         read_only_fields = ['tenant']
 
-class TimeDimensionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TimeDimension
-        fields = ['id', 'date', 'day', 'day_of_week', 'day_name', 'week', 'month', 'month_name', 'quarter', 'year', 'is_weekend', 'is_holiday', 'tenant']
-        read_only_fields = ['tenant']
-      
-class DashboardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Dashboard
-        fields = ['id', 'name', 'layout', 'tenant']
-        read_only_fields = ['tenant']
-  
 class ReportSerializer(serializers.ModelSerializer):
     configuration = serializers.JSONField(required=False)
     analysis_result = serializers.JSONField(required=False)
@@ -328,7 +269,7 @@ class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Report
-        fields = ['id', 'metric', 'tenant', 'name', 'configuration', 'analysis_result', 
+        fields = ['id', 'project', 'metric', 'tenant', 'name', 'configuration', 'analysis_result', 
                   'forecast_result', 'anomaly_result', 'relationship_result', 'report', 
                   'created_at', 'updated_at']
         read_only_fields = ['tenant', 'created_at', 'updated_at']
@@ -417,34 +358,289 @@ class ReportSerializer(serializers.ModelSerializer):
         
         return value
         
-class ComputationStatusSerializer(serializers.ModelSerializer):
-    status = serializers.ChoiceField(choices=ComputationStatus.STATUS_CHOICES)
+# Experiment nested serializers
+class ImpactAnalysisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImpactAnalysis
+        fields = ['id', 'experiment', 'metric', 'before_value', 'after_value', 'percentage_change', 'confidence', 'artifact_link', 'tenant']
+        read_only_fields = ['tenant']
+
+class MetricSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+    metadata = MetricMetadataSerializer(read_only=True)
+    targets = MetricTargetSerializer(many=True, read_only=True)
+    historical_data = HistoricalDataSerializer(many=True, read_only=True)
+    forecast = ForecastSerializer(many=True, read_only=True)
+    anomaly = AnomalySerializer(many=True, read_only=True)
+    trend = TrendSerializer(many=True, read_only=True)
+    correlations = CorrelationSerializer(many=True, read_only=True)
+    connections = ConnectionSerializer(many=True, read_only=True)
+    data_quality_scores = DataQualityScoreSerializer(many=True, read_only=True)
+    insights = InsightSerializer(many=True, read_only=True)
+    technical_indicators = TechnicalIndicatorSerializer(many=True, read_only=True)
+    moving_averages = MovingAverageSerializer(many=True, read_only=True)
+    seasonality_results = SeasonalityResultSerializer(many=True, read_only=True)
+    trend_change_points = TrendChangePointSerializer(many=True, read_only=True)
 
     class Meta:
-        model = ComputationStatus
-        fields = ['id', 'status', 'created_at', 'updated_at', 'error_message', 'tenant']
-        read_only_fields = ['tenant', 'created_at', 'updated_at']
+        model = Metric
+        fields = ['id', 'name', 'project', 'type', 'value_type', 'category', 'tags', 'tenant',
+                  'metadata', 'targets', 'historical_data', 'forecast', 'anomaly', 'trend',
+                  'correlations', 'connections', 'data_quality_scores', 'insights',
+                  'technical_indicators', 'moving_averages', 'seasonality_results',
+                  'trend_change_points']
+        read_only_fields = ['tenant', 'last_updated']
+        depth = 3  # This will serialize the first level of nested objects (projects)
+
+    def validate_type(self, value):
+        try:
+            return MetricType[value].name
+        except KeyError:
+            raise serializers.ValidationError(f"Invalid metric type: {value}")
+
+    def validate_value_type(self, value):
+        try:
+            return ValueType[value].name
+        except KeyError:
+            raise serializers.ValidationError(f"Invalid value type: {value}")
+
+    def validate_rhythm(self, value):
+        try:
+            return Rhythm[value].name
+        except KeyError:
+            raise serializers.ValidationError(f"Invalid rhythm: {value}")
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['type'] = MetricType[instance.type].value
+        representation['value_type'] = ValueType[instance.value_type].value
+        representation['rhythm'] = Rhythm[instance.rhythm].value
+        return representation
+
+    def create(self, validated_data):
+        tags_data = self.context.get('tags', [])
+        category_data = self.context.get('category')
+        metadata_data = self.context.get('metadata', {})
+        
+        metric = Metric.objects.create(**validated_data)
+        
+        if category_data:
+            category, _ = Category.objects.get_or_create(**category_data)
+            metric.category = category
+        
+        for tag_data in tags_data:
+            tag, _ = Tag.objects.get_or_create(**tag_data)
+            metric.tags.add(tag)
+        
+        if metadata_data:
+            MetricMetadata.objects.create(metric=metric, **metadata_data)
+        
+        metric.save()
+        return metric
+
+    def update(self, instance, validated_data):
+        tags_data = self.context.get('tags', [])
+        category_data = self.context.get('category')
+        metadata_data = self.context.get('metadata', {})
+        
+        instance = super().update(instance, validated_data)
+        
+        if category_data:
+            category, _ = Category.objects.get_or_create(**category_data)
+            instance.category = category
+        
+        instance.tags.clear()
+        for tag_data in tags_data:
+            tag, _ = Tag.objects.get_or_create(**tag_data)
+            instance.tags.add(tag)
+        
+        if metadata_data:
+            MetricMetadata.objects.update_or_create(
+                metric=instance,
+                defaults=metadata_data
+            )
+        
+        instance.save()
+        return instance
+
+class ExperimentSerializer(serializers.ModelSerializer):
+    status = serializers.ChoiceField(choices=[(status.name, status.value) for status in ExperimentStatus])
+    metrics = MetricSerializer(many=True, read_only=True)
+    results = serializers.JSONField(required=False)
+    impact_analysis = ImpactAnalysisSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Experiment
+        fields = ['id', 'name', 'description', 'start_date', 'end_date', 'status', 'results', 'metrics', 'tenant', 'impact_analysis']
+        read_only_fields = ['tenant']
+        depth = 3  # This will serialize the first level of nested objects (projects)
 
     def validate_status(self, value):
-        if value not in dict(ComputationStatus.STATUS_CHOICES):
-            raise serializers.ValidationError(f"Invalid status: {value}")
-        return value
+        try:
+            return ExperimentStatus[value].name
+        except KeyError:
+            raise serializers.ValidationError(f"Invalid experiment status: {value}")
 
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = ['id', 'message', 'created_at', 'is_read', 'tenant']
-        read_only_fields = ['tenant', 'created_at']
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['status'] = ExperimentStatus[instance.status].value
+        return representation
 
-class PendingComputationSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        metrics_data = self.context.get('metrics', [])
+        experiment = Experiment.objects.create(**validated_data)
+        experiment.metrics.set(metrics_data)
+        return experiment
+
+    def update(self, instance, validated_data):
+        metrics_data = self.context.get('metrics', [])
+        instance = super().update(instance, validated_data)
+        instance.metrics.set(metrics_data)
+        return instance
+
+class ProjectSerializer(serializers.ModelSerializer):
+    metrics = MetricSerializer(many=True, read_only=True)
+    categories = CategorySerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+    dashboards = DashboardSerializer(many=True, read_only=True)
+    experiments = ExperimentSerializer(many=True, read_only=True)
+    reports = ReportSerializer(many=True, read_only=True)
+    strategies = StrategySerializer(many=True, read_only=True)
+    action_remarks = ActionRemarkSerializer(many=True, read_only=True)
+    tactical_solutions = TacticalSolutionSerializer(many=True, read_only=True)
+    time_dimensions = TimeDimensionSerializer(many=True, read_only=True)
+    network_analysis_results = NetworkAnalysisResultSerializer(many=True, read_only=True)
+    computation_status = ComputationStatusSerializer(many=True, read_only=True)
+    notifications = NotificationSerializer(many=True, read_only=True)
+    pending_computations = PendingComputationSerializer(many=True, read_only=True)
+
     class Meta:
-        model = PendingComputation
-        fields = ['id', 'metric', 'created_at', 'tenant']
-        read_only_fields = ['tenant', 'created_at']
+        model = Project
+        fields = ['id', 'name', 'created_on', 'tenant', 'metrics', 'categories', 'tags', 'dashboards', 
+                  'experiments', 'reports', 'strategies', 'action_remarks', 'tactical_solutions', 
+                  'time_dimensions', 'network_analysis_results', 'computation_status', 'notifications', 
+                  'pending_computations']
+        read_only_fields = ['tenant', 'created_on']
+        depth = 2  # This will serialize the first level of nested objects (projects)
+    
+    def create(self, validated_data):
+        metrics_data = validated_data.pop('metrics', [])
+        categories_data = validated_data.pop('categories', [])
+        tags_data = validated_data.pop('tags', [])
+        dashboards_data = validated_data.pop('dashboards', [])
+        experiments_data = validated_data.pop('experiments', [])
+        reports_data = validated_data.pop('reports', [])
+        strategies_data = validated_data.pop('strategies', [])
+        action_remarks_data = validated_data.pop('action_remarks', [])
+        tactical_solutions_data = validated_data.pop('tactical_solutions', [])
+        time_dimensions_data = validated_data.pop('time_dimensions', [])
+        network_analysis_results_data = validated_data.pop('network_analysis_results', [])
+        computation_status_data = validated_data.pop('computation_status', [])
+        notifications_data = validated_data.pop('notifications', [])
+        pending_computations_data = validated_data.pop('pending_computations', [])
+
+        project = Project.objects.create(**validated_data)
+
+        for metric_data in metrics_data:
+            Metric.objects.create(project=project, **metric_data)
+        for category_data in categories_data:
+            Category.objects.create(project=project, **category_data)
+        for tag_data in tags_data:
+            Tag.objects.create(project=project, **tag_data)
+        for dashboard_data in dashboards_data:
+            Dashboard.objects.create(project=project, **dashboard_data)
+        for experiment_data in experiments_data:
+            Experiment.objects.create(project=project, **experiment_data)
+        for report_data in reports_data:
+            Report.objects.create(project=project, **report_data)
+        for strategy_data in strategies_data:
+            Strategy.objects.create(project=project, **strategy_data)
+        for action_remark_data in action_remarks_data:
+            ActionRemark.objects.create(project=project, **action_remark_data)
+        for tactical_solution_data in tactical_solutions_data:
+            TacticalSolution.objects.create(project=project, **tactical_solution_data)
+        for time_dimension_data in time_dimensions_data:
+            TimeDimension.objects.create(project=project, **time_dimension_data)
+        for network_analysis_result_data in network_analysis_results_data:
+            NetworkAnalysisResult.objects.create(project=project, **network_analysis_result_data)
+        for computation_status_item in computation_status_data:
+            ComputationStatus.objects.create(project=project, **computation_status_item)
+        for notification_data in notifications_data:
+            Notification.objects.create(project=project, **notification_data)
+        for pending_computation_data in pending_computations_data:
+            PendingComputation.objects.create(project=project, **pending_computation_data)
+
+        return project
+
+    def update(self, instance, validated_data):
+        metrics_data = validated_data.pop('metrics', [])
+        categories_data = validated_data.pop('categories', [])
+        tags_data = validated_data.pop('tags', [])
+        dashboards_data = validated_data.pop('dashboards', [])
+        experiments_data = validated_data.pop('experiments', [])
+        reports_data = validated_data.pop('reports', [])
+        strategies_data = validated_data.pop('strategies', [])
+        action_remarks_data = validated_data.pop('action_remarks', [])
+        tactical_solutions_data = validated_data.pop('tactical_solutions', [])
+        time_dimensions_data = validated_data.pop('time_dimensions', [])
+        network_analysis_results_data = validated_data.pop('network_analysis_results', [])
+        computation_status_data = validated_data.pop('computation_status', [])
+        notifications_data = validated_data.pop('notifications', [])
+        pending_computations_data = validated_data.pop('pending_computations', [])
+
+        # Update project fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Update or create nested objects
+        self.update_nested_objects(instance.metrics, metrics_data, Metric)
+        self.update_nested_objects(instance.categories, categories_data, Category)
+        self.update_nested_objects(instance.tags, tags_data, Tag)
+        self.update_nested_objects(instance.dashboards, dashboards_data, Dashboard)
+        self.update_nested_objects(instance.experiments, experiments_data, Experiment)
+        self.update_nested_objects(instance.reports, reports_data, Report)
+        self.update_nested_objects(instance.strategies, strategies_data, Strategy)
+        self.update_nested_objects(instance.action_remarks, action_remarks_data, ActionRemark)
+        self.update_nested_objects(instance.tactical_solutions, tactical_solutions_data, TacticalSolution)
+        self.update_nested_objects(instance.time_dimensions, time_dimensions_data, TimeDimension)
+        self.update_nested_objects(instance.network_analysis_results, network_analysis_results_data, NetworkAnalysisResult)
+        self.update_nested_objects(instance.computation_status, computation_status_data, ComputationStatus)
+        self.update_nested_objects(instance.notifications, notifications_data, Notification)
+        self.update_nested_objects(instance.pending_computations, pending_computations_data, PendingComputation)
+
+        return instance
+
+    def update_nested_objects(self, queryset, data_list, model):
+        existing_ids = set(queryset.values_list('id', flat=True))
+        for item_data in data_list:
+            item_id = item_data.get('id')
+            if item_id in existing_ids:
+                item = queryset.get(id=item_id)
+                for attr, value in item_data.items():
+                    setattr(item, attr, value)
+                item.save()
+                existing_ids.remove(item_id)
+            else:
+                model.objects.create(**item_data)
+        queryset.filter(id__in=existing_ids).delete()
+
+class ClientSerializer(serializers.ModelSerializer):
+    projects = ProjectSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Client
+        fields = ['id', 'name', 'created_on', 'schema_name', 'domain_url', 'projects']
+        read_only_fields = ['schema_name', 'created_on']
+        depth = 1  # This will serialize the first level of nested objects (projects)
+
+    def get_projects(self, obj):
+        return ProjectSerializer(obj.projects.all(), many=True, context=self.context).data
 
 class TenantCreationSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=100)
-    domain = serializers.CharField(max_length=253)
+    domain_url = serializers.CharField(max_length=253)
     email = serializers.EmailField()
 
     def validate_domain(self, value):

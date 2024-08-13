@@ -42,7 +42,7 @@ class DataPreparation:
     def _load_metric(self) -> None:
         Metric = apps.get_model('metrics', 'Metric')
         try:
-            self.metric = Metric.objects.select_related('client').get(id=self.metric_id)
+            self.metric = Metric.objects.select_related('tenant').get(id=self.metric_id)
             logger.info(f"Loaded metric {self.metric_id} for client {self.client.id}")
         except ObjectDoesNotExist:
             logger.error(f"Metric with id {self.metric_id} does not exist")
@@ -192,6 +192,7 @@ class DataPreparation:
         self.data_quality_score, _ = DataQualityScore.objects.update_or_create(
             metric=self.metric,
             client=self.client,
+            tenant=self.metric.tenant,  # Add this line
             defaults={
                 'data_entry': f"Metric_{self.metric_id}",
                 'completeness_score': completeness * 100,

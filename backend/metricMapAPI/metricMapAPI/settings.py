@@ -1,6 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
 import sys
+import socket
+import os
 
 
 print("Python path in settings:", sys.path)
@@ -19,7 +21,7 @@ SECRET_KEY = 'django-insecure-wy-8zqsas0vuoz!^sewki@ev3w%dx8jl7aj5_719ivg&y2ex7r
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.localhost']  # The dot allows all subdomains
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.localhost', '[::1]']  # The dot allows all subdomains
 
 
 # Application definition
@@ -33,20 +35,61 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'rest_framework', 
-    'metrics',  
+    'rest_framework',
     'corsheaders',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
-    'drf_yasg',
     'debug_toolbar',
     'django_filters',
+    'django_extensions',
+    'drf_yasg',
+    'metrics',  
 ]
 
+SHARED_APPS = (
+    'django_tenants',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'rest_framework',
+    'corsheaders',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'debug_toolbar',
+    'django_filters',
+    'django_extensions',
+    'drf_yasg',
+    'metrics',  
+)
+
+TENANT_APPS = (
+    'django_tenants',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'rest_framework',
+    'corsheaders',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'debug_toolbar',
+    'django_filters',
+    'django_extensions',
+    'drf_yasg',
+    'metrics', 
+)
+
+
 MIDDLEWARE = [
-    'django_tenants.middleware.main.TenantMainMiddleware',
     'metricMapAPI.middleware.CustomTenantMiddleware',
-    'metricMapAPI.middleware.TenantMiddleware',
+    # 'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,6 +100,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'metricMapAPI.middleware.LoggingMiddleware',
+    'metricMapAPI.middleware.RequestResponseLoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'metricMapAPI.urls'
@@ -64,7 +109,10 @@ ROOT_URLCONF = 'metricMapAPI.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR.parent / '.venv' / 'lib' / 'python3.10' / 'site-packages' / 'drf_yasg' / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +127,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'metricMapAPI.wsgi.application'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -92,7 +142,8 @@ SITE_ID = 1
 
 
 TENANT_MODEL = "metrics.Client"
-TENANT_DOMAIN_MODEL = "metrics.Domain"
+TENANT_DOMAIN_MODEL = "metrics.Client"
+
 TENANT_DB_ALIAS = 'default'
 PUBLIC_SCHEMA_URLCONF = 'metricMapAPI.urls_public'
 PUBLIC_SCHEMA_DOMAIN = 'public.localhost'
@@ -110,38 +161,6 @@ DATABASES = {
         },
     }
 }
-
-SHARED_APPS = (
-    'django_tenants',
-    'django.contrib.contenttypes',
-    'django.contrib.auth',
-    'django.contrib.sessions',
-    'django.contrib.admin',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
-    'corsheaders',
-    'debug_toolbar',
-    'metrics',
-)
-
-TENANT_APPS = (
-    'django_tenants',
-    'django.contrib.contenttypes',
-    'django.contrib.auth',
-    'django.contrib.sessions',
-    'django.contrib.admin',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
-    'corsheaders',
-    'debug_toolbar',
-    'metrics',
-)
 
 DEFAULT_FILE_STORAGE = 'django_tenants.files.storage.TenantFileSystemStorage'
 
@@ -163,6 +182,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'metrics.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -229,6 +249,46 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
+
+'''
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'metrics': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
+'''
+
 if 'test' in sys.argv:
     LOGGING = {
         'version': 1,
@@ -259,32 +319,29 @@ else:
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '{levelname} {asctime} {module} {message}',
+                'style': '{',
+            },
+        },
         'handlers': {
             'console': {
+                'level': 'DEBUG',
                 'class': 'logging.StreamHandler',
+                'formatter': 'verbose',
             },
-            'file': {
-                'class': 'logging.FileHandler',
-                'filename': 'debug.log',
-            },
-        },
-        'root': {
-            'handlers': ['console','file'],
-            'level': 'INFO',
         },
         'loggers': {
-            'django': {
-                'handlers': ['console'],
-                'level': 'INFO',
-                'propagate': False,
-            },
             'metrics': {
                 'handlers': ['console'],
-                'level': 'INFO',
+                'level': 'DEBUG',
                 'propagate': False,
             },
         },
     }
+
+
 
 # TEST_RUNNER = 'metrics.management.commands.custom_test_runner.FileOutputTestRunner'
 TEST_RUNNER = 'metrics.tests.test_utils.CustomTenantTestRunner'

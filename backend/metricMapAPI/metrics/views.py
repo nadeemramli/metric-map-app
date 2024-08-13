@@ -1,9 +1,10 @@
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, throttle_classes, permission_classes
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.management import call_command
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.db import models, transaction
@@ -12,32 +13,24 @@ from django.views.decorators.cache import cache_page
 from celery.result import AsyncResult
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import (
-    Client, Domain, CustomUser, UserProfile, Team, Project, Category, Tag, Metric,
-    MetricMetadata, MetricTarget, Correlation, Connection, HistoricalData,
-    Experiment, Forecast, Anomaly, Trend, Dashboard, Report, ActionRemark,
-    Strategy, TacticalSolution, DataQualityScore, TimeDimension, ComputationStatus, Notification, PendingComputation
-)
-from .serializers import (
-    ClientSerializer, DomainSerializer, CustomUserSerializer, UserProfileSerializer,
-    TeamSerializer, ProjectSerializer, CategorySerializer, TagSerializer, MetricSerializer,
-    MetricMetadataSerializer, MetricTargetSerializer, CorrelationSerializer,
-    ConnectionSerializer, HistoricalDataSerializer, ExperimentSerializer,
-    ForecastSerializer, AnomalySerializer, TrendSerializer, DashboardSerializer,
-    ReportSerializer, ActionRemarkSerializer, StrategySerializer,
-    TacticalSolutionSerializer, DataQualityScoreSerializer, TimeDimensionSerializer,
-    ProjectCreationSerializer, TeamCreationSerializer, TeamMemberAssignmentSerializer
-)
+from .models import *
+from .serializers import *
 from .tasks import run_computations, run_long_computation
-from .throttles import ComputationTriggerThrottle
+from .utils.throttles import ComputationTriggerThrottle
 from .interim.data_export import prepare_data_for_bulk_import
-
-import logging
-
-logger = logging.getLogger(__name__)
+from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
+from rest_framework.exceptions import NotFound
+from metrics import logger
+from django_tenants.utils import schema_context
+from .utils.permissions import IsTenantUser
+from .utils.filters import *
 
 def public_home(request):
     return render(request, 'home.html')
+
+def debug_view(request):
+       return HttpResponse("Debug view is working!")
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     pass
@@ -47,24 +40,54 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
-class TenantViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+class TenantAwareViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsTenantUser]
     pagination_class = StandardResultsSetPagination
+    serializer_class = ClientSerializer
     filter_backends = [DjangoFilterBackend]
-
+    
+    def check_tenant(self):
+        if not hasattr(self.request, 'tenant') or not self.request.tenant:
+            raise NotFound("Tenant not found.")
+        return self.request.tenant
+    
+    def check_permissions(self, request):
+        if not isinstance(request.user, CustomUser):
+            raise PermissionDenied("Invalid user type")
+        super().check_permissions(request)
+    
     def get_queryset(self):
-        return self.queryset.filter(tenant=self.request.tenant)
+        queryset = super().get_queryset()
+        if not hasattr(self.request, 'tenant') or not self.request.tenant:
+            return queryset.none()
+        if hasattr(queryset.model, 'tenant'):
+            queryset = queryset.filter(tenant=self.request.tenant)
+        if hasattr(self, 'filterset_class') and self.request.query_params:
+            return self.filterset_class(self.request.query_params, queryset=queryset).qs
+        return queryset
 
     def perform_create(self, serializer):
-        serializer.save(tenant=self.request.tenant)
+        tenant = self.check_tenant()
+        with schema_context(tenant.schema_name):
+            serializer.save(tenant=self.request.tenant)
 
-    @method_decorator(cache_page(60 * 15))  # Cache for 15 minutes
+    @method_decorator(cache_page(60 * 15))  # Cache the response for 15 minutes
     def list(self, request, *args, **kwargs):
+        logger.info(f"List view called for {self.__class__.__name__}")
+        logger.debug(f"Request data: {request.data}")
+        logger.debug(f"Request user: {request.user}")
+        logger.debug(f"Request tenant: {getattr(request, 'tenant', None)}")
         try:
-            return super().list(request, *args, **kwargs)
+            with schema_context(request.tenant.schema_name):
+                queryset = self.get_queryset()
+                logger.debug(f"Queryset in list view: {queryset}")
+                serializer = self.get_serializer(queryset, many=True)
+                logger.debug(f"Serialized data: {serializer.data}")
+            return Response(serializer.data)
         except Exception as e:
-            logger.error(f"Error in list view of {self.__class__.__name__}: {str(e)}")
-            return Response({"error": "An error occurred while fetching the list."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.exception(f"Error in list view of {self.__class__.__name__}: {str(e)}")
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
     def create(self, request, *args, **kwargs):
         try:
@@ -75,13 +98,25 @@ class TenantViewSet(viewsets.ModelViewSet):
 
     @method_decorator(cache_page(60 * 15))  # Cache for 15 minutes
     def retrieve(self, request, *args, **kwargs):
+        logger.info(f"Retrieve view called for {self.__class__.__name__}")
+        logger.debug(f"Request user: {request.user}")
+        logger.debug(f"Request tenant: {getattr(request, 'tenant', None)}")
+        logger.debug(f"Args: {args}")
+        logger.debug(f"Kwargs: {kwargs}")
+        
         try:
-            return super().retrieve(request, *args, **kwargs)
-        except models.ObjectDoesNotExist:
-            return Response({"error": "Object not found."}, status=status.HTTP_404_NOT_FOUND)
+            instance = self.get_object()
+            logger.debug(f"Retrieved object: {instance}")
+            serializer = self.get_serializer(instance)
+            logger.debug(f"Serialized data: {serializer.data}")
+            return Response(serializer.data)
+        except models.ObjectDoesNotExist as e:
+            logger.warning(f"Object not found in retrieve view of {self.__class__.__name__}: {str(e)}")
+            logger.debug(f"Query parameters: {request.query_params}")
+            return Response({"error": "Object not found.", "details": str(e)}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            logger.error(f"Error in retrieve view of {self.__class__.__name__}: {str(e)}")
-            return Response({"error": "An error occurred while fetching the object."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.error(f"Error in retrieve view of {self.__class__.__name__}: {str(e)}", exc_info=True)
+            return Response({"error": "An error occurred while fetching the object.", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, *args, **kwargs):
         try:
@@ -101,56 +136,72 @@ class TenantViewSet(viewsets.ModelViewSet):
             logger.error(f"Error in destroy view of {self.__class__.__name__}: {str(e)}")
             return Response({"error": "An error occurred while deleting the object."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class ClientViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+class ClientViewSet(TenantAwareViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
-class DomainViewSet(TenantViewSet):
-    queryset = Domain.objects.all()
-    serializer_class = DomainSerializer
-    filterset_fields = ['domain', 'is_primary']
-
-class CustomUserViewSet(TenantViewSet):
+class CustomUserViewSet(TenantAwareViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    filterset_fields = ['username', 'email', 'team']
+    filterset_class = CustomUserFilter
 
-class UserProfileViewSet(TenantViewSet):
+class UserProfileViewSet(TenantAwareViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    filterset_fields = ['user']
+    filterset_class = UserProfileFilter
 
-class TeamViewSet(TenantViewSet):
+class TeamViewSet(TenantAwareViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    filterset_fields = ['name']
+    filterset_class = TeamFilter
 
-class ProjectViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+class ProjectViewSet(TenantAwareViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    filterset_class = ProjectFilter
     basename='client-projects'
-    filterset_fields = ['name']
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(tenant=self.request.tenant)
 
-class CategoryViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for project-related entities
+class CategoryViewSet(TenantAwareViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    filterset_fields = ['name']
+    filterset_class = CategoryFilter
     basename='project-categories'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
-class TagViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for project-related entities
+class TagViewSet(TenantAwareViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    filterset_fields = ['name', 'project']
+    filterset_class = TagFilter
     basename='project-tags'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
     
-class MetricViewSet(TenantViewSet):
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
+
+# Nested viewset for project-related entities  
+class MetricViewSet(TenantAwareViewSet):
     queryset = Metric.objects.all()
     serializer_class = MetricSerializer
-    filterset_fields = ['name', 'type', 'value_type', 'rhythm', 'category', 'tags']
+    filterset_class = MetricFilter
+    basename='project-metrics'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'metric_pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
     @action(detail=True, methods=['post'])
     def set_position(self, request, pk=None):
@@ -162,110 +213,399 @@ class MetricViewSet(TenantViewSet):
             return Response({'status': 'position updated'})
         return Response({'error': 'Invalid position data'}, status=status.HTTP_400_BAD_REQUEST)
 
-class MetricMetadataViewSet(TenantViewSet):
+# Nested viewset for metric-related entities
+class MetricMetadataViewSet(TenantAwareViewSet):
     queryset = MetricMetadata.objects.all()
     serializer_class = MetricMetadataSerializer
-    filterset_fields = ['metric', 'rhythm', 'team']
+    filterset_class = MetricMetadataFilter
+    basename='metric-metadata'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
 
-class MetricTargetViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for metric-related entities
+class MetricTargetViewSet(TenantAwareViewSet):
     queryset = MetricTarget.objects.all()
     serializer_class = MetricTargetSerializer
-    filterset_fields = ['metric', 'target_date']
-    basename='project-targets'
+    filterset_class = MetricTargetFilter
+    basename='metric-targets'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
 
-class CorrelationViewSet(TenantViewSet):
+# Nested viewset for metric-related entities
+class CorrelationViewSet(TenantAwareViewSet):
     queryset = Correlation.objects.all()
     serializer_class = CorrelationSerializer
-    filterset_fields = ['metric1', 'metric2']
+    filterset_class = CorrelationFilter
+    basename='metric-correlations'
+    lookup_field = 'metric1__id'
+    lookup_url_kwarg = 'metric1_pk'
+    
+    def get_queryset(self):
+        return Correlation.objects.filter(
+            metric1__id=self.kwargs.get('metric1_pk'),
+            metric2__id=self.kwargs.get('metric2_pk')
+        )
 
-class ConnectionViewSet(TenantViewSet):
+# Nested viewset for metric-related entities
+class ConnectionViewSet(TenantAwareViewSet):
     queryset = Connection.objects.all()
     serializer_class = ConnectionSerializer
-    filterset_fields = ['from_metric', 'to_metric']
+    filterset_class = ConnectionFilter
     basename = 'metric-connections'
+    lookup_field = 'metric1__id'
+    lookup_url_kwarg = 'metric1_pk'
 
-class HistoricalDataViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        return Connection.objects.filter(
+            metric1__id=self.kwargs.get('metric1_pk'),
+            metric2__id=self.kwargs.get('metric2_pk')
+        )
+
+# Nested viewset for metric-related entities
+class HistoricalDataViewSet(TenantAwareViewSet):
     queryset = HistoricalData.objects.all()
     serializer_class = HistoricalDataSerializer
-    filterset_fields = ['metric', 'date', 'anomaly_detected']
+    filterset_class = HistoricalDataFilter
     pagination_class = StandardResultsSetPagination
     basename = 'metric-historical-data'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
 
-class ExperimentViewSet(TenantViewSet):
+# Based on this code, the URL pattern for this view would likely look like:
+# /api/clients/{client_id}/projects/{project_id}/metrics/{metric_id}/historical-data/
+#
+# This pattern is derived from:
+# 1. The use of TenantAwareViewSet as the base class, which implies a client-level scope
+# 2. The 'project_pk' in the get_queryset method, indicating a project-level scope
+# 3. The 'metric_pk' used as the lookup_url_kwarg, suggesting a metric-level scope
+# 4. The basename 'metric-historical-data', which would form the final part of the URL
+#
+# The view supports standard CRUD operations on HistoricalData objects, filtered by tenant, project, and metric.
+# It uses authentication, pagination, and allows filtering on 'metric', 'date', and 'anomaly_detected' fields.
+
+# Nested viewset for project-related entities  
+class ExperimentViewSet(TenantAwareViewSet):
     queryset = Experiment.objects.all()
     serializer_class = ExperimentSerializer
-    filterset_fields = ['name', 'status', 'start_date', 'end_date']
-    permission_classes = [IsAuthenticated]
+    filterset_class = ExperimentFilter
     basename='project-experiments'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
-class ForecastViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for metric-related entities
+class ForecastViewSet(TenantAwareViewSet):
     queryset = Forecast.objects.all()
     serializer_class = ForecastSerializer
-    filterset_fields = ['metric', 'forecast_date', 'model_used']
+    filterset_class = ForecastFilter
     basename='metric-forecast'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
 
-class AnomalyViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for metric-related entities
+class AnomalyViewSet(TenantAwareViewSet):
     queryset = Anomaly.objects.all()
     serializer_class = AnomalySerializer
-    filterset_fields = ['metric', 'detection_date', 'anomaly_type', 'quality']
+    filterset_class = AnomalyFilter
     basename='metric-anomaly'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
 
-class TrendViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for metric-related entities
+class TrendViewSet(TenantAwareViewSet):
     queryset = Trend.objects.all()
     serializer_class = TrendSerializer
-    filterset_fields = ['metric', 'trend_type', 'start_date', 'end_date']
+    filterset_class = TrendFilter
     basename='metric-trend'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
 
-class DashboardViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for project-related entities 
+class DashboardViewSet(TenantAwareViewSet):
     queryset = Dashboard.objects.all()
     serializer_class = DashboardSerializer
-    filterset_fields = ['name']
+    filterset_class = DashboardFilter
     basename='project-dashboards'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
-class ReportViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for project-related entities 
+class ReportViewSet(TenantAwareViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer
-    filterset_fields = ['name']
+    filterset_class = ReportFilter
     basename='project-reports'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
 
-class ActionRemarkViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
+
+# Nested viewset for project-related entities 
+class ActionRemarkViewSet(TenantAwareViewSet):
     queryset = ActionRemark.objects.all()
     serializer_class = ActionRemarkSerializer
-    filterset_fields = ['metric', 'date', 'impact', 'importance']
-    basename='metric-action-remarks'
+    filterset_class = ActionRemarkFilter
+    basename='project-action-remarks'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
-class StrategyViewSet(TenantViewSet):
-    permission_classes = [IsAuthenticated]
+# Nested viewset for project-related entities 
+class StrategyViewSet(TenantAwareViewSet):
     queryset = Strategy.objects.all()
     serializer_class = StrategySerializer
-    filterset_fields = ['title', 'team']
+    filterset_class = StrategyFilter
     basename='project-strategies'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
-class TacticalSolutionViewSet(TenantViewSet):
+# Nested viewset for project-related entities 
+class TacticalSolutionViewSet(TenantAwareViewSet):
     queryset = TacticalSolution.objects.all()
     serializer_class = TacticalSolutionSerializer
-    filterset_fields = ['metric', 'title']
-    basename='metric-tactical-solutions'
+    filterset_class = TacticalSolutionFilter
+    basename='project-tactical-solutions'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
-class DataQualityScoreViewSet(TenantViewSet):
+# Nested viewset for metric-related entities
+class DataQualityScoreViewSet(TenantAwareViewSet):
     queryset = DataQualityScore.objects.all()
     serializer_class = DataQualityScoreSerializer
-    filterset_fields = ['data_entry']
+    filterset_class = DataQualityScoreFilter
     basename='metric-data-quality-scores'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
 
-class TimeDimensionViewSet(TenantViewSet):
+# Nested viewset for project-related entities 
+class TimeDimensionViewSet(TenantAwareViewSet):
     queryset = TimeDimension.objects.all()
     serializer_class = TimeDimensionSerializer
-    filterset_fields = ['date', 'year', 'month', 'is_weekend', 'is_holiday']
-    basename='metric-time-dimensions'
+    filterset_class = TimeDimensionFilter
+    basename='project-time-dimensions'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
+
+# Nested viewset for project-related entities
+class InsightViewSet(TenantAwareViewSet):
+    queryset = Insight.objects.all()
+    serializer_class = InsightSerializer
+    filterset_class = InsightFilter
+    basename = 'metric-insights'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        project_id = self.kwargs.get('project_pk')
+        metric_pk = self.kwargs.get('metric_pk')
+        if project_id:
+            queryset = queryset.filter(metric__project_id=project_id)
+        if metric_pk:
+            queryset = queryset.filter(metric_id=metric_pk)
+        return queryset
+
+# Nested viewset for metric-related entities
+class TechnicalIndicatorViewSet(TenantAwareViewSet):
+    queryset = TechnicalIndicator.objects.all()
+    serializer_class = TechnicalIndicatorSerializer
+    filterset_class = TechnicalIndicatorFilter
+    basename = 'metric-technical-indicators'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
+
+# Nested viewset for metric-related entities
+class ImpactAnalysisViewSet(TenantAwareViewSet):
+    queryset = ImpactAnalysis.objects.all()
+    serializer_class = ImpactAnalysisSerializer
+    filterset_class = ImpactAnalysisFilter
+    basename = 'experiment-impact-analysis'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
+
+# Nested viewset for metric-related entities
+class MovingAverageViewSet(TenantAwareViewSet):
+    queryset = MovingAverage.objects.all()
+    serializer_class = MovingAverageSerializer
+    filterset_class = MovingAverageFilter
+    basename = 'metric-moving-averages'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
+
+# Nested viewset for metric-related entities
+class SeasonalityResultViewSet(TenantAwareViewSet):
+    queryset = SeasonalityResult.objects.all()
+    serializer_class = SeasonalityResultSerializer
+    filterset_class = SeasonalityResultFilter
+    basename = 'metric-seasonality-results'
+    lookup_field = 'id'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        metric_pk = self.kwargs.get('metric_pk')
+        if metric_pk:
+            return queryset.filter(metric__id=metric_pk)
+        return queryset
+
+# Nested viewset for metric-related entities
+class TrendChangePointViewSet(TenantAwareViewSet):
+    queryset = TrendChangePoint.objects.all()
+    serializer_class = TrendChangePointSerializer
+    filterset_class = TrendChangePointFilter
+    basename = 'metric-trend-change-points'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        return TrendChangePoint.objects.filter(
+            metric__id=self.kwargs.get('metric_pk')
+        )
+
+# Nested viewset for project-related entities 
+class NetworkAnalysisResultViewSet(TenantAwareViewSet):
+    queryset = NetworkAnalysisResult.objects.all()
+    serializer_class = NetworkAnalysisResultSerializer
+    filterset_class = NetworkAnalysisResultFilter
+    basename = 'project-network-analysis-results'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
+
+# Nested viewset for project-related entities 
+class ComputationStatusViewSet(TenantAwareViewSet):
+    queryset = ComputationStatus.objects.all()
+    serializer_class = ComputationStatusSerializer
+    filterset_class = ComputationStatusFilter
+    basename = 'project-computation-status'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
+
+# Nested viewset for project-related entities 
+class NotificationViewSet(TenantAwareViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    filterset_class = NotificationFilter
+    basename = 'project-notifications'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk' 
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
+
+# Nested viewset for project-related entities 
+class PendingComputationViewSet(TenantAwareViewSet):
+    queryset = PendingComputation.objects.all()
+    serializer_class = PendingComputationSerializer
+    filterset_class = PendingComputationFilter
+    basename = 'project-pending-computations'
+    lookup_field = 'id'
+    lookup_url_kwarg = 'pk'
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_pk')
+        return super().get_queryset().filter(project_id=project_id)
 
 
 @api_view(['POST'])
@@ -413,15 +753,14 @@ def get_task_status(request, task_id):
 @permission_classes([IsAuthenticated])
 def create_tenant(request):
     name = request.data.get('name')
-    subdomain = request.data.get('subdomain')
-    domain = request.data.get('domain', 'localhost')
+    domain_url = request.data.get('domain_url')
 
-    if not name or not subdomain:
-        return Response({'error': 'Name and subdomain are required'}, status=400)
+    if not name or not domain_url:
+        return Response({'error': 'Name and domain_url are required'}, status=400)
 
     try:
         # Call the create_tenant command
-        call_command('manage_tenants', 'create', name=name, subdomain=subdomain, domain=domain)
+        call_command('manage_tenants', 'create', name=name, domain_url=domain_url)
         return Response({'message': f'Tenant {name} created successfully'}, status=201)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
@@ -462,3 +801,11 @@ def assign_team_members(request):
         
         return Response({"message": "Team members assigned successfully"}, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserRegistrationView(APIView):
+    def post(self, request):
+        serializer = CustomUserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save(tenant=request.tenant)
+            return Response(CustomUserSerializer(user).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

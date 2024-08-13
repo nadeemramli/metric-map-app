@@ -3,9 +3,14 @@ from enum import Enum
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
-from django_tenants.models import TenantMixin, DomainMixin
+from django_tenants.models import TenantMixin
+from django.db import connection
 from .computations.permanent_computations import PermanentComputations
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Manager
+from django.utils.text import slugify
+from metrics import logger
+from .utils.custom_tenant_mixin import CustomTenantMixin
 
 ''' 
 Tenant, Organization and User Management: Setting Up
@@ -16,12 +21,16 @@ Tenant, Organization and User Management: Setting Up
      5. Team: Represents groups within a tenant's organization.
      6. Project: Represents projects within a tenant.
 '''
-class Client(TenantMixin):
+class Client(CustomTenantMixin, models.Model):
     name = models.CharField(max_length=100, db_index=True)
     created_on = models.DateField(auto_now_add=True)
+    domain_url = models.CharField(max_length=253, unique=True, null=True, blank=True)
     
     auto_create_schema = True
 
+    class Meta:
+        abstract = False
+    
     def __str__(self):
         return self.name
     
@@ -32,13 +41,6 @@ class Client(TenantMixin):
         - `name`: The name of the client (tenant).
         - `created_on`: The date when the client was created.
         - `auto_create_schema`: Automatically creates a database schema for each tenant.
-    '''
-
-class Domain(DomainMixin):
-    pass
-
-    '''
-        Handles domain management for tenants. Inherits all fields from DomainMixin.
     '''
 
 class TenantAwareMixin(models.Model):
@@ -89,6 +91,17 @@ class CustomUser(AbstractUser, TenantAwareMixin):
     def __str__(self):
         return self.username
     
+    def save(self, *args, **kwargs):
+        if not self.pk and not self.tenant_id:
+            try:
+                self.tenant_id = connection.tenant.id
+                logger.debug(f"Set tenant from connection: {connection.tenant.schema_name}")
+            except AttributeError:
+                logger.error("No tenant set in the current connection")
+                raise ValueError("Cannot save user without a tenant")
+
+        logger.debug(f"Saving user with tenant_id: {self.tenant_id}")
+        super().save(*args, **kwargs)
     '''
         An extension of Django's AbstractUser with tenant awareness.
         - `team`: The team to which the user belongs (optional).
@@ -183,6 +196,7 @@ Core Business Logic:
     7. Connection: Represents relationships between metrics.
 '''
 class Category(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='categories')
     name = models.CharField(max_length=100, db_index=True)
 
     def __str__(self):
@@ -194,8 +208,8 @@ class Category(TenantAwareMixin):
     '''
 
 class Tag(TenantAwareMixin):
-    name = models.CharField(max_length=100, db_index=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tags')
+    name = models.CharField(max_length=100, db_index=True)
 
     class Meta:
         unique_together = ('name', 'project')
@@ -261,7 +275,6 @@ class Metric(TenantAwareMixin):
 
 class DataQualityScore(TenantAwareMixin):
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name='data_quality_scores')
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='data_quality_scores')
     data_entry = models.CharField(max_length=255)
     completeness_score = models.FloatField()
     accuracy_score = models.FloatField()
@@ -270,10 +283,10 @@ class DataQualityScore(TenantAwareMixin):
     overall_score = models.FloatField()
 
     def __str__(self):
-        return f"Data Quality Score for {self.metric.name} in {self.project.name}"
+        return f"Data Quality Score for {self.metric.name}"
     
     class Meta:
-        unique_together = ('tenant', 'metric', 'project')
+        unique_together = ('tenant', 'metric')
     
     '''
         Stores data quality scores for metrics.
@@ -392,6 +405,29 @@ class Correlation(TenantAwareMixin):
         - `pearson_correlation`: Pearson correlation coefficient.
         - `spearman_correlation`: Spearman correlation coefficient.
     '''
+class ConnectionManager(Manager):
+    def bulk_create(self, objs, **kwargs):
+        result = super().bulk_create(objs, **kwargs)
+        affected_metric_ids = set()
+        for obj in objs:
+            affected_metric_ids.add(obj.from_metric_id)
+            affected_metric_ids.add(obj.to_metric_id)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
+
+    def bulk_update(self, objs, fields, **kwargs):
+        result = super().bulk_update(objs, fields, **kwargs)
+        affected_metric_ids = set()
+        for obj in objs:
+            affected_metric_ids.add(obj.from_metric_id)
+            affected_metric_ids.add(obj.to_metric_id)
+        client = objs[0].client if objs else None
+        if client:
+            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
+        return result
+
 class Connection(TenantAwareMixin):
     from_metric = models.ForeignKey(Metric, related_name='outgoing_connections', on_delete=models.CASCADE)
     to_metric = models.ForeignKey(Metric, related_name='incoming_connections', on_delete=models.CASCADE)
@@ -433,29 +469,6 @@ class Connection(TenantAwareMixin):
         - `relationship`: Description of the relationship between the metrics.
     '''
 
-class ConnectionManager(Manager):
-    def bulk_create(self, objs, **kwargs):
-        result = super().bulk_create(objs, **kwargs)
-        affected_metric_ids = set()
-        for obj in objs:
-            affected_metric_ids.add(obj.from_metric_id)
-            affected_metric_ids.add(obj.to_metric_id)
-        client = objs[0].client if objs else None
-        if client:
-            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
-        return result
-
-    def bulk_update(self, objs, fields, **kwargs):
-        result = super().bulk_update(objs, fields, **kwargs)
-        affected_metric_ids = set()
-        for obj in objs:
-            affected_metric_ids.add(obj.from_metric_id)
-            affected_metric_ids.add(obj.to_metric_id)
-        client = objs[0].client if objs else None
-        if client:
-            PermanentComputations(list(affected_metric_ids), client).run_all_computations()
-        return result
-
 ''' 
 Execution and Qualitative Data:
      1. Experiment: Represents experiments conducted on metrics.
@@ -465,6 +478,7 @@ Execution and Qualitative Data:
      5. TacticalSolution: Represents tactical solutions for metrics.
 '''
 class Experiment(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='experiments')
     name = models.CharField(max_length=100, db_index=True)
     title = models.CharField(max_length=200)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True, related_name='experiment_set')
@@ -519,7 +533,7 @@ class Experiment(TenantAwareMixin):
     '''
 
 class ActionRemark(TenantAwareMixin):
-    metric = models.ForeignKey(Metric, related_name='action_remarks', on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='action_remarks')
     title = models.CharField(max_length=200)
     date = models.DateField(null=True, blank=True, db_index=True)
     summary = models.TextField()
@@ -536,7 +550,7 @@ class ActionRemark(TenantAwareMixin):
 
     class Meta:
         indexes = [
-            models.Index(fields=['metric', 'date']),
+            models.Index(fields=['date']),
         ]
     
     def __str__(self):
@@ -581,6 +595,7 @@ class Insight(TenantAwareMixin):
     '''
 
 class Strategy(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='strategies')
     title = models.CharField(max_length=200)
     description = models.TextField()
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='strategies')
@@ -608,7 +623,7 @@ class Strategy(TenantAwareMixin):
     '''
 
 class TacticalSolution(TenantAwareMixin):
-    metric = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name='solutions')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tactical_solutions')
     title = models.CharField(max_length=200)
     description = models.TextField()
     artifact_url = models.URLField(blank=True)
@@ -667,7 +682,7 @@ class Forecast(TenantAwareMixin):
     '''
 
 class TechnicalIndicator(TenantAwareMixin):
-    metric = models.ForeignKey('Metric', on_delete=models.CASCADE)
+    metric = models.ForeignKey(Metric, related_name='indicators', on_delete=models.CASCADE)
     date = models.DateField()
     stochastic_value = models.FloatField()
     rsi_value = models.FloatField()
@@ -887,6 +902,7 @@ class TrendChangePoint(TenantAwareMixin):
     '''
 
 class NetworkAnalysisResult(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='network_analysis_results')
     metric = models.ForeignKey(Metric, on_delete=models.CASCADE, related_name='network_analysis_results')
     analysis_type = models.CharField(max_length=20)  # e.g., 'PageRank', 'community'
     result = models.JSONField()  # Store complex results as JSON
@@ -965,6 +981,7 @@ class HistoricalData(TenantAwareMixin):
     '''
 
 class TimeDimension(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='time_dimensions')
     date = models.DateField(unique=True)
     day = models.IntegerField()
     day_of_week = models.IntegerField()
@@ -994,6 +1011,7 @@ class TimeDimension(TenantAwareMixin):
     '''
 
 class Dashboard(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='dashboards')
     name = models.CharField(max_length=100, db_index=True)
     layout = models.JSONField(default=dict, blank=True)
     
@@ -1005,8 +1023,8 @@ class Dashboard(TenantAwareMixin):
     '''
 
 class Report(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='reports')
     metric = models.ForeignKey(Metric, related_name='report', on_delete=models.CASCADE)
-    tenant = models.ForeignKey(Client, related_name='tenant_report', on_delete=models.CASCADE)
     name = models.CharField(max_length=100, db_index=True)
     configuration = models.JSONField(default=dict, blank=True)
     analysis_result = models.JSONField(null=True, blank=True)
@@ -1025,6 +1043,7 @@ class Report(TenantAwareMixin):
     '''
 
 class ComputationStatus(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='computation_statuses')
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('IN_PROGRESS', 'In Progress'),
@@ -1040,12 +1059,14 @@ class ComputationStatus(TenantAwareMixin):
         ordering = ['-created_at']
 
 class Notification(TenantAwareMixin):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='notifications')
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
 class PendingComputation(TenantAwareMixin):
-    metric = models.ForeignKey('Metric', on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='pending_computations')
+    metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

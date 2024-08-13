@@ -317,10 +317,6 @@ class SerializerTestCase(TenantTestCase):
         with schema_context('public'):
             self.tenant.delete()
         super().tearDown()
-        
-    def test_domain_serializer(self):
-        serializer = DomainSerializer(instance=self.domain)
-        self.assertEqual(serializer.data['domain'], "test.localhost")
 
     def test_custom_user_serializer(self):
         serializer = CustomUserSerializer(instance=self.user)

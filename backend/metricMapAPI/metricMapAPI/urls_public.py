@@ -15,12 +15,11 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
-    # Include app-level URLs (this should include your clients endpoint)
-    path('api/', include('metrics.urls')),  # Ensure this line is present and correct
-    
     # Public URLs
     path('', views.public_home, name='home'),
- 
+    
+    # API URLs
+    path('api/', include('metrics.urls')),  # Include your API URLs here
 ]
 
 if settings.DEBUG:

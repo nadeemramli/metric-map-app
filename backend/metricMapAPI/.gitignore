@@ -1,0 +1,17 @@
+# Ignore virtual environments
+venv/
+
+# Ignore static and build files
+/staticfiles/
+/htmlcov/
+/docs/
+/public/
+/utils/
+/teroka-digital/
+
+# Ignore debug logs
+.debug.log
+
+# Ignore specific backend directories
+/metrics/management/
+/metrics/tests/

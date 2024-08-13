@@ -1,18 +1,18 @@
 import os
 import sys
 import time
-import uuid
 from io import StringIO
 from django.db import connection
 from django.test.runner import DiscoverRunner
 from django.conf import settings
-from django_tenants.test.cases import TenantTestCase
-from django_tenants.test.client import TenantClient
-from django_tenants.utils import get_public_schema_name, schema_context, get_tenant_model, get_tenant_domain_model
+#from django_tenants.test.cases import TenantTestCase
+#from django_tenants.utils import get_public_schema_name, schema_context, get_tenant_model, get_tenant_domain_model
 from rest_framework.test import APIClient
-from ..models import Client, Domain
+#from ..models import *
+#from .test_permanent_computations.factories import ClientFactory, DomainFactory
 import logging
-import contextlib
+# from django.db import transaction
+# import uuid
 
 logger = logging.getLogger(__name__)
 
@@ -241,22 +241,44 @@ class CustomTenantTestRunner(DiscoverRunner):
         
         return result
 
+'''
 class MetricsTestCase(TenantTestCase):
     @classmethod
     def setUpClass(cls):
+        logger.info("MetricsTestCase.setUpClass: Starting")
         super().setUpClass()
         connection.set_schema_to_public()
+        logger.info(f"MetricsTestCase.setUpClass: Set schema to public. Current schema: {connection.schema_name}")
         
     def setUp(self):
+        logger.info("MetricsTestCase.setUp: Starting")
         super().setUp()
-        self.tenant_client = Client.objects.create(schema_name=get_public_schema_name(),
-                                                   name='Test Client')
-        self.domain = Domain.objects.create(domain='test.com', 
-                                            tenant=self.tenant_client,
-                                            is_primary=True)
+        self.schema_name = f"test_{uuid.uuid4().hex[:10]}"
+        logger.info(f"MetricsTestCase.setUp: Generated schema name: {self.schema_name}")
+        with schema_context('public'):
+            logger.info("MetricsTestCase.setUp: Creating tenant in public schema")
+            self.tenant_client = ClientFactory(schema_name=self.schema_name)
+            self.domain = DomainFactory(tenant=self.tenant_client, domain=f'{self.schema_name}.test.com', is_primary=True)
         connection.set_tenant(self.tenant_client)
+        logger.info(f"MetricsTestCase.setUp: Set tenant. Current schema: {connection.schema_name}")
         self.client = APIClient()
-
+        logger.info("MetricsTestCase.setUp: Finished")
+    
     def tearDown(self):
+        logger.info("MetricsTestCase.tearDown: Starting")
         connection.set_schema_to_public()
+        logger.info(f"MetricsTestCase.tearDown: Set schema to public. Current schema: {connection.schema_name}")
         super().tearDown()
+        logger.info("MetricsTestCase.tearDown: Finished")
+
+    @transaction.atomic
+    def setup_tenant(self):
+        self.tenant_client = ClientFactory(schema_name=get_public_schema_name())
+        self.domain = DomainFactory(tenant=self.tenant_client, domain='test.com', is_primary=True)
+        connection.set_tenant(self.tenant_client)
+        self.tenant = self.tenant_client
+
+    def run(self, result=None):
+        with transaction.atomic():
+            return super().run(result)
+'''

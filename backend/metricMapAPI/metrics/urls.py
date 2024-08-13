@@ -8,15 +8,18 @@ from .interim.experiment_analysis import ab_test_analysis, difference_in_differe
 from .interim.data_export import bulk_export_data, prepare_data_for_bulk_import
 
 # Main router for tenants (clients) 
-router = routers.SimpleRouter()
+router = routers.DefaultRouter()
 router.register(r'clients', ClientViewSet, basename='client')
 
 # Nested router for projects within a client
-client_router = routers.NestedSimpleRouter(router, r'clients', lookup='client')
+client_router = routers.NestedDefaultRouter(router, r'clients', lookup='client')
 client_router.register(r'projects', ProjectViewSet, basename='client-projects')
+client_router.register(r'users', CustomUserViewSet, basename='client-users')
+client_router.register(r'user-profiles', UserProfileViewSet, basename='client-user-profiles')
+client_router.register(r'teams', TeamViewSet, basename='client-teams')
 
 # Nested router for entities within a project
-project_router = routers.NestedSimpleRouter(client_router, r'projects', lookup='project')
+project_router = routers.NestedDefaultRouter(client_router, r'projects', lookup='project')
 project_router.register(r'metrics', MetricViewSet, basename='project-metrics')
 project_router.register(r'categories', CategoryViewSet, basename='project-categories')
 project_router.register(r'tags', TagViewSet, basename='project-tags')
@@ -27,9 +30,13 @@ project_router.register(r'strategies', StrategyViewSet, basename='project-strate
 project_router.register(r'action-remarks', ActionRemarkViewSet, basename='project-action-remarks')
 project_router.register(r'tactical-solutions', TacticalSolutionViewSet, basename='project-tactical-solutions')
 project_router.register(r'time-dimensions', TimeDimensionViewSet, basename='project-time-dimensions')
+project_router.register(r'network-analysis-results', NetworkAnalysisResultViewSet, basename='project-network-analysis-results')
+project_router.register(r'computation-status', ComputationStatusViewSet, basename='project-computation-status')
+project_router.register(r'notifications', NotificationViewSet, basename='project-notifications')
+project_router.register(r'pending-computations', PendingComputationViewSet, basename='project-pending-computations')
 
 # Nested router for metric-related entities
-metric_router = routers.NestedSimpleRouter(project_router, r'metrics', lookup='metric')
+metric_router = routers.NestedDefaultRouter(project_router, r'metrics', lookup='metric')
 metric_router.register(r'historical-data', HistoricalDataViewSet, basename='metric-historical-data')
 metric_router.register(r'metadata', MetricMetadataViewSet, basename='metric-metadata')
 metric_router.register(r'targets', MetricTargetViewSet, basename='metric-targets')
@@ -39,11 +46,15 @@ metric_router.register(r'trend', TrendViewSet, basename='metric-trend')
 metric_router.register(r'correlations', CorrelationViewSet, basename='metric-correlations')
 metric_router.register(r'connections', ConnectionViewSet, basename='metric-connections')
 metric_router.register(r'data-quality-scores', DataQualityScoreViewSet, basename='metric-data-quality-scores')
+metric_router.register(r'insights', InsightViewSet, basename='metric-insights')
+metric_router.register(r'technical-indicators', TechnicalIndicatorViewSet, basename='metric-technical-indicators')
+metric_router.register(r'moving-averages', MovingAverageViewSet, basename='metric-moving-averages')
+metric_router.register(r'seasonality-results', SeasonalityResultViewSet, basename='metric-seasonality-results')
+metric_router.register(r'trend-change-points', TrendChangePointViewSet, basename='metric-trend-change-points')
 
-# Router for non-nested viewsets
-router.register(r'users', CustomUserViewSet, basename='users')
-router.register(r'user-profiles', UserProfileViewSet, basename='user-profiles')
-router.register(r'teams', TeamViewSet, basename='teams')
+# Nested router for experiment within a project
+experiment_router = routers.NestedDefaultRouter(project_router, r'experiments', lookup='experiment')
+experiment_router.register(r'impact-analysis', ImpactAnalysisViewSet, basename='experiment-impact-analysis')
 
 # Interim computation routes
 interim_routes = [
@@ -76,6 +87,8 @@ urlpatterns = [
     path('', include(client_router.urls)),
     path('', include(project_router.urls)),
     path('', include(metric_router.urls)),
+    path('', include(experiment_router.urls)),
+    path('debug/', debug_view, name='debug_view'),
     
     # Interim computation routes
     path('metrics/<int:metric_id>/', include(interim_routes)),
@@ -274,6 +287,61 @@ URL Patterns:
          "end_date": "2023-12-31",
          "created_at": "2023-06-06T14:00:00Z",
          "updated_at": "2023-06-06T14:00:00Z"
+       },                     
+       ...
+     ]
+   - Network Analysis Results:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/network-analysis-results/
+     Output: 
+     [
+       {
+         "id": 1,
+         "project": project_pk,
+         "result_data": {...},
+         "created_at": "2023-06-08T15:00:00Z",
+         "updated_at": "2023-06-08T15:00:00Z"
+       },
+       ...
+     ]
+   - Computation Status:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/computation-status/
+     Output: 
+     [
+       {
+         "id": 1,
+         "project": project_pk,
+         "computation_type": "forecast",
+         "status": "completed",
+         "created_at": "2023-06-08T16:00:00Z",
+         "updated_at": "2023-06-08T16:00:00Z"
+       },
+       ...
+     ]
+   - Notifications:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/notifications/
+     Output: 
+     [
+       {
+         "id": 1,
+         "project": project_pk,
+         "message": "Notification message",
+         "is_read": false,
+         "created_at": "2023-06-08T17:00:00Z",
+         "updated_at": "2023-06-08T17:00:00Z"
+       },
+       ...
+     ]
+   - Pending Computations:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/pending-computations/
+     Output: 
+     [
+       {
+         "id": 1,
+         "project": project_pk,
+         "computation_type": "trend_analysis",
+         "status": "pending",
+         "created_at": "2023-06-08T18:00:00Z",
+         "updated_at": "2023-06-08T18:00:00Z"
        },
        ...
      ]
@@ -435,76 +503,291 @@ URL Patterns:
        },
        ...
      ]
+   - Insights:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/insights/
+     Output: 
+     [
+       {
+         "id": 1,
+         "metric": metric_pk,
+         "content": "Insight content",
+         "created_at": "2023-06-08T09:00:00Z",
+         "updated_at": "2023-06-08T09:00:00Z"
+       },
+       ...
+     ]
+   - Technical Indicators:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/technical-indicators/
+     Output: 
+     [
+       {
+         "id": 1,
+         "metric": metric_pk,
+         "indicator_type": "RSI",
+         "value": 70,
+         "date": "2023-06-08",
+         "created_at": "2023-06-08T10:00:00Z",
+         "updated_at": "2023-06-08T10:00:00Z"
+       },
+       ...
+     ]
+   - Moving Averages:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/moving-averages/
+     Output: 
+     [
+       {
+         "id": 1,
+         "metric": metric_pk,
+         "window_size": 7,
+         "value": 105.5,
+         "date": "2023-06-08",
+         "created_at": "2023-06-08T12:00:00Z",
+         "updated_at": "2023-06-08T12:00:00Z"
+       },
+       ...
+     ]
+   - Seasonality Results:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/seasonality-results/
+     Output: 
+     [
+       {
+         "id": 1,
+         "metric": metric_pk,
+         "seasonality_type": "weekly",
+         "strength": 0.6,
+         "created_at": "2023-06-08T13:00:00Z",
+         "updated_at": "2023-06-08T13:00:00Z"
+       },
+       ...
+     ]
+   - Trend Change Points:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/metrics/{metric_pk}/trend-change-points/
+     Output: 
+     [
+       {
+         "id": 1,
+         "metric": metric_pk,
+         "change_date": "2023-06-01",
+         "change_magnitude": 0.15,
+         "created_at": "2023-06-08T14:00:00Z",
+         "updated_at": "2023-06-08T14:00:00Z"
+       },
+       ...
+     ]
 
-4. Non-nested entities:
+4. Experiment Analysis:
+   - Impact Analysis:
+     GET, POST, PUT, PATCH, DELETE /clients/{client_pk}/projects/{project_pk}/experiments/{experiment_pk}/impact-analysis/
+     Output: 
+     [
+       {
+         "id": 1,
+         "metric": metric_pk,
+         "impact_value": 0.15,
+         "created_at": "2023-06-08T15:00:00Z",
+         "updated_at": "2023-06-08T15:00:00Z"
+       },
+       ...
+     ]
+
+5. Non-nested entities:
    - Users: 
      GET, POST, PUT, PATCH, DELETE /users/
-     Output: [{"id": 1, "username": "user1", "email": "user1@example.com", ...}, ...]
+     Output: 
+     [
+       {
+         "id": 1,
+         "username": "johndoe",
+         "email": "john@example.com",
+         "first_name": "John",
+         "last_name": "Doe",
+         "is_active": true,
+         "date_joined": "2023-06-01T10:00:00Z"
+       },
+       ...
+     ]
    - User Profiles: 
      GET, POST, PUT, PATCH, DELETE /user-profiles/
-     Output: [{"id": 1, "user": 1, "bio": "User bio", ...}, ...]
+     Output: 
+     [
+       {
+         "id": 1,
+         "user": 1,
+         "bio": "A short bio",
+         "location": "New York",
+         "birth_date": "1990-01-01",
+         "created_at": "2023-06-01T10:00:00Z",
+         "updated_at": "2023-06-01T10:00:00Z"
+       },
+       ...
+     ]
    - Teams: 
      GET, POST, PUT, PATCH, DELETE /teams/
-     Output: [{"id": 1, "name": "Team Name", "members": [1, 2, 3], ...}, ...]
+     Output: 
+     [
+       {
+         "id": 1,
+         "name": "Team Alpha",
+         "description": "A team description",
+         "created_at": "2023-06-01T10:00:00Z",
+         "updated_at": "2023-06-01T10:00:00Z",
+         "members": [1, 2, 3]
+       },
+       ...
+     ]
 
-5. Interim computation routes:
-   - Automated Suggestions: 
-     GET /metrics/{metric_id}/suggestions/
-     Output: {"suggestions": ["Suggestion 1", "Suggestion 2", ...]}
-   - Performance Dashboard: 
-     GET /metrics/{metric_id}/performance-dashboard/
-     Output: {"current_value": 100, "trend": 0.05, "forecast": 120, ...}
-   - Export Data: 
-     GET /metrics/{metric_id}/export/
-     Output: [{"date": "2023-05-20", "value": 100}, ...]
-   - Import Data: 
-     POST /metrics/{metric_id}/import/
-     Input: [{"date": "2023-05-20", "value": 100}, ...]
-     Output: {"message": "Data imported successfully"}
+6. Interim Computation Routes:
    - Statistical Analysis: 
      GET /metrics/{metric_id}/statistical-analysis/
-     Output: {"mean": 100, "median": 95, "std_dev": 10, ...}
+     Input: ?type=basic (or advanced, aggregated)
+     Output: {"task_id": "12345-abcde-67890"}
+
    - Performance Analysis: 
      GET /metrics/{metric_id}/performance-analysis/
-     Output: {"current_performance": "above_average", "trend": "increasing", ...}
+     Input: ?type=forecast_vs_actual (or probability_analysis, process_progress_tracking)
+     Output: {"task_id": "12345-abcde-67890"}
+
    - Experiment Analysis: 
      POST /metrics/{metric_id}/experiment-analysis/
-     Input: {"control_group": "A", "treatment_group": "B", ...}
-     Output: {"p_value": 0.05, "effect_size": 0.2, ...}
-   - Prepare Import: 
+     Input: 
+     {
+       "type": "ab_test",
+       "control_group": "A",
+       "treatment_group": "B"
+     }
+     Output: {"task_id": "12345-abcde-67890"}
+
+   - Automated Suggestions: 
+     GET /metrics/{metric_id}/automated-suggestions/
+     Output: {"task_id": "12345-abcde-67890"}
+
+   - Performance Dashboard: 
+     GET /metrics/{metric_id}/performance-dashboard/
+     Input: ?current_date=2023-06-01
+     Output: {"task_id": "12345-abcde-67890"}
+
+   - Export Data: 
+     GET /metrics/{metric_id}/export-data/
+     Input: ?start_date=2023-01-01&end_date=2023-06-01&data_type=raw
+     Output: {"task_id": "12345-abcde-67890"}
+
+   - Task Status: 
+     GET /task-status/{task_id}/
+     Output: 
+     {
+       "status": "completed",
+       "result": {
+         // Task-specific result data
+       }
+     }
+
+   - Prepare Bulk Import: 
      POST /metrics/{metric_id}/prepare-import/
-     Input: {"file_url": "https://example.com/data.csv"}
-     Output: {"preview": [{"date": "2023-05-20", "value": 100}, ...], "column_mapping": {...}}
-   - Forecast vs Actual: 
+     Input: {"sheet_url": "https://docs.google.com/spreadsheets/d/..."}
+     Output: 
+     {
+       "preview": [
+         {"date": "2023-05-20", "value": 100},
+         ...
+       ],
+       "column_mapping": {...}
+     }
+
+   - Import Historical Data: 
+     POST /metrics/{metric_id}/import-historical-data/
+     Input: 
+     {
+       "data": [
+         {"date": "2023-05-20", "value": 100},
+         ...
+       ]
+     }
+     Output: {"message": "Successfully imported 100 data points"}
+  
+      - Forecast vs Actual Comparison:
      GET /metrics/{metric_id}/forecast-vs-actual/
-     Output: [{"date": "2023-05-20", "forecast": 100, "actual": 105}, ...]
-   - Probability Analysis: 
+     Output: 
+     [
+       {
+         "date": "2023-06-01",
+         "forecast": 100,
+         "actual": 105,
+         "difference": 5
+       },
+       ...
+     ]
+
+   - Probability Analysis:
      GET /metrics/{metric_id}/probability-analysis/
-     Output: {"probability_of_achieving_target": 0.75, ...}
-   - Aggregated Views: 
+     Output: 
+     {
+       "target_value": 1000,
+       "target_date": "2023-12-31",
+       "probability_of_achieving": 0.75
+     }
+
+   - Advanced Stats:
+     GET /metrics/{metric_id}/advanced-stats/
+     Output: 
+     {
+       "skewness": 0.5,
+       "kurtosis": 3.2,
+       "autocorrelation": 0.7,
+       "stationarity": 0.01
+     }
+
+   - Aggregated Views:
      GET /metrics/{metric_id}/aggregated-views/
-     Output: {"daily": {...}, "weekly": {...}, "monthly": {...}}
-   - Basic Stats: 
+     Output: 
+     {
+       "daily": {"2023-06-01": 100, "2023-06-02": 105, ...},
+       "weekly": {"2023-W22": 102, "2023-W23": 107, ...},
+       "monthly": {"2023-06": 105, "2023-07": 110, ...}
+     }
+
+   - Basic Stats:
      GET /metrics/{metric_id}/basic-stats/
-     Output: {"mean": 100, "median": 95, "min": 80, "max": 120, ...}
-   - Difference in Differences: 
+     Output: 
+     {
+       "mean": 100,
+       "median": 98,
+       "std": 10,
+       "min": 80,
+       "max": 120
+     }
+      - Difference in Differences Analysis:
      POST /metrics/{metric_id}/difference-in-differences/
-     Input: {"control_group": "A", "treatment_group": "B", "pre_period": "2023-04-01", "post_period": "2023-05-01"}
-     Output: {"diff_in_diff": 0.15, "p_value": 0.03, ...}
+     Input: 
+     {
+       "control_group": "A",
+       "treatment_group": "B",
+       "pre_period": "2023-04-01",
+       "post_period": "2023-05-01"
+     }
+     Output: 
+     {
+       "diff_in_diff": 0.15,
+       "p_value": 0.03,
+       "standard_error": 0.05,
+       "confidence_interval": [0.05, 0.25]
+     }
 
 6. Tenant and project creation flow routes:
    - Create Tenant: 
      POST /create-tenant/
-     Input: {"name": "New Tenant", ...}
-     Output: {"id": 1, "name": "New Tenant", ...}
+     Input: {"name": "New Tenant", "subdomain": "new-tenant"}
+     Output: {"message": "Tenant New Tenant created successfully"}
+
    - Create Project: 
      POST /create-project/
-     Input: {"name": "New Project", "client": 1, ...}
-     Output: {"id": 1, "name": "New Project", "client": 1, ...}
+     Input: {"name": "New Project", "client": 1}
+     Output: {"message": "Project created successfully", "id": 1}
+
    - Create Team: 
      POST /create-team/
-     Input: {"name": "New Team", "members": [1, 2, 3], ...}
-     Output: {"id": 1, "name": "New Team", "members": [1, 2, 3], ...}
+     Input: {"name": "New Team", "members": [1, 2, 3]}
+     Output: {"message": "Team created successfully", "id": 1}
+
    - Assign Team Members: 
      POST /assign-team-members/
      Input: {"team": 1, "members": [4, 5, 6]}

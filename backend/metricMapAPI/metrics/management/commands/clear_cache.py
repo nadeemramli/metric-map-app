@@ -5,6 +5,7 @@ class Command(BaseCommand):
     help = 'Clears the entire cache'
 
     def handle(self, *args, **kwargs):
+        self.stdout.write('Starting cache clear...')
         cache.clear()
         self.stdout.write(self.style.SUCCESS('Successfully cleared cache'))
 
