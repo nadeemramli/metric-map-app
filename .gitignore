@@ -27,3 +27,4 @@ coverage/
 # Ignore build directories
 dist/
 build/
+backend/metricMapAPI/debug.log
